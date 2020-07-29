@@ -35,6 +35,7 @@
 #include "cms8s6990.h"
 #include "timer0.h"
 #include "demo_buzzer.h"
+#include "key.h"
 
 
 uint32_t Systemclock = 24000000;
@@ -94,12 +95,14 @@ static struct _TASK_COMPONENTS TaskComps[] =
 int main(void)
 {		
     TMR0_Config();
-	  BUZZER_Config();
+    BUZZER_Config();
+	
 	GPIO_SET_MUX_MODE(P24CFG, GPIO_MUX_GPIO);
 	GPIO_ENABLE_OUTPUT(P2TRIS, GPIO_PIN_4);
 	P24 =0;
-
-	while(1)
+	GPIO_Config();
+								
+  while(1)
 	{	
 		TaskProcess();
 	}		
