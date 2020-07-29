@@ -36,6 +36,7 @@
 #include "timer0.h"
 #include "demo_buzzer.h"
 #include "key.h"
+#include "tm1650_i2c.h"
 
 
 uint32_t Systemclock = 24000000;
@@ -101,6 +102,7 @@ int main(void)
 	GPIO_ENABLE_OUTPUT(P2TRIS, GPIO_PIN_4);
 	P24 =0;
 	GPIO_Config();
+	I2C_Config();							/*设置I2C主控模式*/		
 								
   while(1)
 	{	
@@ -138,7 +140,7 @@ void TaskProcess(void)
 ***********************************************************/
 void TaskLEDDisplay(void)
 {
-   
+   TM1650_write_byte(TM1650_DIG1_ADDR , 0xff);
 
 }
 /***********************************************************

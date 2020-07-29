@@ -114,7 +114,7 @@ void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR
 ******************************************************************************/
 void UART0_IRQHandler(void)  interrupt UART0_VECTOR 
 {
-	P24 =~P24; 
+
 }
 /******************************************************************************
  ** \brief	 Timer 2 interrupt service function
@@ -169,7 +169,11 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
  ******************************************************************************/
 void P2EI_IRQHandler(void)  interrupt P2EI_VECTOR 
 {
-
+	if(GPIO_GetIntFlag(GPIO2, GPIO_PIN_3))
+	{
+		P24 =~P24;
+		GPIO_ClearIntFlag(GPIO2, GPIO_PIN_3);
+	}
 }
 /******************************************************************************
  ** \brief	 GPIO 3 interrupt service function
