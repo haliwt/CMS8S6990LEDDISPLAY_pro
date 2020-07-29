@@ -33,6 +33,7 @@
 /*	include files
 *****************************************************************************/
 #include "cms8s6990.h"
+#include "timer0.h"
 
 
 uint32_t Systemclock = 24000000;
@@ -67,7 +68,7 @@ typedef enum _TASK_LIST
 
 void TaskLEDDisplay(void);
 void TaskKeySan(void);
-void TaskReceiveIR(void);
+void TaskReceiveAirSensor(void);
 void TaskTelecStatus(void);
 void TaskProcess(void);
 
@@ -75,11 +76,11 @@ static struct _TASK_COMPONENTS TaskComps[] =
 {
     {0, 769, 769, TaskLEDDisplay},           // 显示数字 20ms = 13us * 1538，扫描一次
     {0, 154, 154, TaskKeySan},               // 按键扫描 4ms=13us * 308 扫描一次
-    {0, 308, 308, TaskReceiveIR},            // 接收IR   8ms = 13us * 616 执行一次
+    {0, 308, 308, TaskReceiveAirSensor},     // 接收到空气传感器         8ms = 13us * 616 执行一次
     {0, 384, 384, TaskTelecStatus}           // 同主板通讯 10ms = 13us * 160  执行一次 
 };
 
-
+ 
 
 /*****************************************************************************
  ** \brief	 main
@@ -91,6 +92,12 @@ static struct _TASK_COMPONENTS TaskComps[] =
 
 int main(void)
 {		
+    TMR0_Config();
+	
+	GPIO_SET_MUX_MODE(P24CFG, GPIO_MUX_GPIO);
+	GPIO_ENABLE_OUTPUT(P2TRIS, GPIO_PIN_4);
+	P24 =0;
+
 	while(1)
 	{	
 		TaskProcess();
@@ -150,7 +157,7 @@ void TaskKeySan(void)
 	*Output Ref:No
 	*
 ***********************************************************/
-void TaskReceiveIR(void)
+void TaskReceiveAirSensor(void)
 {
   
 

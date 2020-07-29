@@ -114,7 +114,7 @@ void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR
 ******************************************************************************/
 void UART0_IRQHandler(void)  interrupt UART0_VECTOR 
 {
-
+	P24 =~P24; 
 }
 /******************************************************************************
  ** \brief	 Timer 2 interrupt service function
