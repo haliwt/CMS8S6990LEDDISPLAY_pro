@@ -1,7 +1,7 @@
 #include "cms8s6990.h"
 #include "timer0.h"
 
-
+volatile uint16_t getMinute; 
 
 /******************************************************************************
  ** \brief	 INT0 interrupt service function
@@ -46,7 +46,7 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
 			 minutes ++;
 			if(minutes ==71){ //1分钟时间
 				minutes =0;
-			  //  getMinute++; 
+			    getMinute++; 
 		    }
 			
 		}

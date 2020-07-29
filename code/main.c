@@ -10,8 +10,7 @@
 
 
 
- //volatile uint16 getMinute;
- //volatile uint16 getHour;
+
 
 
 void TaskLEDDisplay(void);
@@ -21,23 +20,15 @@ void TaskTelecStatus(void);
 void TaskProcess(void);
 
 
-TASK_COMPONENTS TaskComps[4]={
+TASK_COMPONENTS TaskComps[TASK_NUM]={
 
     {0, 769, 769, TaskLEDDisplay},           // 显示数字 20ms = 13us * 1538，扫描一次
     {0, 154, 154, TaskKeySan},               // 按键扫描 4ms=13us * 308 扫描一次
     {0, 308, 308, TaskReceiveAirSensor},     // 接收到空气传感器         8ms = 13us * 616 执行一次
     {0, 384, 384, TaskTelecStatus}           // 同主板通讯 10ms = 13us * 160  执行一次 
 
-
-
-
 };
-
 uint32_t Systemclock = 24000000;
-
-
-
-
 /*****************************************************************************
  ** \brief	 main
  **

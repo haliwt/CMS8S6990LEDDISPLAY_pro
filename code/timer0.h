@@ -7,8 +7,9 @@
 #include "cms8s6990.h"
 
 #define TASK_NUM   (4)                  //  这里定义的任务数为4，表示有4个任务会使用此定时器定时。
-//#define TASKS_MAX             4
-//#define	DEBUG
+
+extern volatile uint16_t getMinute; 
+extern volatile uint16_t getHour;
 
 typedef struct _TASK_COMPONENTS
 {
@@ -29,7 +30,7 @@ typedef enum _TASK_LIST
 } TASK_LIST;
 
 #endif 
-extern TASK_COMPONENTS TaskComps[4]; 
+extern TASK_COMPONENTS TaskComps[TASK_NUM]; //声明一个全局结构变量 TaskComps[4]
 
 
 
