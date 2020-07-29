@@ -1,64 +1,6 @@
-/*******************************************************************************
-* Copyright (C) 2019 China Micro Semiconductor Limited Company. All Rights Reserved.
-*
-* This software is owned and published by:
-* CMS LLC, No 2609-10, Taurus Plaza, TaoyuanRoad, NanshanDistrict, Shenzhen, China.
-*
-* BY DOWNLOADING, INSTALLING OR USING THIS SOFTWARE, YOU AGREE TO BE BOUND
-* BY ALL THE TERMS AND CONDITIONS OF THIS AGREEMENT.
-*
-* This software contains source code for use with CMS
-* components. This software is licensed by CMS to be adapted only
-* for use in systems utilizing CMS components. CMS shall not be
-* responsible for misuse or illegal use of this software for devices not
-* supported herein. CMS is providing this software "AS IS" and will
-* not be responsible for issues arising from incorrect user implementation
-* of the software.
-*
-* This software may be replicated in part or whole for the licensed use,
-* with the restriction that this Disclaimer and Copyright notice must be
-* included with each copy of this software, whether used in part or whole,
-* at all times.
-*/
-
-/****************************************************************************/
-/** \file isr.c
-**
-** 
-**
-**	History:
-**		
-*****************************************************************************/
-/****************************************************************************/
-/*	include files
-*****************************************************************************/
 #include "cms8s6990.h"
+#include "timer0.h"
 
-/****************************************************************************/
-/*	Local pre-processor symbols('#define')
-****************************************************************************/
-
-/****************************************************************************/
-/*	Global variable definitions(declared in header file with 'extern')
-****************************************************************************/
-
-/****************************************************************************/
-/*	Local type definitions('typedef')
-****************************************************************************/
-
-/****************************************************************************/
-/*	Local variable  definitions('static')
-****************************************************************************/
-
-
-/****************************************************************************/
-/*	Local function prototypes('static')
-****************************************************************************/
-
-
-/****************************************************************************/
-/*	Function implementation - global ('extern') and local('static')
-****************************************************************************/
 
 
 /******************************************************************************
@@ -75,12 +17,42 @@ void INT0_IRQHandler(void)  interrupt INT0_VECTOR
 /******************************************************************************
  ** \brief	 Timer 0 interrupt service function
  **
- ** \param [in]  none   
+ ** \param [in]  none   100us interrupt times
  **
  ** \return none
 ******************************************************************************/
 void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR 
 {
+	static uint16_t seconds=0,minutes=0;
+	uint8_t i;
+	  seconds++;
+	  
+	 
+	  for (i=0; i<TASKS_MAX; i++)          // 逐个任务轮询时间处理
+	  {
+	        if (TaskComps[i].Timer)          // 时间不为0
+	        {
+	            TaskComps[i].Timer--;         // 减去一个节拍
+	            if (TaskComps[i].Timer == 0)       // 时间减完了
+	            {
+	                 TaskComps[i].Timer = TaskComps[i].ItervalTime;       // 恢复计时器值，从新下一次
+	                 TaskComps[i].Run = 1;           // 任务可以运行
+	            }
+	        }
+		}
+
+		if(seconds==65535){ //计时：6.6s
+			seconds =0;
+			 minutes ++;
+			if(minutes ==71){ //1分钟时间
+				minutes =0;
+			  //  getMinute++; 
+		    }
+			
+		}
+		
+	
+	
 
 }
 /******************************************************************************
