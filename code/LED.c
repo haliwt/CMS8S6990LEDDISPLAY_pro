@@ -15,6 +15,7 @@ const uint8_t seg[]={
             0x80,   //DOT
 
 };
+static void LEDDisplay_BlueColorRing(void);
 /******************************************************************************
  **
  ** Function Name:	void LED_GPIO_Init(void)
@@ -70,10 +71,13 @@ void LED_GPIO_Init(void)
  ** Return Ref:NO
  **   
  ******************************************************************************/
-void LEDDisplay_Function(void)
+void LEDDisplay_SleepLamp(void)
 {
+   if(Telecom->setWind_levels == wind_sleep)
+   {
+       LEDDisplay_BlueColorRing();
 
-
+   }
 
 }
 /****************************************************************************************************

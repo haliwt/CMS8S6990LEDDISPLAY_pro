@@ -79,7 +79,7 @@ void TaskProcess(void)
 void TaskLEDDisplay(void)
 {
    LEDDisplay_TimerTim();
-  
+   LEDDisplay_SleepLamp();
 
 }
 /***********************************************************

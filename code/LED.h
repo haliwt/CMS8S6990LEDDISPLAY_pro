@@ -69,11 +69,11 @@
 
 
 void LED_GPIO_Init(void);
-void LEDDisplay_Function(void);
+void LEDDisplay_SleepLamp(void);
 void LEDDisplay_TimerTim(void );
 void LEDDisplay_RedColorRing(void);
 void LEDDisplay_GreenColorRing(void);
-void LEDDisplay_BlueColorRing(void);
+//void LEDDisplay_BlueColorRing(void);
 
 
 
