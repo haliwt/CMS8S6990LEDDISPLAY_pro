@@ -8,10 +8,20 @@
 #include "key.h"
 #include "tm1650_i2c.h"
 
+ const uint8_t seg[]={
 
+			0x3F,	// 0		
+			0x06,	// 1		
+			0x5B,	// 2		
+			0x4F,	// 3		
+			0x66,	// 4		
+			0x6D,	// 5		
+			0x7D,	// 6		
+			0x07,	// 7		
+			0x7F,	// 8		
+			0x6F	// 9
 
-
-
+};
 
 void TaskLEDDisplay(void);
 void TaskKeySan(void);
@@ -22,10 +32,10 @@ void TaskProcess(void);
 
 TASK_COMPONENTS TaskComps[TASK_NUM]={
 
-    {0, 769, 769, TaskLEDDisplay},           // 显示数字 20ms = 13us * 1538，扫描一次
-    {0, 154, 154, TaskKeySan},               // 按键扫描 4ms=13us * 308 扫描一次
-    {0, 308, 308, TaskReceiveAirSensor},     // 接收到空气传感器         8ms = 13us * 616 执行一次
-    {0, 384, 384, TaskTelecStatus}           // 同主板通讯 10ms = 13us * 160  执行一次 
+    {0, 200, 200, TaskLEDDisplay},           // 显示数字 20ms = 100us * 10 *20，扫描一次
+    {0, 40,  40, TaskKeySan},               // 按键扫描 4ms=100us * 10*4 扫描一次
+    {0, 80, 80, TaskReceiveAirSensor},     // 接收到空气传感器   8ms = 100us * 80 执行一次
+    {0, 100, 100, TaskTelecStatus}           // 同主板通讯 10ms = 100us * 100  执行一次 
 
 };
 uint32_t Systemclock = 24000000;
@@ -84,7 +94,7 @@ void TaskProcess(void)
 ***********************************************************/
 void TaskLEDDisplay(void)
 {
-   TM1650_write_byte(TM1650_DIG1_ADDR , 0xff);
+   TM1650_write_byte(TM1650_DIG1_ADDR ,seg);
 
 }
 /***********************************************************

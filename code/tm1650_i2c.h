@@ -4,6 +4,8 @@
 /* Include files */
 /*****************************************************************************/
 #include "cms8s6990.h"
+#include "key.h"
+#include "timer0.h"
 
 
 /*---向TM1650显示 写指令*/
@@ -22,6 +24,23 @@
 #define  TM1650_DIG3_ADDR		0x6C        /*TM1650显示段选COM3，地址*/
 #define  TM1650_DIG4_ADDR		0x6E        /*TM1650显示段选COM4，地址*/
 
+extern volatile uint8_t DispData[3];//显示LED位数
+
+/**************************************************
+	*XinTong LED Display Data Data:2020.07.23
+
+	    //                a
+        //            ---------
+        //           |         |
+        //         f |         | b
+        //           |    g    |
+        //            ---------
+        //           |         |
+        //         e |         | c
+        //           |    d    |
+        //            ---------   O <- h
+**************************************************/
+extern const uint8_t seg[];
 
 /******************************************************************************
  ** \brief	 I2C_Config
@@ -62,7 +81,8 @@ uint8_t  At24c256_read_byte(uint16_t addr);
  ** \return  -1：超出地址范围 0：写完成
  ** \note  
  *****************************************************************************/ 
- int16_t  TM1650_write_byte(uint16_t addr , uint8_t ch);
+ int16_t  TM1650_write_byte(uint16_t addr , uint8_t *pointer);
+ void LEDDisplay_TimerTim(void );
 //int16_t  At24c256_write_byte(uint16_t addr , uint8_t ch);
 
 #endif /* __DEMO_I2C_H__ */

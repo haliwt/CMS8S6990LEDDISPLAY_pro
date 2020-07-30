@@ -24,13 +24,13 @@ typedef enum _TASK_LIST
 {
     TAST_DISP_NUMBER,          // 显示数字
     TAST_KEY_SAN,             // 按键扫描
-    TASK_RECE_IR,             // 接收IR
-    TASK_TELEC_WS,            // 同控制主板通讯
+    TASK_RECE_AIRSENSOR,       // 接收AIRSENSOR
+    TASK_TELEC_MESSAGE,        // 同控制主板通讯
     TASKS_MAX                 // 总的可供分配的定时任务数目
 } TASK_LIST;
 
 #endif 
-extern TASK_COMPONENTS TaskComps[TASK_NUM]; //声明一个全局结构变量 TaskComps[4]
+extern TASK_COMPONENTS TaskComps[TASK_NUM]; //声明一个全局结构变量 TaskComps[TASK_NUM]
 
 
 

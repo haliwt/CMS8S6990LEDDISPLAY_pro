@@ -19,10 +19,6 @@
 #define  AT24C256_READ      0xA1				/*Read  Cmd*/
 #define  AT24C256_MAX		0x7fff				/*address  max*/
 
-
-
-
-
 /*----I2C主控模式命令-------------------------------------------------------*/
 #define I2C_MASTER_START_SEND				(I2C_I2CMCR_START_Msk | I2C_I2CMCR_RUN_Msk)		/*起始位+从机地址+写+1Byte数据*/
 #define I2C_MASTER_SEND						(I2C_I2CMCR_RUN_Msk)							/*发送1Byte数据*/
@@ -32,7 +28,7 @@
 #define I2C_MASTER_RECEIVE_NACK				(I2C_I2CMCR_RUN_Msk)							/*发送读1Byte时钟+NACK*/
 #define I2C_MASTER_RECEIVE_ACK				(I2C_I2CMCR_RUN_Msk | I2C_I2CMCR_ACK_Msk)		/*发送读1Byte时钟+ACK*/
 
-
+volatile uint8_t DispData[3];
 /*****************************************************************************
  ** \brief	I2C_SendMasterCmd
  **			发送主控命令
@@ -87,14 +83,13 @@ uint8_t I2C_MasterReadBuffer(void)
  ** \return  -1：超出地址范围 0：写完成
  ** \note  
  *****************************************************************************/
-int16_t  TM1650_write_byte(uint16_t addr , uint8_t indata)
+int16_t  TM1650_write_byte(uint16_t addr , uint8_t *ptr)
 {
 	volatile int16_t i,j;
 	if(addr >AT24C256_MAX)
 		return -1;
 	else
 	{			
-		
 		I2C_SendMasterCmd(TM1650_ORDER);	            /* 写TM1650数据命令  */
 		I2C_SendMasterCmd(TM1650_ON_DIS);               /* 写TM1650 显示命令，显示级别，打开显示*/
 		I2C_SendMasterCmd(I2C_I2CMCR_ACK_Msk) ;         /*发送应答信号*/  
@@ -108,14 +103,14 @@ int16_t  TM1650_write_byte(uint16_t addr , uint8_t indata)
 		while(!(I2C_GetMasterIntFlag()));              /*等待发送结束*/       
 		I2C_ClearMasterIntFlag();	
 		
-		I2C_MasterWriteBuffer(indata);							/*写数据*/
+		I2C_MasterWriteBuffer(*ptr);							/*写数据*/
 		I2C_SendMasterCmd(I2C_MASTER_SEND);
 		while(!(I2C_GetMasterIntFlag()));		
 		I2C_ClearMasterIntFlag();
 		
 		I2C_SendMasterCmd(I2C_I2CMCR_ACK_Msk) ;         /*发送应答信号*/  
 		I2C_SendMasterCmd(I2C_MASTER_STOP);					/*发送停止位*/
-		for(i=2000;i>0;i--)								/*延时确保AT24C256写数据完成*/
+		for(i=2000;i>0;i--)								/*延时确保TM1650写数据完成*/
 			for(j=200;j>0;j--);
 	}
 	return 0;
@@ -264,7 +259,64 @@ void I2C_Config(void)
 	 GPIO_SET_MUX_MODE(P22CFG, GPIO_MUX_SDA);	 		/*SDA*/	 
 	 
 }
+/**********************************************************
+ * 	*
+	*函数名称：void LEDDisplay_TimerTim(void)
+	*函数功能：定时时间显示,按键设置定时时间
+	*入口参数：NO
+	*出口参数：NO
+	*
+**********************************************************/
+void LEDDisplay_TimerTim(void)
+{
+	 //定时显示，3位7段
+	 static uint8_t minhour=0;
+    if(Telecom.showtimes<=60 && Telecom.getTimerHour < 1){//显示分钟时间
+        if(Telecom.showtimes ==60 && Telecom.TimerEvent ==0){  //设置定时时间，按键输入定时时间值
+			Telecom.getTimerHour++;
+			Telecom.showtimes=0;
+		}
+		if(Telecom.TimerEvent == 1){ //显示定时时间，每次减一分钟 ，定时事件=1，定时开始
+			Telecom.showtimes  = Telecom.showtimes - getMinute;
+			if(Telecom.showtimes <=0) {
+				minhour ++;    				//分钟时间减完了，---再减小时时间参数
+				Telecom.showtimes=0;
+				getMinute =0;
+			}
+ 
+		}
 
+       	DispData[2] = seg[Telecom.showtimes %10];// LED个位
+       	DispData[1] = seg[Telecom.showtimes /10];// LED十位	
+       	DispData[0] = seg[0];         //小时，个位
+       
+
+    }
+    else if(Telecom.getTimerHour >=1){ //显示小时时间，分钟时间
+        if(Telecom.showtimes ==60 && Telecom.TimerEvent==0){
+			Telecom.getTimerHour++;
+			Telecom.showtimes=0;
+		}
+		if(Telecom.TimerEvent == 1){ //定时事件开始
+			if(Telecom.getTimerHour !=0){ //定时时间，大于一个小时
+				Telecom.showtimes  = Telecom.showtimes - getMinute;
+				if(Telecom.showtimes <=0) {
+					minhour ++;
+					Telecom.showtimes=60;
+				}
+				Telecom.getTimerHour  = Telecom.getTimerHour - minhour; //减小时时间
+			}
+		}
+        
+		DispData[2] = seg[Telecom.showtimes %10];		//LED 显示个位  29分钟----‘9’
+        DispData[1] = seg[Telecom.showtimes / 10];		//LED 显示十位 分钟 29分--‘2’
+        DispData[0] = seg[Telecom.getTimerHour / 10]; 	//---显示最高位时间，定时最大时间8小时
+        if(Telecom.getTimerHour >=8)Telecom.getTimerHour =0;  //最大定时时间是 8小时
+    }
+
+   
+
+}
 
 
 

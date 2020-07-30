@@ -41,19 +41,14 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
 	        }
 		}
 
-		if(seconds==65535){ //计时：6.6s
+		if(seconds==60000){ //计时：6.0s
 			seconds =0;
 			 minutes ++;
-			if(minutes ==71){ //1分钟时间
+			if(minutes ==10){ //1分钟时间
 				minutes =0;
 			    getMinute++; 
 		    }
-			
 		}
-		
-	
-	
-
 }
 /******************************************************************************
  ** \brief	 INT0 interrupt service function
@@ -130,7 +125,11 @@ void P0EI_IRQHandler(void)  interrupt P0EI_VECTOR
  ******************************************************************************/
 void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR 
 {
-	;
+	if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_6))
+	{
+		
+		GPIO_ClearIntFlag(GPIO1, GPIO_PIN_6);
+	}
 }
 /******************************************************************************
  ** \brief	 GPIO 2 interrupt service function
@@ -141,11 +140,7 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
  ******************************************************************************/
 void P2EI_IRQHandler(void)  interrupt P2EI_VECTOR 
 {
-	if(GPIO_GetIntFlag(GPIO2, GPIO_PIN_3))
-	{
-		P24 =~P24;
-		GPIO_ClearIntFlag(GPIO2, GPIO_PIN_3);
-	}
+		;
 }
 /******************************************************************************
  ** \brief	 GPIO 3 interrupt service function
