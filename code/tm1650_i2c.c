@@ -111,7 +111,7 @@ int16_t  TM1650_write_byte(uint8_t cmd2 ,uint16_t addr , uint8_t *ptr)
 		I2C_ClearMasterIntFlag();	
 
 		
-		I2C_MasterWriteBuffer(((*ptr)>>4) & 0x0f);					/*写数据---低4位数据*/
+		I2C_MasterWriteBuffer(((*ptr)>>4) & 0xf0);					/*写数据---低4位数据*/
 		I2C_SendMasterCmd(I2C_MASTER_SEND);
 		while(!(I2C_GetMasterIntFlag()));		
 		I2C_ClearMasterIntFlag();

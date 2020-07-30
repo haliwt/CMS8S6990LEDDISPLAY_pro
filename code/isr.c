@@ -27,8 +27,6 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
 	static uint16_t seconds=0,minutes=0;
 	uint8_t i;
 	  seconds++;
-	  
-	 
 	  for (i=0; i<TASKS_MAX; i++)          // 逐个任务轮询时间处理
 	  {
 	        if (TaskComps[i].Timer)          // 时间不为0
@@ -36,7 +34,7 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
 	            TaskComps[i].Timer--;         // 减去一个节拍
 	            if (TaskComps[i].Timer == 0)       // 时间减完了
 	            {
-	                 TaskComps[i].Timer = TaskComps[i].ItervalTime;       // 恢复计时器值，从新下一次
+	                 TaskComps[i].Timer = TaskComps[i].ItervalTime;       // 恢复计时器值，从新运行下一次
 	                 TaskComps[i].Run = 1;           // 任务可以运行
 	            }
 	        }

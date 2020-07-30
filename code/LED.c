@@ -1,8 +1,8 @@
 #include "LED.h"
-
+//8段LED显示
 const uint8_t seg[]={
 
-			0x3F,	// 0		
+			0xBF,	// 0		
 			0x06,	// 1		
 			0x5B,	// 2		
 			0x4F,	// 3		
@@ -12,7 +12,6 @@ const uint8_t seg[]={
 			0x07,	// 7		
 			0x7F,	// 8		
 			0x6F,	// 9
-      0x80  // PM2.5 
 
 };
 /******************************************************************************
@@ -89,11 +88,7 @@ void LEDDisplay_TimerTim(void)
 	 //定时显示，3位7段
 	 static uint8_t minhour=0;
 
-	  
-     
-	  
-	
-    if(Telecom->showtimes <=60 && Telecom->getTimerHour < 1){//显示分钟时间
+   if(Telecom->showtimes <=60 && Telecom->getTimerHour < 1){//显示分钟时间
         if(Telecom->showtimes ==60 && Telecom->TimerEvent ==0){  //设置定时时间，按键输入定时时间值
 			Telecom->getTimerHour++;
 			Telecom->showtimes=0;
@@ -109,12 +104,12 @@ void LEDDisplay_TimerTim(void)
 		}
 
        //	DispData[2] = seg[Telecom->showtimes %10];// LED个位
-        TM1650_write_byte(TM1650_8_DIS,TM1650_COM3_ADDR,&seg[Telecom->showtimes %10]); //写入个位 
+        TM1650_write_byte(TM1650_5_DISP,TM1650_COM3_ADDR,&seg[Telecom->showtimes %10]); //写入个位 
        //	DispData[1] = seg[Telecom->showtimes /10];// LED十位
-        TM1650_write_byte(TM1650_8_DIS,TM1650_COM2_ADDR , &seg[Telecom->showtimes /10])	;
+        TM1650_write_byte(TM1650_5_DISP,TM1650_COM2_ADDR , &seg[Telecom->showtimes /10])	;
        //	DispData[0] = seg[0];         //小时，个位
-        TM1650_write_byte(TM1650_8_DIS,TM1650_COM1_ADDR , &seg[0]);
-        P24=1;
+        TM1650_write_byte(TM1650_5_DISP,TM1650_COM1_ADDR , &seg[0]);
+        P24=1; //PM2.5显示
     }
     else if(Telecom->getTimerHour >=1){ //显示小时时间，分钟时间
         if(Telecom->showtimes ==60 && Telecom->TimerEvent==0){
@@ -133,12 +128,12 @@ void LEDDisplay_TimerTim(void)
 		}
         
 		//DispData[2] = seg[Telecom->showtimes %10];		//LED 显示个位  29分钟----‘9’
-        TM1650_write_byte(TM1650_8_DIS,TM1650_COM3_ADDR, &seg[Telecom->showtimes %10]); //写入个位 
+        TM1650_write_byte(TM1650_5_DISP,TM1650_COM3_ADDR, &seg[Telecom->showtimes %10]); //写入个位 
         //DispData[1] = seg[Telecom->showtimes / 10];		//LED 显示十位 分钟 29分--‘2’
-        TM1650_write_byte(TM1650_8_DIS,TM1650_COM2_ADDR , &seg[Telecom->showtimes /10])	;
+        TM1650_write_byte(TM1650_5_DISP,TM1650_COM2_ADDR , &seg[Telecom->showtimes /10])	;
         //DispData[0] = seg[Telecom->getTimerHour / 10]; 	//---显示最高位时间，定时最大时间8小时
-        TM1650_write_byte(TM1650_8_DIS,TM1650_COM1_ADDR , &seg[Telecom->getTimerHour / 10]);
-        P24=1;
+        TM1650_write_byte(TM1650_5_DISP,TM1650_COM1_ADDR , &seg[Telecom->getTimerHour / 10]);
+        P24=1; //PM2.5显示
         if(Telecom->getTimerHour >=8)Telecom->getTimerHour =0;  //最大定时时间是 8小时
     }
 
