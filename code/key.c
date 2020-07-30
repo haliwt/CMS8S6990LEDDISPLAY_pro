@@ -1,6 +1,6 @@
 #include "key.h"
 
-Telec Telecom;
+Telec Telecom= NULL;
 /******************************************************************************
  **
  ** Function Name:	void delay_10us(uint16_t n) 
@@ -41,6 +41,11 @@ void GPIO_Config(void)
 	/*
 	(1)设置P23 IO功能
 	*/
+	GPIO_SET_MUX_MODE(P13CFG,GPIO_MUX_GPIO);   //开机按键  P13
+	GPIO_ENABLE_INPUT(P1TRIS,GPIO_PIN_3); 
+	GPIO_ENABLE_RD(P1RD,GPIO_PIN_3) ;    
+
+
 	GPIO_SET_MUX_MODE(P15CFG, GPIO_MUX_GPIO);		//设置P15为GPIO模式--风速按键
 	GPIO_ENABLE_INPUT(P1TRIS, GPIO_PIN_5);			//设置为输入模式
 	GPIO_ENABLE_RD(P1RD, GPIO_PIN_5);				//开启下拉
@@ -50,24 +55,22 @@ void GPIO_Config(void)
 	GPIO_ENABLE_INPUT(P1TRIS,GPIO_PIN_4);      //设置为输入模式
 	GPIO_ENABLE_RD(P1RD,GPIO_PIN_4);           //开启下拉
 
-	GPIO_SET_MUX_MODE(P13CFG,GPIO_MUX_GPIO);   //虑网重置按键  P13
-	GPIO_ENABLE_INPUT(P1TRIS,GPIO_PIN_3); 
-	GPIO_ENABLE_RD(P1RD,GPIO_PIN_3) ;    
+	GPIO_SET_MUX_MODE(P16CFG,GPIO_MUX_GPIO);   //虑网重置按键  P16
+	GPIO_ENABLE_INPUT(P1TRIS,GPIO_PIN_6); 
+	GPIO_ENABLE_RD(P1RD,GPIO_PIN_6) ;    
 	/*
 	(2)设置中断方式
 	*/
-	GPIO_SET_INT_MODE(P16EICFG, GPIO_INT_FALLING);	//设置为下降沿中断模式 P16电源按键
-	GPIO_EnableInt(GPIO1, GPIO_PIN_6_MSK);			//开启P16中断 
+	//GPIO_SET_INT_MODE(P16EICFG, GPIO_INT_FALLING);	//设置为下降沿中断模式 P16电源按键
+	//GPIO_EnableInt(GPIO1, GPIO_PIN_6_MSK);			//开启P16中断 
 	/*
 	(3)设置中断优先级
 	*/
-	IRQ_SET_PRIORITY(IRQ_P1, IRQ_PRIORITY_LOW);
+//	IRQ_SET_PRIORITY(IRQ_P1, IRQ_PRIORITY_LOW);
 	/*
 	(4)开启总中断
 	*/	
-	IRQ_ALL_ENABLE();
-
-	
+//	IRQ_ALL_ENABLE();
 }
 /******************************************************************************
  **
@@ -79,41 +82,61 @@ void GPIO_Config(void)
  ******************************************************************************/
 void KEY_FUNCTION(void)
 {
-     static uint8_t Lockflag =0,lockey=0;
+   static uint8_t Lockflag =0,lockey=0,pkey=0;
 	 uint8_t subutton=0,i=0;
-	 
-	 if(Lockflag ==0){
-		if(P15 == 1){ //风速按键
-			delay_10us(1000);
-			if(subutton ==0 && P15==1){
-				Telecom.setWind_levels++;
-				if(Telecom.setWind_levels>=4)
-				Telecom.setWind_levels = wind_sleep;
-				subutton =1;
-			} 
-		}
-		else if(P14==1){ //定时按键,定时时间 8个小时,循环
-			delay_10us(1000);
-			if(P14 ==1){
-			Telecom.TimerEvent=1;
-			Telecom.showtimes= 10+Telecom.showtimes;//每次增加 10分钟
-			LEDDisplay_TimerTim();
-			Telecom.TimerEvent=0;
-				
+	 if(Lockflag ==0 ){
+			if(P13 == 1){ //开关按键
+				delay_10us(1000);
+				pkey = pkey ^ 0x01;
+				if(pkey==1){
+					if(subutton ==0 && P13==1){
+						Telecom->power_state =1;
+												//背光是绿色
+					} 
+				}
+				else{
+					if(subutton ==0 && P13==1){
+						Telecom->power_state =0;
+										//电源指示灯红色，闪烁。
+					} 
+				}
 			}
-		}
-		else if(P13==1){ //滤网重置按键,时间到3000小时更换虑网
-			delay_10us(1000);
-			if(subutton ==0 && P13==1){
-				subutton =1;
+			else if(P15 == 1 && Telecom->power_state ==1){ //风速按键
+				delay_10us(1000);
+				if(subutton ==0 && P15==1 && Telecom->power_state ==1){
+					//Telecom->setWind_levels = wind_auto;
+					Telecom->setWind_levels++;
+					if(Telecom->setWind_levels>=4)
+					Telecom->setWind_levels = wind_sleep;
+					subutton =1;
+				} 
+			}
+			else if(P14==1 && Telecom->power_state ==1){ //定时按键,定时时间 8个小时,循环增加数值
+				delay_10us(1000);
+				if(P14 ==1 && Telecom->power_state ==1){
+					Telecom->TimerEvent=1;
+					Telecom->showtimes= 10+Telecom->showtimes;//每次增加 10分钟
+					LEDDisplay_TimerTim();
+					Telecom->TimerEvent=0;
+					
+				}
+			}
+			else if(P16==1 && Telecom->power_state ==1){ //滤网重置按键,时间到3000小时更换虑网
+				delay_10us(1000);
+				if(subutton ==0 && P16==1 && Telecom->power_state ==1){
+					subutton =1;
 
+
+				}
 
 			}
-
-		}
 	 }
 	 else{
-		 	 //buzzer sound twice
+		P00 = 1; 	 //buzzer sound twice
+        P00=0;
+		P00 = 1; 	 //buzzer sound twice
+       
+		P00=0;
 
 	 }
 
@@ -125,11 +148,17 @@ void KEY_FUNCTION(void)
 		if(lockey ==1){
 			if(P15==1 && P14==1){
 				Lockflag = 1;
+				P00 = 1;        //蜂鸣器
+				delay_10us(50000);
+				P00=0;
 			}
 		}
 		else{
 			if(P15==1 && P14==1){
 				Lockflag = 0;
+				P00 = 1;        //蜂鸣器
+				delay_10us(50000);
+				P00=0;
 			}
 		}
 

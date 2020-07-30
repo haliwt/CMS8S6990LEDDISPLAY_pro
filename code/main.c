@@ -7,21 +7,8 @@
 #include "demo_buzzer.h"
 #include "key.h"
 #include "tm1650_i2c.h"
+#include "LED.h"
 
- const uint8_t seg[]={
-
-			0x3F,	// 0		
-			0x06,	// 1		
-			0x5B,	// 2		
-			0x4F,	// 3		
-			0x66,	// 4		
-			0x6D,	// 5		
-			0x7D,	// 6		
-			0x07,	// 7		
-			0x7F,	// 8		
-			0x6F	// 9
-
-};
 
 void TaskLEDDisplay(void);
 void TaskKeySan(void);
@@ -46,15 +33,11 @@ uint32_t Systemclock = 24000000;
  **
  ** \return 0
  *****************************************************************************/
-
 int main(void)
 {		
     TMR0_Config();
     BUZZER_Config();
 	
-	GPIO_SET_MUX_MODE(P24CFG, GPIO_MUX_GPIO);
-	GPIO_ENABLE_OUTPUT(P2TRIS, GPIO_PIN_4);
-	P24 =0;
 	GPIO_Config();
 	I2C_Config();							/*设置I2C主控模式*/		
 								
@@ -94,7 +77,8 @@ void TaskProcess(void)
 ***********************************************************/
 void TaskLEDDisplay(void)
 {
-   TM1650_write_byte(TM1650_DIG1_ADDR ,seg);
+   LEDDisplay_TimerTim();
+   //LEDDisplay_Function();
 
 }
 /***********************************************************
@@ -107,7 +91,7 @@ void TaskLEDDisplay(void)
 ***********************************************************/
 void TaskKeySan(void)
 {
-	
+	 KEY_FUNCTION();
 }
 /***********************************************************
 	*

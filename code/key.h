@@ -5,6 +5,7 @@
 /*****************************************************************************/
 #include "cms8s6990.h"
 #include "tm1650_i2c.h"
+#include <stdio.h>
 
 //通讯参数
 typedef struct _TELEC_
@@ -18,7 +19,7 @@ typedef struct _TELEC_
 	uint8_t power_state :1;               //开启电源
 	uint8_t setTimerValue ;               //设置定时时间的值
 	
-}Telec;
+} *Telec;
 
 extern Telec Telecom;
 
