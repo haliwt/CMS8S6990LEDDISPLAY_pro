@@ -76,7 +76,7 @@ uint8_t I2C_MasterReadBuffer(void)
  ** \return  -1：超出地址范围 0：写完成
  ** \note  
  *****************************************************************************/
-int16_t  TM1650_write_byte(uint16_t addr , uint8_t *ptr)
+int16_t  TM1650_write_byte(uint8_t cmd2 ,uint16_t addr , uint8_t *ptr)
 {
 	volatile int16_t i,j;
 	if(addr >AT24C256_MAX)
@@ -84,7 +84,7 @@ int16_t  TM1650_write_byte(uint16_t addr , uint8_t *ptr)
 	else
 	{			
 		I2C_SendMasterCmd(TM1650_ORDER);	            /* 写TM1650数据命令  */
-		I2C_SendMasterCmd(TM1650_ON_DIS);               /* 写TM1650 显示命令，显示级别，打开显示*/
+		I2C_SendMasterCmd(cmd2);                       /* 写TM1650 显示命令，显示级别，打开显示*/
 		I2C_SendMasterCmd(I2C_I2CMCR_ACK_Msk) ;         /*发送应答信号*/  
 		
 		I2C_SendMasterCmd(I2C_I2CMCR_STOP_Msk);         /*停止信号*/
@@ -96,7 +96,7 @@ int16_t  TM1650_write_byte(uint16_t addr , uint8_t *ptr)
 		while(!(I2C_GetMasterIntFlag()));				/*等待发送结束*/
 		I2C_ClearMasterIntFlag();
 
-		I2C_MasterWriteBuffer(*ptr);					/*写数据--高4位数据*/
+		I2C_MasterWriteBuffer(*ptr & 0xf0);					/*写数据--高4位数据*/
 		I2C_SendMasterCmd(I2C_MASTER_SEND);
 		while(!(I2C_GetMasterIntFlag()));		
 		I2C_ClearMasterIntFlag();
@@ -111,7 +111,7 @@ int16_t  TM1650_write_byte(uint16_t addr , uint8_t *ptr)
 		I2C_ClearMasterIntFlag();	
 
 		
-		I2C_MasterWriteBuffer((*ptr)>>4);					/*写数据---低4位数据*/
+		I2C_MasterWriteBuffer(((*ptr)>>4) & 0x0f);					/*写数据---低4位数据*/
 		I2C_SendMasterCmd(I2C_MASTER_SEND);
 		while(!(I2C_GetMasterIntFlag()));		
 		I2C_ClearMasterIntFlag();
@@ -124,6 +124,44 @@ int16_t  TM1650_write_byte(uint16_t addr , uint8_t *ptr)
 	return 0;
 }
 
+/*****************************************************************************
+ ** \brief	 TM1650_write_Secialbyte(uint16_t addr , uint8_t number)
+ **			 写数据到TM1650显示数据
+ ** \param [in] addr ：地址
+**				ch   : 数据
+ **            	
+ ** \return  -1：超出地址范围 0：写完成
+ ** \note  
+ *****************************************************************************/
+void TM1650_write_Secialbyte(uint8_t cmd2,uint16_t addr , uint8_t number)
+{
+	volatile int16_t i,j;
+				
+		I2C_SendMasterCmd(TM1650_ORDER);	            /* 写TM1650数据命令  */
+		I2C_SendMasterCmd(cmd2);               /* 写TM1650 显示命令，显示级别，打开显示*/
+		I2C_SendMasterCmd(I2C_I2CMCR_ACK_Msk) ;         /*发送应答信号*/  
+		
+		I2C_SendMasterCmd(I2C_I2CMCR_STOP_Msk);         /*停止信号*/
+		I2C_SendMasterCmd(I2C_I2CMCR_START_Msk);        /* 发送开始信号*/
+		
+		//I2C_MasterWriteAddr(addr);			            /*写从机地址+写*/
+		I2C_MasterWriteBuffer((addr>>8)& 0xff);			/*写Buffer(高位ROM 地址)*/
+		I2C_SendMasterCmd(I2C_I2CMCR_ACK_Msk) ;         /*发送应答信号*/ 
+		while(!(I2C_GetMasterIntFlag()));				/*等待发送结束*/
+		I2C_ClearMasterIntFlag();
+
+		I2C_MasterWriteBuffer(number);					/*写数据--高4位数据*/
+		I2C_SendMasterCmd(I2C_MASTER_SEND);
+		while(!(I2C_GetMasterIntFlag()));		
+		I2C_ClearMasterIntFlag();
+		
+		I2C_SendMasterCmd(I2C_I2CMCR_ACK_Msk) ;         /*发送应答信号*/  
+		I2C_SendMasterCmd(I2C_MASTER_STOP);				/*发送停止位*/
+		for(i=2000;i>0;i--)								/*延时确保TM1650写数据完成*/
+			for(j=200;j>0;j--);
+	
+
+}
 #if 0
 
 int16_t  At24c256_write_byte(uint16_t addr , uint8_t ch)

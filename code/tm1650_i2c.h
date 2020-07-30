@@ -11,11 +11,18 @@
 
 /*---向TM1650显示 写指令*/
 #define  TM1650_ORDER      0x48        //数字指令 写数据
-#define  TM1650_ON_DIS     0x01        //开显示，显示亮度级别8 最高
+
 #define  TM1650_OFF_DIS    0x00        //关闭显示
-#define  TM1650_1_DISP     0x11    //显示亮度级别 1
-#define  TM1650_2_DISP     0x21    //显示亮度级别 2
-#define  TM1650_3_DISP     0x31    //显示亮度级别 3
+
+#define  TM1650_8_DIS      0x01          //开显示，8段显示方式，显示亮度级别8 最高
+#define  TM1650_1_DISP     0x11         //显示亮度级别 1
+#define  TM1650_2_DISP     0x21         //显示亮度级别 2
+#define  TM1650_3_DISP     0x31         //显示亮度级别 3
+#define  TM1650_4_DISP     0x41         //显示亮度级别 4
+#define  TM1650_5_DISP     0x51         //显示亮度级别 5
+#define  TM1650_6_DISP     0x61         //显示亮度级别 6
+#define  TM1650_7_DISP     0x71         //显示亮度级别 7
+
 
 
 
@@ -66,8 +73,8 @@ uint8_t  At24c256_read_byte(uint16_t addr);
  ** \return  -1：超出地址范围 0：写完成
  ** \note  
  *****************************************************************************/ 
- int16_t  TM1650_write_byte(uint16_t addr , uint8_t *pointer);
- 
+ int16_t  TM1650_write_byte(uint8_t cmd2,uint16_t addr , uint8_t *pointer);
+ void     TM1650_write_Secialbyte(uint8_t cmd2,uint16_t addr , uint8_t number);
 //int16_t  At24c256_write_byte(uint16_t addr , uint8_t ch);
 
 #endif /* __DEMO_I2C_H__ */

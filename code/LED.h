@@ -1,10 +1,12 @@
 #ifndef __LED_H__
 #define __LED_H__
 #include "tm1650_i2c.h"
+#include "key.h"
 
 
-extern volatile uint8_t DispData[3];//显示LED位数
-
+//extern volatile uint8_t DispData[3];//显示LED位数
+#define		BitSET(x,y)		x|=(1<<y)				//置1
+#define		BitCLR(x,y)		x&=~(1<<y)				//置0
 
 //extern const uint8_t seg[];
 
@@ -26,9 +28,12 @@ extern volatile uint8_t DispData[3];//显示LED位数
 
 
 
-
+void LED_GPIO_Init(void);
 void LEDDisplay_Function(void);
 void LEDDisplay_TimerTim(void );
+void LEDDisplay_RedColorRing(void);
+void LEDDisplay_GreenColorRing(void);
+void LEDDisplay_BlueColorRing(void);
 
 
 

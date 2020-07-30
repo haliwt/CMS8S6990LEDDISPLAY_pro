@@ -40,6 +40,7 @@ int main(void)
 	
 	GPIO_Config();
 	I2C_Config();							/*设置I2C主控模式*/		
+	LED_GPIO_Init();
 								
   while(1)
 	{	
@@ -78,7 +79,7 @@ void TaskProcess(void)
 void TaskLEDDisplay(void)
 {
    LEDDisplay_TimerTim();
-   //LEDDisplay_Function();
+  
 
 }
 /***********************************************************
