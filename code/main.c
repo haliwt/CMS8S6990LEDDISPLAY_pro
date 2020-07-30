@@ -8,6 +8,7 @@
 #include "key.h"
 #include "tm1650_i2c.h"
 #include "LED.h"
+#include "telecuart.h"
 
 
 void TaskLEDDisplay(void);
@@ -41,6 +42,7 @@ int main(void)
 	GPIO_Config();
 	I2C_Config();							/*设置I2C主控模式*/		
 	LED_GPIO_Init();
+	UART0_Config();
 								
   while(1)
 	{	
