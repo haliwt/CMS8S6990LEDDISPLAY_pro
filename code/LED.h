@@ -3,6 +3,14 @@
 #include "tm1650_i2c.h"
 #include "key.h"
 
+#define PI   P24
+#define PJ   P25
+#define PK   P26
+#define PL   P30
+#define COM5   P31
+#define COM6   P32
+#define COM7   P36
+#define COM8   P05
 
 //extern volatile uint8_t DispData[3];//显示LED位数
 #define		BitSET(x,y)		x|=(1<<y)				//置1
@@ -12,7 +20,7 @@
 
 #define  TM1650_OFF_DIS    0x00        //关闭显示
 
-#define  TM1650_8_DIS      0x01          //开显示，8段显示方式，显示亮度级别8 
+#define  TM1650_8_DIS      0x01          //开显示，8段显示方式，显示亮度级别8 -亮度低
 #define  TM1650_1_DISP     0x11         //显示亮度级别 1
 #define  TM1650_2_DISP     0x21         //显示亮度级别 2
 #define  TM1650_3_DISP     0x31         //显示亮度级别 3

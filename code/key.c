@@ -91,13 +91,13 @@ void KEY_FUNCTION(void)
 				if(pkey==1){
 					if(subutton ==0 && P13==1){
 						Telecom->power_state =1;
-												//背光是绿色
+						LEDDisplay_GreenColorRing();//背光是绿色
 					} 
 				}
 				else{
 					if(subutton ==0 && P13==1){
 						Telecom->power_state =0;
-										//电源指示灯红色，闪烁。
+						LEDDisplay_RedColorRing();//电源指示灯红色，闪烁。
 					} 
 				}
 			}
