@@ -15,7 +15,7 @@ typedef struct _TELEC_
     int16_t  showtimes;                 //显示时间，数据，按键输入
     uint8_t getTimerHour;                 //定时器时间小时
 	uint8_t setWind_levels :3 ;              //设置风扇的级别，共4级 睡眠，中速风，高速风，自动
-	uint8_t runstart:1;
+	uint8_t runstart:1;					// 风扇开启
 	uint8_t power_state :1;               //开启电源
 	uint8_t setTimerValue ;               //设置定时时间的值
 	

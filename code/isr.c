@@ -80,16 +80,17 @@ void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR
 ******************************************************************************/
 void UART0_IRQHandler(void)  interrupt UART0_VECTOR 
 {
-	if(UART_GetSendIntFlag(UART0))
+	#if 0
+	if(UART_GetSendIntFlag(UART0))	//软件清楚中断标志位
 	{
-		
 		UART_ClearSendIntFlag(UART0);	
 	}
 	if(UART_GetReceiveIntFlag(UART0))
 	{
 		UART_SendBuff(UART0,UART_GetBuff(UART0));
 		UART_ClearReceiveIntFlag(UART0);	
-	}	
+	}
+	#endif 	
 }
 /******************************************************************************
  ** \brief	 Timer 2 interrupt service function

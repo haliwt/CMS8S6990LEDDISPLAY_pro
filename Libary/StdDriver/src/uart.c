@@ -387,7 +387,7 @@ uint8_t  UART_GetSendIntFlag(uint8_t UARTn)
 {
 	if(UART0 ==  UARTn)
 	{
-		return((SCON0 & UART_SCON0_TI0_Msk)? 1:0);
+		return((SCON0 & UART_SCON0_TI0_Msk)? 1:0); //TI0 -发送中断标志位，需要软件清零  1-发送器已经清空，可发送下一位。
 	}
 	if(UART1 ==  UARTn)
 	{
@@ -407,7 +407,7 @@ void UART_ClearSendIntFlag(uint8_t UARTn)
 {
 	if(UART0 ==  UARTn)
 	{
-		SCON0  &= ~(UART_SCON0_TI0_Msk);
+		SCON0  &= ~(UART_SCON0_TI0_Msk);  //TI0 -发送中断标志位，需要软件清零  1-发送器已经清空，可发送下一位。
 	}
 	if(UART1 == UARTn)
 	{

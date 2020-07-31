@@ -162,7 +162,7 @@ void TM1650_write_Secialbyte(uint8_t cmd2,uint16_t addr , uint8_t number)
 	
 
 }
-#if 0
+#if 1
 
 int16_t  At24c256_write_byte(uint16_t addr , uint8_t ch)
 {
