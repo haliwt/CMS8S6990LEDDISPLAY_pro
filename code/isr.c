@@ -1,8 +1,12 @@
 #include "cms8s6990.h"
 #include "timer0.h"
 #include "key.h"
-
+#include "telecuart.h"
 volatile uint16_t getMinute; 
+volatile uint16_t TimerCnt;
+uint8_t cmdArrived=0,cmdIndex=0,cmdArriving=0;
+ UART *pUart;
+
 
 /******************************************************************************
  ** \brief	 INT0 interrupt service function
@@ -27,6 +31,7 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
 	static uint16_t seconds=0,minutes=0;
 	uint8_t i;
 	  seconds++;
+	  TimerCnt++;
 	  for (i=0; i<TASKS_MAX; i++)          // 逐个任务轮询时间处理
 	  {
 	        if (TaskComps[i].Timer)          // 时间不为0
@@ -43,10 +48,20 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
 		if(seconds==60000){ //计时：6.0s
 			seconds =0;
 			 minutes ++;
+			 TimerCnt =0;
 			if(minutes ==10){ //1分钟时间
 				minutes =0;
 			    getMinute++; 
 		    }
+		}
+		
+		if(cmdArriving == 1 && TimerCnt == 500)
+		{
+			cmdArrived = 1;
+			pUart->ReceNum = cmdIndex;
+			cmdIndex = 0;
+			TimerCnt = 0;
+			cmdArriving =0;
 		}
 }
 /******************************************************************************
@@ -80,14 +95,27 @@ void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR
 ******************************************************************************/
 void UART0_IRQHandler(void)  interrupt UART0_VECTOR 
 {
-	#if 0
-	if(UART_GetSendIntFlag(UART0))	//软件清楚中断标志位
+	
+	#if 1
+	if(UART_GetSendIntFlag(UART0))	//软件清除发送中断标志位TI0 
 	{
 		UART_ClearSendIntFlag(UART0);	
 	}
-	if(UART_GetReceiveIntFlag(UART0))
+	if(UART_GetReceiveIntFlag(UART0)) //接收有中断 RI0，清空接收中断标志位
 	{
-		UART_SendBuff(UART0,UART_GetBuff(UART0));
+        TimerCnt = 0;
+        cmdArriving = 1;
+        if(cmdArrived == 0)
+        {
+            pUart->ReceiveDataBuffer[cmdIndex++] = SBUF0;
+			                  
+			if(pUart->ReceiveDataBuffer[cmdIndex]==0xAB){
+				cmdArrived =1;
+				cmdArriving =0;
+				pUart->ReceNum = cmdIndex;
+				cmdIndex =0;
+			}
+        }
 		UART_ClearReceiveIntFlag(UART0);	
 	}
 	#endif 	

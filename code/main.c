@@ -22,8 +22,8 @@ TASK_COMPONENTS TaskComps[TASK_NUM]={
 
     {0, 200, 200, TaskLEDDisplay},           // 显示数字 20ms = 100us * 10 *20，扫描一次
     {0, 40,  40, TaskKeySan},               // 按键扫描 4ms=100us * 10*4 扫描一次
-    {0, 80, 80, TaskReceiveAirSensor},     // 接收到空气传感器   8ms = 100us * 80 执行一次
-    {0, 100, 100, TaskTelecStatus}           // 同主板通讯 10ms = 100us * 100  执行一次 
+    {0, 100, 100, TaskReceiveAirSensor},     // 接收到空气传感器   10ms = 100us * 10* 10 执行一次
+    {0, 10000, 10000, TaskTelecStatus}           // 同主板通讯 1.0s= 100us * 10000  执行一次 
 
 };
 uint32_t Systemclock = 24000000;
@@ -43,6 +43,7 @@ int main(void)
 	I2C_Config();							/*设置I2C主控模式*/		
 	LED_GPIO_Init();
 	UART0_Config();
+	UART1_Config();
 	
 	printf("CMS8S6990 Test........\n\r");
 								
@@ -108,7 +109,8 @@ void TaskKeySan(void)
 ***********************************************************/
 void TaskReceiveAirSensor(void)
 {
-  
+    
+//	ReceiveData= UART_GetBuff(UART1);
 
 }
 /***********************************************************************************************
@@ -122,7 +124,7 @@ void TaskReceiveAirSensor(void)
 void TaskTelecStatus(void)
 {
 	uint8_t bcc_data;
-  uint8_t senddata[4];       // 待检查数据
+  uint8_t senddata[4];       // 发送数据
     
    Telecom->setWind_levels |=Telecom->setWind_levels <<0; //风速4档，睡眠风速，中速风速，高速风速 自动风速
     
@@ -135,13 +137,13 @@ void TaskTelecStatus(void)
 	senddata[2]=Telecom->setWind_levels;										//wind speed of code low code 8 bit
 	
    
-  bcc_data=BCC(senddata,3);
+  	bcc_data=BCC(senddata,3);
 	senddata[3]=bcc_data;
 
-	UART_SendBuff(UART0,  senddata[0]); //头码
-	UART_SendBuff(UART0,  senddata[1]); //风速码 高8bit
-	UART_SendBuff(UART0,  senddata[2]); //风速码 低8bit
-	UART_SendBuff(UART0,  senddata[3]); //校验码
+	UART_SendBuff(UART1,  senddata[0]); //头码
+	UART_SendBuff(UART1,  senddata[1]); //风速码 高8bit
+	UART_SendBuff(UART1,  senddata[2]); //风速码 低8bit
+	UART_SendBuff(UART1,  senddata[3]); //校验码
 
 	
 }

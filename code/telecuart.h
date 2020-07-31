@@ -3,12 +3,22 @@
 
 #include "cms8s6990.h"
 
+typedef struct _UART_{
+    uint8_t ReceiveDataBuffer[10];            //定义数据包长度为80个bit
+    volatile uint8_t ReceNum;
+    uint8_t  achieveFlag : 1;
+
+}UART;
+extern UART *pUart;
+//uint8_t ReceiveDataBuffer[10];            //定义数据包长度为80个bit
+//extern volatile uint8_t ReceNum;
 
 void UART0_Config(void);
-void USART1_Config(void);
+void UART1_Config(void);
 void USART_SendData(uint8_t UARTn,uint8_t *arr);  //同主控制板通信
-void USART_AirSensorReceiveData(uint8_t uartn,uint8_t recedata); //接收空气PM1.5传感器数据
+void USART0_AirSensorReceiveData(uint8_t *recedata); //接收空气PM1.5传感器数据
 uint8_t BCC(uint8_t *sbytes,uint8_t wid);
+uint8_t Analysis_UART0_ReceiveData(void)  ;
 
 
 

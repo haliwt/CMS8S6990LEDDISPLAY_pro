@@ -1,11 +1,56 @@
 #include "telecuart.h"
 
+/*************************************************************************
+ 	*
+	*Function Name: void UART1_Config(void)
+	*Function : Config USART1 Initialital reference
+	*Input Ref: 
+    *Output Ref: BCC校验码
+	*
+**************************************************************************/
+void UART1_Config(void)
+{
+	//使用TMR2作为UART模块的波特率时钟发生器	 
+	 uint16_t  TMR2Value = 0;
+	 uint32_t  BaudRateVlue = 9600;	 
+	/*
+	 (1)设置UARTx的运行模式
+	 */
+	 UART_ConfigRunMode(UART1,UART_MOD_ASY_8BIT, UART_BAUD_TMR2);
+	 UART_EnableReceive(UART1);
+	/*
+	 (2)配置UARTx的波特率
+	 */
+	 TMR2_ConfigTimerClk(TMR2_CLK_DIV_12);						/*T2PS =0*/
+	 TMR2_ConfigRunMode(TMR2_MODE_TIMING, TMR2_AUTO_LOAD); 		/*设置为8位重装模式*/
+	
+	 UART_EnableDoubleFrequency(UART1); 							/*波特率使能倍频：SMOD =1*/
+	
+  #ifdef USE_FORMULA				//使用公式计算定时器的加载值(需要对Systemclock赋值(main.c))，USE_FORMULA 在 选项Option->C51->Preporcessor Symbols->Define中定义
+	 TMR2Value = UART_ConfigBaudRate(UART1, BaudRateVlue) ;
+  #else 
+	 TMR2Value = 65523; 				
+  #endif
+  
+	 TMR2_ConfigTimerPeriod(TMR2Value);						/*配置重装值*/
+	 TMR2_Start();											/*使能定时器*/
+	
+	 /*
+	 (3)配置IO口
+	 */
+	 GPIO_SET_MUX_MODE(P23CFG,GPIO_MUX_TXD1);			/*TXD1*/
+	 GPIO_SET_MUX_MODE(P22CFG,GPIO_MUX_RXD1);	 		/*RXD1*/
+
+
+}
+
 /******************************************************************************
- ** \brief	 UART0_Config
- ** \param [in] 
- **            	
- ** \return  none
- ** \note  
+ ** 
+ **Function Name: UART0_Config(void)
+ **Function : setup UART0 for serial port reference          	
+ **Input Ref:NO
+ ** Return Ref: NO
+ **  
  ******************************************************************************/
 void UART0_Config(void)
 {
@@ -41,9 +86,9 @@ void UART0_Config(void)
 	 /*
 	 (4)设置UART中断
 	 */
-	 // UART_EnableInt(UART0);  //UART_DisableInt(uint8_t UARTn)
-	 //IRQ_SET_PRIORITY(IRQ_UART0,IRQ_PRIORITY_LOW);
-	 //IRQ_ALL_ENABLE();
+	 UART_EnableInt(UART0);  //UART_DisableInt(uint8_t UARTn)
+	 IRQ_SET_PRIORITY(IRQ_UART0,IRQ_PRIORITY_LOW);
+	 IRQ_ALL_ENABLE();
  }
 
 /*************************************************************************
@@ -78,7 +123,38 @@ uint8_t BCC(uint8_t *sbytes,uint8_t width)
     return tembyte;
 
 }
- /******************************************************************************
+/*************************************************************************
+ 	*
+	*Function Name: void USART_AirSensorReceiveData(uint8_t uartn,uint8_t recedata)
+	*Function :  receive air sensor data 
+	*Input Ref:  uartn: be used to UART0 
+	             recedata: form air sensor receive data
+    *Output Ref: NO
+	*
+**************************************************************************/
+
+/*************************************************************************
+ 	*
+	*Function Name: 
+	*Function :  处理串口接收数据包函数（成功处理数据包则返回1，否则返回0）
+	*Input Ref:               
+    *Return Ref: 接收数据成功 1，
+	*
+**************************************************************************/
+uint8_t Analysis_UART0_ReceiveData(void)  
+{
+     //PutString(ReceiveDataBuffer);
+     if(pUart->ReceiveDataBuffer[0]==0xAA)  //进行数据包头尾标记验证
+     {        
+        if(pUart->ReceiveDataBuffer[1]==0xC0)        //识别发送者设备ID的第1位数字
+        {
+            if(pUart->ReceiveDataBuffer[pUart->ReceNum]==0xAB) 
+				     return 1;
+        }
+     }
+     return 0;
+}
+/******************************************************************************
  ** \brief	 putchar
  ** \param [in] data
  **            	
@@ -119,5 +195,6 @@ int  puts( const char  * s)
 		putchar(*s);
 	return 0;
 }
+
 
 
