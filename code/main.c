@@ -110,7 +110,7 @@ void TaskKeySan(void)
 void TaskReceiveAirSensor(void)
 {
     
-//	ReceiveData= UART_GetBuff(UART1);
+	Analysis_UART0_ReceiveData() ;
 
 }
 /***********************************************************************************************
@@ -123,27 +123,7 @@ void TaskReceiveAirSensor(void)
 *************************************************************************************************/
 void TaskTelecStatus(void)
 {
-	uint8_t bcc_data;
-  uint8_t senddata[4];       // 发送数据
-    
-   Telecom->setWind_levels |=Telecom->setWind_levels <<0; //风速4档，睡眠风速，中速风速，高速风速 自动风速
-    
-	Telecom->power_state |= Telecom->power_state << 0;       //电源开关量
-	
-    Telecom->runstart  |=Telecom->runstart<<2;             //电机开启开关量
-
-	senddata[0]=Telecom->power_state |Telecom->runstart;  //head code 8bit
-	senddata[1]=0x0; 														           //wind speed of code hig code 8bit
-	senddata[2]=Telecom->setWind_levels;										//wind speed of code low code 8 bit
-	
-   
-  	bcc_data=BCC(senddata,3);
-	senddata[3]=bcc_data;
-
-	UART_SendBuff(UART1,  senddata[0]); //头码
-	UART_SendBuff(UART1,  senddata[1]); //风速码 高8bit
-	UART_SendBuff(UART1,  senddata[2]); //风速码 低8bit
-	UART_SendBuff(UART1,  senddata[3]); //校验码
+	USART1_SendDataToMain();
 
 	
 }

@@ -1,6 +1,6 @@
 #include "key.h"
 
-Telec Telecom= NULL;
+Telec *Telecom= NULL;
 /******************************************************************************
  **
  ** Function Name:	void delay_10us(uint16_t n) 

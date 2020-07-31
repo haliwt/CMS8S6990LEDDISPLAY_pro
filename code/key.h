@@ -19,9 +19,9 @@ typedef struct _TELEC_
 	uint8_t power_state :1;               //开启电源
 	uint8_t setTimerValue ;               //设置定时时间的值
 	
-} *Telec;
+} Telec;
 
-extern Telec Telecom;
+extern Telec *Telecom;
 
 enum WindSpeed{wind_sleep,wind_middle,wind_high,wind_auto};
 /******************************************************************************

@@ -1,5 +1,5 @@
 #include "telecuart.h"
-
+#include "key.h"
 /*************************************************************************
  	*
 	*Function Name: void UART1_Config(void)
@@ -99,9 +99,45 @@ void UART0_Config(void)
 	*Output Ref:No
 	*
 **************************************************************************/
-void USART_SendData(uint8_t UARTn,uint8_t *arr)
+void USART1_SendDataToMain(void)
 {
-	UART_SendBuff(UARTn, *arr);
+	float PM25;
+	static uint8_t autoWindValue=0;
+	uint8_t bcc_data,Judeflag=0;
+    uint8_t senddata[4];       // 发送数据
+    Judeflag = Analysis_UART0_ReceiveData();
+	if(Judeflag ==1){
+			//PM2.5
+			PM25 = (pUart->ReceiveDataBuffer[2]*16 + 1+ (pUart->ReceiveDataBuffer[3]*16 + 1)*256) * 0.1;
+		//	PM10 = (pUart->ReceiveDataBuffer[4]*16 + 1+ (pUart->ReceiveDataBuffer[5]*16 + 1)*256) * 0.1;
+    }
+    
+	if(Telecom->setWind_levels == wind_auto){
+          if(PM25<=75) autoWindValue = 0x01;             //当PM2.5检查到PM2.5值小于75ug/m^3 风速一档
+		  if(PM25 >75 && PM25<=150) autoWindValue  = 0x02; //风速 2档
+		  if(PM25 >150 && PM25<=300)  autoWindValue  = 0x03; //风速 3档
+		  if(PM25 >300 )  autoWindValue  = 0x04; //风速 H 档 ，显示H档。
+
+	}
+     
+    Telecom->setWind_levels |=Telecom->setWind_levels <<0; //风速4档，睡眠风速，中速风速，高速风速 自动风速
+	
+	Telecom->power_state |= Telecom->power_state << 0;       //电源开关量
+	
+    Telecom->runstart  |=Telecom->runstart<<2;             //电机开启开关量
+
+	senddata[0]=Telecom->power_state |Telecom->runstart;  //head code 8bit
+	senddata[1]=autoWindValue ;     //自动档，风速判定，PM2.5值调节风速大小
+	senddata[2]=Telecom->setWind_levels;									//风扇档位值：
+	
+   
+  	bcc_data=BCC(senddata,3);
+	senddata[3]=bcc_data;
+
+	UART_SendBuff(UART1,  senddata[0]); //头码
+	UART_SendBuff(UART1,  senddata[1]); //风速码 高8bit  //自动档，风速的判断值
+	UART_SendBuff(UART1,  senddata[2]); //风速码 低8bit
+	UART_SendBuff(UART1,  senddata[3]); //校验码
 	
 }
 /*************************************************************************
@@ -125,16 +161,6 @@ uint8_t BCC(uint8_t *sbytes,uint8_t width)
 }
 /*************************************************************************
  	*
-	*Function Name: void USART_AirSensorReceiveData(uint8_t uartn,uint8_t recedata)
-	*Function :  receive air sensor data 
-	*Input Ref:  uartn: be used to UART0 
-	             recedata: form air sensor receive data
-    *Output Ref: NO
-	*
-**************************************************************************/
-
-/*************************************************************************
- 	*
 	*Function Name: 
 	*Function :  处理串口接收数据包函数（成功处理数据包则返回1，否则返回0）
 	*Input Ref:               
@@ -143,15 +169,29 @@ uint8_t BCC(uint8_t *sbytes,uint8_t width)
 **************************************************************************/
 uint8_t Analysis_UART0_ReceiveData(void)  
 {
-     //PutString(ReceiveDataBuffer);
-     if(pUart->ReceiveDataBuffer[0]==0xAA)  //进行数据包头尾标记验证
-     {        
-        if(pUart->ReceiveDataBuffer[1]==0xC0)        //识别发送者设备ID的第1位数字
-        {
-            if(pUart->ReceiveDataBuffer[pUart->ReceNum]==0xAB) 
-				     return 1;
-        }
-     }
+     uint8_t checkSum=0;
+	 if(pUart->achieveUartFlag==1){
+		if(pUart->ReceiveDataBuffer[0]==0xAA)  //进行数据包头尾标记验证
+		{        
+			if(pUart->ReceiveDataBuffer[1]==0xC0)        //识别发送者设备ID的第1位数字
+			{
+			checkSum = 
+				pUart->ReceiveDataBuffer[2]+
+				pUart->ReceiveDataBuffer[3]+
+				pUart->ReceiveDataBuffer[4]+
+				pUart->ReceiveDataBuffer[5]+
+				pUart->ReceiveDataBuffer[6]+
+				pUart->ReceiveDataBuffer[7];
+
+				if(checkSum == pUart->ReceiveDataBuffer[8] )
+				{
+				
+					if(pUart->ReceiveDataBuffer[pUart->ReceNum]==0xAB) 
+						return 1;
+				}
+			}
+		}
+	 }
      return 0;
 }
 /******************************************************************************

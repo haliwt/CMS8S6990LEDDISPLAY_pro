@@ -5,7 +5,7 @@
 volatile uint16_t getMinute; 
 volatile uint16_t TimerCnt;
 uint8_t cmdArrived=0,cmdIndex=0,cmdArriving=0;
- UART *pUart;
+ UART *pUart=NULL;
 
 
 /******************************************************************************
@@ -62,6 +62,7 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
 			cmdIndex = 0;
 			TimerCnt = 0;
 			cmdArriving =0;
+			pUart->achieveUartFlag=1;
 		}
 }
 /******************************************************************************
@@ -108,12 +109,13 @@ void UART0_IRQHandler(void)  interrupt UART0_VECTOR
         if(cmdArrived == 0)
         {
             pUart->ReceiveDataBuffer[cmdIndex++] = SBUF0;
-			                  
+			pUart->achieveUartFlag=0;                 
 			if(pUart->ReceiveDataBuffer[cmdIndex]==0xAB){
 				cmdArrived =1;
 				cmdArriving =0;
 				pUart->ReceNum = cmdIndex;
 				cmdIndex =0;
+				pUart->achieveUartFlag=1;
 			}
         }
 		UART_ClearReceiveIntFlag(UART0);	
