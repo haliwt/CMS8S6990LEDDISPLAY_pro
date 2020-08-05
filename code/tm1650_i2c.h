@@ -9,6 +9,10 @@
 #include "LED.h"
 
 
+#define SCL 	P03
+#define SDA     P04 
+#define SET_SDA_OUT_TM1650()       (GPIO_SET_MUX_MODE(P04CFG, GPIO_MUX_GPIO),GPIO_ENABLE_OUTPUT(P0TRIS, GPIO_PIN_4))
+#define SET_SDA_IN_TM1650() 	   (GPIO_SET_MUX_MODE(P04CFG, GPIO_MUX_GPIO),GPIO_ENABLE_INPUT(P0TRIS, GPIO_PIN_4))
 /*---向TM1650显示 写指令*/
 #define  TM1650_ORDER      0x48        //数字指令 写数据
 
@@ -58,6 +62,17 @@ uint8_t  At24c256_read_byte(uint16_t addr);
  int16_t  TM1650_write_byte(uint8_t cmd2,uint16_t addr , uint8_t *pointer);
  void     TM1650_write_Secialbyte(uint8_t cmd2,uint16_t addr , uint8_t number);
 //int16_t  At24c256_write_byte(uint16_t addr , uint8_t ch);
+
+
+void IIC_Init_TM1650(void);
+void IIC_Start_TM1650(void);
+void IIC_Stop_TM1650(void);
+void IIC_Ack_TM1650(void);
+void IIC_NAck_TM1650(void);
+uint8_t IIC_Wait_Ack_TM1650(void);
+void IIC_WrByte_TM1650(uint8_t number);
+void TM1650_Set(uint8_t add,uint8_t dat) ;
+void Init_Tm1650(void);
 
 #endif /* __DEMO_I2C_H__ */
 

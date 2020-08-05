@@ -20,10 +20,10 @@ void TaskProcess(void);
 
 TASK_COMPONENTS TaskComps[TASK_NUM]={
 
-    {0, 200, 200, TaskLEDDisplay},           // 显示数字 20ms = 100us * 10 *20，扫描一次
-    {0, 40,  40, TaskKeySan},               // 按键扫描 4ms=100us * 10*4 扫描一次
-    {0, 100, 100, TaskReceiveAirSensor},     // 接收到空气传感器   10ms = 100us * 10* 10 执行一次
-    {0, 10000, 10000, TaskTelecStatus}           // 同主板通讯 1.0s= 100us * 10000  执行一次 
+    {0, 60, 60, TaskLEDDisplay},           // 显示数字 15ms = 100us * 10 *15，扫描一次
+    {0, 20,  20, TaskKeySan},              // 按键扫描 20ms=100us * 10* 2扫描一次
+    {0, 400, 400, TaskReceiveAirSensor},     // 接收到空气传感器   40ms = 100us * 10* 40 执行一次
+    {0, 10000, 10000, TaskTelecStatus}       // 同主板通讯 1.0s= 100us * 10000  执行一次 
 
 };
 uint32_t Systemclock = 24000000;
@@ -36,8 +36,10 @@ uint32_t Systemclock = 24000000;
  *****************************************************************************/
 int main(void)
 {		
+    static uint8_t taskState =0;
     TMR0_Config();
-    BUZZER_Config();
+   // BUZZER_Config();
+  //  BUZZER_Init();
 	
 	GPIO_Config();
 	I2C_Config();							/*设置I2C主控模式*/		
@@ -45,11 +47,37 @@ int main(void)
 	UART0_Config();
 	UART1_Config();
 	
-	printf("CMS8S6990 Test........\n\r");
+    
 								
   while(1)
-	{	
-		TaskProcess();
+	{
+	  Init_Tm1650();
+		
+#if 0
+	  switch(taskState){
+
+          case 0 :
+                  TaskLEDDisplay();
+                  taskState =1;
+          break;
+
+          case 1:
+                  TaskKeySan();
+                  taskState =2;
+		  break;
+
+		  case 2: 
+		           TaskReceiveAirSensor();
+		           taskState =3;
+		  break;
+
+		  case 3: 
+		  			TaskTelecStatus();
+                    taskState =0;
+		  break;
+      }
+#endif 
+	   
 	}		
 }
 /***********************************************************
@@ -62,13 +90,16 @@ int main(void)
 ***********************************************************/
 void TaskProcess(void)
 {
-	uint8_t i;
+	uint8_t i=0;
     for (i=0; i<TASKS_MAX; i++)           // 逐个任务轮询时间处理
     {
-        if(TaskComps[i].Run)           // 时间不为0
+      
+			if(TaskComps[i].Run)           // 时间不为0
         {
              TaskComps[i].TaskHook();         // 运行任务
-             TaskComps[i].Run = 0;          // 标志清0
+             TaskComps[i].Run = 0;  // 标志清0
+					   
+					   
         }
     }
 
@@ -83,8 +114,14 @@ void TaskProcess(void)
 ***********************************************************/
 void TaskLEDDisplay(void)
 {
-   LEDDisplay_TimerTim();
-   LEDDisplay_SleepLamp();
+   
+	   P25=0;
+	 // LEDDisplay_TimerTim();
+     // LEDDisplay_SleepLamp();
+	  //TM1650_write_Secialbyte(0x51,0x68,0xff);
+	  delay_30us(100)  ;
+	
+	  
 
 }
 /***********************************************************
@@ -97,7 +134,23 @@ void TaskLEDDisplay(void)
 ***********************************************************/
 void TaskKeySan(void)
 {
+	
+  //TM1650_write_Secialbyte(0x51, 0x68 , 0x01);
+   if(P13==1){
+		delay_30us(1000) ;
+	   if(P13==1){ 
+		 BUZZER_Config();
+		 P26=1;
+		 P25=0;	
+								
+		}
+	}
+//	BUZZER_Config();
 	 KEY_FUNCTION();
+	// P26 =1;
+	// TM1650_write_Secialbyte(0x51, 0x68 , 0x01);
+	
+	
 }
 /***********************************************************
 	*
@@ -109,8 +162,13 @@ void TaskKeySan(void)
 ***********************************************************/
 void TaskReceiveAirSensor(void)
 {
-    
+ // BUZZER_Config();  
+	P26=0;
 	Analysis_UART0_ReceiveData() ;
+	 delay_30us(1000)  ;//(25ms)
+	
+	 
+	
 
 }
 /***********************************************************************************************
@@ -123,30 +181,10 @@ void TaskReceiveAirSensor(void)
 *************************************************************************************************/
 void TaskTelecStatus(void)
 {
-	USART1_SendDataToMain();
+  P25=1;
+  USART1_SendDataToMain();
+  delay_30us(1000) ;  //28ms
 
+	  
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -162,10 +162,7 @@ void LEDDisplay_RedColorRing(void)
     PI= 1;
     PJ =1;
     PK =1;
-    delay_10us(5000); //50ms
-    delay_10us(5000); //50ms
-    delay_10us(5000); //50ms
-    delay_10us(5000); //50ms
+    delay_30us(5000); //50ms
     COM7=1;
     COM8=1;
     PI= 0;

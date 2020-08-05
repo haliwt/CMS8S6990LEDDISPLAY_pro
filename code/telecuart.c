@@ -1,5 +1,6 @@
 #include "telecuart.h"
 #include "key.h"
+#include "cms8s6990.h"
 /*************************************************************************
  	*
 	*Function Name: void UART1_Config(void)
@@ -38,16 +39,15 @@ void UART1_Config(void)
 	 /*
 	 (3)配置IO口
 	 */
-	 GPIO_SET_MUX_MODE(P23CFG,GPIO_MUX_TXD1);			/*TXD1*/
-	 GPIO_SET_MUX_MODE(P22CFG,GPIO_MUX_RXD1);	 		/*RXD1*/
+	// GPIO_SET_MUX_MODE(P23CFG,GPIO_MUX_TXD1);			/*TXD1*/
+	// GPIO_SET_MUX_MODE(P22CFG,GPIO_MUX_RXD1);	 		/*RXD1*/
 
 
 }
-
 /******************************************************************************
  ** 
  **Function Name: UART0_Config(void)
- **Function : setup UART0 for serial port reference          	
+ **Function : setup UART0 for serial port reference   Air Sensor          	
  **Input Ref:NO
  ** Return Ref: NO
  **  
@@ -161,10 +161,10 @@ uint8_t BCC(uint8_t *sbytes,uint8_t width)
 }
 /*************************************************************************
  	*
-	*Function Name: 
-	*Function :  处理串口接收数据包函数（成功处理数据包则返回1，否则返回0）
-	*Input Ref:               
-    *Return Ref: 接收数据成功 1，
+	*Function Name: uint8_t Analysis_UART0_ReceiveData(void) 
+	*Function :  处理串口接收数据包函数，判断接收数据的可靠性
+	*Input Ref:  No             
+    *Return Ref: 接收数据成功 1，接收数据失败：0
 	*
 **************************************************************************/
 uint8_t Analysis_UART0_ReceiveData(void)  
@@ -176,10 +176,10 @@ uint8_t Analysis_UART0_ReceiveData(void)
 			if(pUart->ReceiveDataBuffer[1]==0xC0)        //识别发送者设备ID的第1位数字
 			{
 			checkSum = 
-				pUart->ReceiveDataBuffer[2]+
-				pUart->ReceiveDataBuffer[3]+
-				pUart->ReceiveDataBuffer[4]+
-				pUart->ReceiveDataBuffer[5]+
+				pUart->ReceiveDataBuffer[2]+             //PM2.5 数据低8bit
+				pUart->ReceiveDataBuffer[3]+             //PM2.5 数据高8bit
+				pUart->ReceiveDataBuffer[4]+             //PM10  数据低8bit
+				pUart->ReceiveDataBuffer[5]+             //PM10  数据高8bit
 				pUart->ReceiveDataBuffer[6]+
 				pUart->ReceiveDataBuffer[7];
 
@@ -208,7 +208,6 @@ char putchar (char ch)
 	SCON0 &=~(1<<1);		
 	return 0;
 }
-
 /******************************************************************************
  ** \brief	 putchar
  ** \param [in] none

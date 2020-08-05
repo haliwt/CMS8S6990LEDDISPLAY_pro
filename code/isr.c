@@ -28,6 +28,7 @@ void INT0_IRQHandler(void)  interrupt INT0_VECTOR
 ******************************************************************************/
 void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR 
 {
+	
 	static uint16_t seconds=0,minutes=0;
 	uint8_t i;
 	  seconds++;
@@ -37,10 +38,11 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
 	        if (TaskComps[i].Timer)          // 时间不为0
 	        {
 	            TaskComps[i].Timer--;         // 减去一个节拍
-	            if (TaskComps[i].Timer == 0)       // 时间减完了
+	            if (TaskComps[i].Timer == 0 )       // 时间减完了
 	            {
 	                 TaskComps[i].Timer = TaskComps[i].ItervalTime;       // 恢复计时器值，从新运行下一次
 	                 TaskComps[i].Run = 1;           // 任务可以运行
+								  
 	            }
 	        }
 		}
@@ -64,6 +66,7 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
 			cmdArriving =0;
 			pUart->achieveUartFlag=1;
 		}
+
 }
 /******************************************************************************
  ** \brief	 INT0 interrupt service function
@@ -97,7 +100,7 @@ void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR
 void UART0_IRQHandler(void)  interrupt UART0_VECTOR 
 {
 	
-	#if 1
+	#if 0
 	if(UART_GetSendIntFlag(UART0))	//软件清除发送中断标志位TI0 
 	{
 		UART_ClearSendIntFlag(UART0);	
