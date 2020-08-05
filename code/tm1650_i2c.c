@@ -106,11 +106,11 @@ void IIC_Stop_TM1650(void)
       _nop_(); 
       _nop_(); 
 	SDA = 0;		//保证数据线为低电平
-	delay_us(80);
+	delay_us(40);
     SCL= 1;		//先保证时钟线为高电平
-    delay_us(20);    //延时 以得到一个可靠的电平信号            
+    delay_us(10);    //延时 以得到一个可靠的电平信号            
     SDA = 1;        //数据线出现上升沿           
-    delay_us(80);    //延时 保证一个可靠的高电平      
+    delay_us(40);    //延时 保证一个可靠的高电平      
 }
 /******************************************************************************
  ** 
@@ -125,13 +125,13 @@ void IIC_Ack_TM1650(void)
     //数据线一直保持为低电平，时钟线出现上升沿即为应答
  
 	SET_SDA_OUT_TM1650();
-	delay_us(20);
+	delay_us(10);
     SDA = 0;
-    delay_us(20);
+    delay_us(10);
     SCL= 0;
-    delay_us(80);
+    delay_us(40);
 	SCL = 1;
-	delay_us(80);
+	delay_us(40);
     //应答完成后 将时钟线拉低 允许数据修改
     SCL = 0;
 }
@@ -147,13 +147,13 @@ void IIC_NAck_TM1650(void)
 {
     //非应答即相反 与应答区别即为数据线保持高电平即可
 	SET_SDA_OUT_TM1650();
-	delay_us(20);
+	delay_us(10);
     SDA = 1;
-    delay_us(20);
+    delay_us(10);
 	SCL= 0;
-	delay_us(80);
+	delay_us(40);
     SCL = 1;
-    delay_us(80);
+    delay_us(40);
     //最后要将时钟线拉低 允许数据变化
     SCL = 0;
 }
@@ -172,19 +172,19 @@ void IIC_NAck_TM1650(void)
     //先将数据线要设置成输入模式本程序未体现，有应答则会出现下降沿
 	SCL = 0;
 	SET_SDA_OUT_TM1650();
-    delay_us(20);	
+    delay_us(10);	
 	SDA = 1;//
-	delay_us(60);
+	delay_us(30);
 	SET_SDA_IN_TM1650();//切换为输入模式
 	
     //时钟线拉高
     SCL = 1;
-    delay_us(60);
+    delay_us(30);
     //等待数据线拉低应答
     while(SDA){
         //如果在该时间内仍未拉低
         ackTime ++;
-        if(ackTime > 500)
+        if(ackTime > 250)
         {
             //认为非应答 停止信号
             IIC_Stop_TM1650();
@@ -207,26 +207,14 @@ void IIC_WrByte_TM1650(uint8_t oneByte)
     //定义一个计数变量
     uint8_t i;
     SCL =0;
-    delay_us(20);
+    delay_us(5);
 	SET_SDA_OUT_TM1650();
     //将时钟线拉低允许数据改变
     //    SCL = 0;
     //按位发送数据
     for(i = 0;i < 8; i ++)
     {
-	  	#if 0
-	  	delay_us(2);
-        if((number &0x80)>>7) //0x80  1000 0000
-			SDA=1;
-		else
-			SDA=0;
-        number<<=1; 	  
-		delay_us(20);   
-		SCL=1;
-		delay_us(20);  
-		SCL=0;	
-		delay_us(20); 
-		#endif 
+	  
 		if((oneByte&0x80))            //   TM1650_DIO_H;
            SDA=1;
 				else                     //  TM1650_DIO_L;
@@ -235,11 +223,11 @@ void IIC_WrByte_TM1650(uint8_t oneByte)
        SCL=1;
         delay_us(5);
       SCL=0;//TM1650_CLK_L;
-        delay_us(5);
+        delay_us(2);
         oneByte<<=1;        
 
     }
-     delay_us(20);
+     delay_us(5);
 }
 
 
