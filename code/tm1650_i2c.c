@@ -23,6 +23,9 @@ const unsigned char segNumber[]={
 
 
 volatile uint8_t DispData[3];
+
+static void TM1650_WriteAddr(uint8_t addr,uint8_t mdata);
+static void I2CWrByte(uint8_t oneByte) ;//写一个字节高位在前，低位在后
 /*****************************************************************************
  ** \brief	I2C_SendMasterCmd
  **			发送主控命令
@@ -50,7 +53,7 @@ void IIC_Init_TM1650(void)
 	GPIO_ENABLE_INPUT(P0TRIS, GPIO_PIN_4);			//Input
 
 	SCL =1;
-	SDA = 1;
+	
 	
 }
 /******************************************************************************
@@ -98,14 +101,16 @@ void IIC_Stop_TM1650(void)
     //SCL高电平期间，SDA产生一个上升沿 表示停止
   	SET_SDA_OUT_TM1650();
 	SCL= 0;
-	  _nop_(); ;
-      _nop_(); ;
+	  _nop_(); 
+      _nop_(); 
+      _nop_(); 
+      _nop_(); 
 	SDA = 0;		//保证数据线为低电平
-	delay_us(40);
+	delay_us(80);
     SCL= 1;		//先保证时钟线为高电平
-    delay_us(10);    //延时 以得到一个可靠的电平信号            
+    delay_us(20);    //延时 以得到一个可靠的电平信号            
     SDA = 1;        //数据线出现上升沿           
-    delay_us(40);    //延时 保证一个可靠的高电平      
+    delay_us(80);    //延时 保证一个可靠的高电平      
 }
 /******************************************************************************
  ** 
@@ -120,13 +125,13 @@ void IIC_Ack_TM1650(void)
     //数据线一直保持为低电平，时钟线出现上升沿即为应答
  
 	SET_SDA_OUT_TM1650();
-	delay_us(10);
+	delay_us(20);
     SDA = 0;
-    delay_us(10);
+    delay_us(20);
     SCL= 0;
-    delay_us(40);
+    delay_us(80);
 	SCL = 1;
-	delay_us(40);
+	delay_us(80);
     //应答完成后 将时钟线拉低 允许数据修改
     SCL = 0;
 }
@@ -142,13 +147,13 @@ void IIC_NAck_TM1650(void)
 {
     //非应答即相反 与应答区别即为数据线保持高电平即可
 	SET_SDA_OUT_TM1650();
-	delay_us(10);
+	delay_us(20);
     SDA = 1;
-    delay_us(10);
+    delay_us(20);
 	SCL= 0;
-	delay_us(40);
+	delay_us(80);
     SCL = 1;
-    delay_us(40);
+    delay_us(80);
     //最后要将时钟线拉低 允许数据变化
     SCL = 0;
 }
@@ -167,19 +172,19 @@ void IIC_NAck_TM1650(void)
     //先将数据线要设置成输入模式本程序未体现，有应答则会出现下降沿
 	SCL = 0;
 	SET_SDA_OUT_TM1650();
-    delay_us(10);	
+    delay_us(20);	
 	SDA = 1;//
-	delay_us(30);
+	delay_us(60);
 	SET_SDA_IN_TM1650();//切换为输入模式
 	
     //时钟线拉高
     SCL = 1;
-    delay_us(30);
+    delay_us(60);
     //等待数据线拉低应答
     while(SDA){
         //如果在该时间内仍未拉低
         ackTime ++;
-        if(ackTime > 250)
+        if(ackTime > 500)
         {
             //认为非应答 停止信号
             IIC_Stop_TM1650();
@@ -197,16 +202,19 @@ void IIC_NAck_TM1650(void)
  ** Return Ref:
  ** 
  ******************************************************************************/
-void IIC_WrByte_TM1650(uint8_t number)
+void IIC_WrByte_TM1650(uint8_t oneByte)
 {
     //定义一个计数变量
     uint8_t i;
+    SCL =0;
+    delay_us(20);
 	SET_SDA_OUT_TM1650();
     //将时钟线拉低允许数据改变
     //    SCL = 0;
     //按位发送数据
     for(i = 0;i < 8; i ++)
     {
+	  	#if 0
 	  	delay_us(2);
         if((number &0x80)>>7) //0x80  1000 0000
 			SDA=1;
@@ -218,8 +226,46 @@ void IIC_WrByte_TM1650(uint8_t number)
 		delay_us(20);  
 		SCL=0;	
 		delay_us(20); 
+		#endif 
+		if((oneByte&0x80))            //   TM1650_DIO_H;
+           SDA=1;
+				else                     //  TM1650_DIO_L;
+         SDA= 0;
+        delay_us(5);
+       SCL=1;
+        delay_us(5);
+      SCL=0;//TM1650_CLK_L;
+        delay_us(5);
+        oneByte<<=1;        
+
     }
+     delay_us(20);
 }
+
+
+
+static void I2CWrByte(uint8_t oneByte) //写一个字节高位在前，低位在后
+{
+    uint8_t  i;
+    SCL =0;
+    delay_us(5);
+    for(i=0;i<8;i++)
+    {    
+        if((oneByte&0x80))            //   TM1650_DIO_H;
+           SDA=1;
+				else                     //  TM1650_DIO_L;
+         SDA= 0;
+        delay_us(5);
+       SCL=1;
+        delay_us(5);
+      SCL=0;//TM1650_CLK_L;
+        delay_us(5);
+        oneByte<<=1;        
+    }
+//    TM1650_CLK_H;
+    delay_us(5);
+}
+
 /******************************************************************************
  ** 
  ** Function Name: void TM1650_Set(u8 add,u8 dat)
@@ -232,12 +278,15 @@ void TM1650_Set(uint8_t add,uint8_t dat)
 {
 	//写显存必须从高地址开始写
 	IIC_Start_TM1650();
+	//I2CWrByte(add);//IIC_WrByte_TM1650(add); //第一个显存地址
 	IIC_WrByte_TM1650(add); //第一个显存地址
 	IIC_Ack_TM1650();
+	//I2CWrByte(dat);//IIC_WrByte_TM1650(dat);
 	IIC_WrByte_TM1650(dat);
-	IIC_Ack_TM1650();
+	//IIC_Ack_TM1650();
 	IIC_Stop_TM1650();
 }
+
 /******************************************************************************
  ** 
  ** Function Name: Init_Tm1650(void)
@@ -252,20 +301,33 @@ void Init_Tm1650(void)
 	delay_30us(1000);			//需要延时一小段时间，否则开显示会无响应
 	TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
 
-	TM1650_Set(0x68,segNumber[9]);//初始化为5级灰度，开显示
 
-	IIC_Ack_TM1650();
-	IIC_Stop_TM1650();
+	TM1650_Set(0x68,segNumber[9]);//初始化为5级灰度，开显示
+   
 
 	TM1650_Set(0x6A,segNumber[1]);//初始化为5级灰度，开显示
-	IIC_Ack_TM1650();
-	IIC_Stop_TM1650();
 
-	TM1650_Set(0x6C,segNumber[2]);//初始化为5级灰度，开显示
-	IIC_Ack_TM1650();
-	IIC_Stop_TM1650();
+
+    TM1650_Set(0x6C,segNumber[2]);//初始化为5级灰度，开显示
+
+	
+    
     TM1650_Set(0x6E,segNumber[3]);//初始化为5级灰度，开显示
-    IIC_Ack_TM1650();
-	IIC_Stop_TM1650();
+    
 	
 }
+
+
+
+#if 0
+void TM1650_Set(uchar add,uchar dat) //数码管显示
+{
+    //写显存必须从高地址开始写
+    I2CStart();
+    I2CWrByte(add); //第一个显存地址
+    I2CAsk();
+    I2CWrByte(dat);
+//I2CAsk();//不能加，加上出错
+    I2CStop();
+}
+#endif 

@@ -36,43 +36,51 @@ uint32_t Systemclock = 24000000;
  *****************************************************************************/
 int main(void)
 {		
-    static uint8_t taskState =0;
+    static uint8_t taskState =0,	i=0;;
+	  
     TMR0_Config();
    // BUZZER_Config();
   //  BUZZER_Init();
+    IIC_Init_TM1650();
 	
 	GPIO_Config();
 	//I2C_Config();							/*设置I2C主控模式*/		
 	LED_GPIO_Init();
 	UART0_Config();
 	UART1_Config();
-	
+
     
 								
   while(1)
 	{
-	  Init_Tm1650();
+	   	Init_Tm1650();
+		
+	
 		
 #if 0
 	  switch(taskState){
 
           case 0 :
                   TaskLEDDisplay();
+                  TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
                   taskState =1;
           break;
 
           case 1:
                   TaskKeySan();
+                  TM1650_Set(0x6A,segNumber[1]);//初始化为5级灰度，开显示
                   taskState =2;
 		  break;
 
 		  case 2: 
 		           TaskReceiveAirSensor();
+		           TM1650_Set(0x6C,segNumber[2]);//初始化为5级灰度，开显示
 		           taskState =3;
 		  break;
 
 		  case 3: 
 		  			TaskTelecStatus();
+		  			TM1650_Set(0x6E,segNumber[3]);//初始化为5级灰度，开显示
                     taskState =0;
 		  break;
       }
