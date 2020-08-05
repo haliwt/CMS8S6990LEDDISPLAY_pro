@@ -42,7 +42,7 @@ int main(void)
   //  BUZZER_Init();
 	
 	GPIO_Config();
-	I2C_Config();							/*设置I2C主控模式*/		
+	//I2C_Config();							/*设置I2C主控模式*/		
 	LED_GPIO_Init();
 	UART0_Config();
 	UART1_Config();

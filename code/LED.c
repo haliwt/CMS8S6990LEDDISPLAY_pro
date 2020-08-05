@@ -109,11 +109,11 @@ void LEDDisplay_TimerTim(void)
 		}
 
        //	DispData[2] = seg[Telecom->showtimes %10];// LED个位
-        TM1650_write_byte(TM1650_5_DISP,TM1650_COM3_ADDR,&seg[Telecom->showtimes %10]); //写入个位 
+     //   TM1650_write_byte(TM1650_5_DISP,TM1650_COM3_ADDR,&seg[Telecom->showtimes %10]); //写入个位 
        //	DispData[1] = seg[Telecom->showtimes /10];// LED十位
-        TM1650_write_byte(TM1650_5_DISP,TM1650_COM2_ADDR , &seg[Telecom->showtimes /10])	;
+     //   TM1650_write_byte(TM1650_5_DISP,TM1650_COM2_ADDR , &seg[Telecom->showtimes /10])	;
        //	DispData[0] = seg[0];         //小时，个位
-        TM1650_write_byte(TM1650_5_DISP,TM1650_COM1_ADDR , &seg[0]);
+    //    TM1650_write_byte(TM1650_5_DISP,TM1650_COM1_ADDR , &seg[0]);
         P24=1; //PM2.5显示
     }
     else if(Telecom->getTimerHour >=1){ //显示小时时间，分钟时间
@@ -133,11 +133,11 @@ void LEDDisplay_TimerTim(void)
 		}
         
 		//DispData[2] = seg[Telecom->showtimes %10];		//LED 显示个位  29分钟----‘9’
-        TM1650_write_byte(TM1650_5_DISP,TM1650_COM3_ADDR, &seg[Telecom->showtimes %10]); //写入个位 
+     //   TM1650_write_byte(TM1650_5_DISP,TM1650_COM3_ADDR, &seg[Telecom->showtimes %10]); //写入个位 
         //DispData[1] = seg[Telecom->showtimes / 10];		//LED 显示十位 分钟 29分--‘2’
-        TM1650_write_byte(TM1650_5_DISP,TM1650_COM2_ADDR , &seg[Telecom->showtimes /10])	;
+     //   TM1650_write_byte(TM1650_5_DISP,TM1650_COM2_ADDR , &seg[Telecom->showtimes /10])	;
         //DispData[0] = seg[Telecom->getTimerHour / 10]; 	//---显示最高位时间，定时最大时间8小时
-        TM1650_write_byte(TM1650_5_DISP,TM1650_COM1_ADDR , &seg[Telecom->getTimerHour / 10]);
+     //   TM1650_write_byte(TM1650_5_DISP,TM1650_COM1_ADDR , &seg[Telecom->getTimerHour / 10]);
         P24=1; //PM2.5显示
         if(Telecom->getTimerHour >=8)Telecom->getTimerHour =0;  //最大定时时间是 8小时
     }
@@ -158,7 +158,7 @@ void LEDDisplay_RedColorRing(void)
     
     COM7 = 0; 
     COM8 = 0;   
-    TM1650_write_byte(TM1650_5_NDISP,TM1650_COM1_ADDR , &seg[8]);
+ //   TM1650_write_byte(TM1650_5_NDISP,TM1650_COM1_ADDR , &seg[8]);
     PI= 1;
     PJ =1;
     PK =1;
@@ -182,13 +182,13 @@ void LEDDisplay_GreenColorRing(void)
 {
    
    //100% 显示
-   TM1650_write_byte(TM1650_5_NDISP,TM1650_COM1_ADDR , &seg[8]);
+  // TM1650_write_byte(TM1650_5_NDISP,TM1650_COM1_ADDR , &seg[8]);
    PI= 1;
    PJ =1;
    PK =1;
    PL = 1;
    COM6=0;
-   TM1650_write_byte(TM1650_5_NDISP,TM1650_COM1_ADDR , &seg[8]);
+  // TM1650_write_byte(TM1650_5_NDISP,TM1650_COM1_ADDR , &seg[8]);
    
    
 
@@ -204,18 +204,18 @@ void LEDDisplay_GreenColorRing(void)
 void LEDDisplay_BlueColorRing(void)
 {
 
-  TM1650_write_byte(TM1650_5_NDISP,TM1650_COM4_ADDR , &seg[8]);
+ // TM1650_write_byte(TM1650_5_NDISP,TM1650_COM4_ADDR , &seg[8]);
    COM5= 0;
 
-   TM1650_write_byte(TM1650_5_NDISP,TM1650_COM1_ADDR , &seg[11]);
+ //  TM1650_write_byte(TM1650_5_NDISP,TM1650_COM1_ADDR , &seg[11]);
 
-   TM1650_write_byte(TM1650_5_NDISP,TM1650_COM2_ADDR , &seg[11]);
+  // TM1650_write_byte(TM1650_5_NDISP,TM1650_COM2_ADDR , &seg[11]);
    
    PI= 1;
    PJ =1;
    PK =1;
    
-   TM1650_write_byte(TM1650_5_NDISP,TM1650_COM3_ADDR , &seg[0]);
+ //  TM1650_write_byte(TM1650_5_NDISP,TM1650_COM3_ADDR , &seg[0]);
    PI= 0;
    PJ =1;
    PK =1;
