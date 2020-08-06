@@ -75,7 +75,7 @@
 #define  seg_f 0x01          //           |         |
 #define  seg_g 0x02          //         e |         | c
 #define  seg_h 0x80          //           |    d    |
-                                          -----------
+                                          ----------- -h (小数点)
 
 #endif 
 
@@ -86,6 +86,7 @@
 #define   seg_e  0x10      //seg_e , //seg_c = 0x04
 #define   seg_f  0x20      //seg_f   //seg_a = 0x01
 #define   seg_g  0x40      //seg_g   //seg_b = 0x02 
+#define   seg_h  0x80      //
 
 extern const unsigned char segNumber[];
         

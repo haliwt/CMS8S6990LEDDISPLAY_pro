@@ -36,7 +36,7 @@ uint32_t Systemclock = 24000000;
  *****************************************************************************/
 int main(void)
 {		
-    static uint8_t taskState =0,	i=0;;
+    static uint8_t taskState =0;
 	  
     TMR0_Config();
    // BUZZER_Config();
@@ -48,12 +48,23 @@ int main(void)
 	LED_GPIO_Init();
 	UART0_Config();
 	UART1_Config();
-
+   Init_Tm1650();
     
 								
   while(1)
 	{
-	   	Init_Tm1650();
+		TaskKeySan();
+		
+		TM1650_Set(0x68,segNumber[9]);//³õÊ¼»¯Îª5¼¶»Ò¶È£¬¿ªÏÔÊ¾
+   
+
+	TM1650_Set(0x6A,segNumber[1]);//³õÊ¼»¯Îª5¼¶»Ò¶È£¬¿ªÏÔÊ¾
+
+
+    TM1650_Set(0x6C,segNumber[2]);//³õÊ¼»¯Îª5¼¶»Ò¶È£¬¿ªÏÔÊ¾
+
+	
+   TM1650_Set(0x6E,segNumber[11]);//³õÊ¼»¯Îª5¼¶»Ò¶È£¬¿ªÏÔÊ¾
 		
 	
 		
@@ -61,26 +72,31 @@ int main(void)
 	  switch(taskState){
 
           case 0 :
-                  TaskLEDDisplay();
-                  TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
+                    TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
+					TaskLEDDisplay();
+                
                   taskState =1;
           break;
 
           case 1:
-                  TaskKeySan();
-                  TM1650_Set(0x6A,segNumber[1]);//初始化为5级灰度，开显示
+                  
+					 
+					TaskKeySan();
+          TM1650_Set(0x6A,segNumber[1]);//初始化为5级灰度，开显示       
                   taskState =2;
 		  break;
 
 		  case 2: 
-		           TaskReceiveAirSensor();
-		           TM1650_Set(0x6C,segNumber[2]);//初始化为5级灰度，开显示
+		            TM1650_Set(0x6C,segNumber[2]);//初始化为5级灰度，开显示
+			       TaskReceiveAirSensor();
+		         
 		           taskState =3;
 		  break;
 
 		  case 3: 
-		  			TaskTelecStatus();
-		  			TM1650_Set(0x6E,segNumber[3]);//初始化为5级灰度，开显示
+		  				TM1650_Set(0x6E,segNumber[3]);//初始化为5级灰度，开显示
+			        TaskTelecStatus();
+		  		
                     taskState =0;
 		  break;
       }
@@ -123,10 +139,10 @@ void TaskProcess(void)
 void TaskLEDDisplay(void)
 {
    
-	   P25=0;
-	 // LEDDisplay_TimerTim();
-     // LEDDisplay_SleepLamp();
-	  //TM1650_write_Secialbyte(0x51,0x68,0xff);
+	   P26=1;
+	  LEDDisplay_TimerTim();
+    //LEDDisplay_SleepLamp();
+	  
 	  delay_30us(100)  ;
 	
 	  
@@ -143,7 +159,7 @@ void TaskLEDDisplay(void)
 void TaskKeySan(void)
 {
 	
-  //TM1650_write_Secialbyte(0x51, 0x68 , 0x01);
+  
    if(P13==1){
 		delay_30us(1000) ;
 	   if(P13==1){ 
@@ -155,8 +171,8 @@ void TaskKeySan(void)
 	}
 //	BUZZER_Config();
 	 KEY_FUNCTION();
-	// P26 =1;
-	// TM1650_write_Secialbyte(0x51, 0x68 , 0x01);
+	 P25=0;
+	
 	
 	
 }

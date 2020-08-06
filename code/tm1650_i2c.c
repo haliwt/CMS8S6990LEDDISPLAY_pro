@@ -6,7 +6,7 @@
 
 
 const unsigned char segNumber[]={
-       seg_a+seg_b+seg_c+seg_d+seg_e+seg_f,        // char "0"  0x00
+         seg_a+seg_b+seg_c+seg_d+seg_e+seg_f,        // char "0"  0x00
          seg_b+seg_c,                                // char "1"  0x01
          seg_a+seg_b+seg_d+seg_e+seg_g,              // char "2"  0x02
          seg_a+seg_b+seg_c+seg_d+seg_g,              // char "3"  0x03
@@ -16,7 +16,8 @@ const unsigned char segNumber[]={
          seg_a+seg_b+seg_c+seg_f,                    // char "7"  0x07
          seg_a+seg_b+seg_c+seg_d+seg_e+seg_f+seg_g,  // char "8"  0x08
          seg_a+seg_b+seg_c+seg_d+seg_f+seg_g,        // char "9"  0x09
-
+         seg_h,                                      // char "."  0x0A
+         0
          
 };
 
@@ -165,7 +166,7 @@ void IIC_NAck_TM1650(void)
  ** Return Ref: 0:应答 1：无应答
  **  
  ******************************************************************************/
- uint8_t IIC_Wait_Ack_TM1650(void)
+uint8_t IIC_Wait_Ack_TM1650(void)
 {
     //应答等待计数
     uint8_t ackTime = 0;
@@ -215,14 +216,15 @@ void IIC_WrByte_TM1650(uint8_t oneByte)
     for(i = 0;i < 8; i ++)
     {
 	  
-		if((oneByte&0x80))            //   TM1650_DIO_H;
-           SDA=1;
-				else                     //  TM1650_DIO_L;
-         SDA= 0;
+		if((oneByte&0x80))            //高位在前发送数据
+        SDA=1;
+		else                     //  TM1650_DIO_L;
+        SDA= 0;
+
         delay_us(5);
-       SCL=1;
+        SCL=1;
         delay_us(5);
-      SCL=0;//TM1650_CLK_L;
+        SCL=0;//TM1650_CLK_L;
         delay_us(2);
         oneByte<<=1;        
 
@@ -266,10 +268,8 @@ void TM1650_Set(uint8_t add,uint8_t dat)
 {
 	//写显存必须从高地址开始写
 	IIC_Start_TM1650();
-	//I2CWrByte(add);//IIC_WrByte_TM1650(add); //第一个显存地址
-	IIC_WrByte_TM1650(add); //第一个显存地址
+  IIC_WrByte_TM1650(add); //第一个显存地址
 	IIC_Ack_TM1650();
-	//I2CWrByte(dat);//IIC_WrByte_TM1650(dat);
 	IIC_WrByte_TM1650(dat);
 	//IIC_Ack_TM1650();
 	IIC_Stop_TM1650();
@@ -289,7 +289,7 @@ void Init_Tm1650(void)
 	delay_30us(1000);			//需要延时一小段时间，否则开显示会无响应
 	TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
 
-
+  #if 0
 	TM1650_Set(0x68,segNumber[9]);//初始化为5级灰度，开显示
    
 
@@ -299,23 +299,8 @@ void Init_Tm1650(void)
     TM1650_Set(0x6C,segNumber[2]);//初始化为5级灰度，开显示
 
 	
-    
-    TM1650_Set(0x6E,segNumber[3]);//初始化为5级灰度，开显示
-    
+   TM1650_Set(0x6E,segNumber[3]);//初始化为5级灰度，开显示
+    #endif 
 	
 }
 
-
-
-#if 0
-void TM1650_Set(uchar add,uchar dat) //数码管显示
-{
-    //写显存必须从高地址开始写
-    I2CStart();
-    I2CWrByte(add); //第一个显存地址
-    I2CAsk();
-    I2CWrByte(dat);
-//I2CAsk();//不能加，加上出错
-    I2CStop();
-}
-#endif 
