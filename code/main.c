@@ -50,7 +50,7 @@ int main(void)
 	UART1_Config();
   Init_Tm1650();
     
-								
+	Telecom->LockKey=0;							
   while(1)
 	{
 		TaskKeySan();
@@ -139,7 +139,7 @@ void TaskProcess(void)
 void TaskLEDDisplay(void)
 {
    
-	   P26=1;
+	  
 	  LEDDisplay_TimerTim();
     //LEDDisplay_SleepLamp();
 	  
@@ -160,7 +160,7 @@ void TaskKeySan(void)
 {
 	
      KEY_FUNCTION();
-	 P25=1;
+	 
 	
 	
 	

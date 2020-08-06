@@ -15,7 +15,7 @@
 //通讯参数
 typedef struct _TELEC_
 {
-	volatile uint8_t LockKey : 1;
+    uint8_t LockKey ;
 	uint8_t TimerEvent :1;                    //定时器通知信号
     uint8_t  TaskCompileFlag : 1;             //任务完成标志位
     

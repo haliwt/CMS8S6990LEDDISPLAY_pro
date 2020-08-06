@@ -3,6 +3,7 @@
 
 Telec *Telecom= NULL;
 static uint8_t Lockflag =0;
+
 /******************************************************************************
  **
  ** Function Name:	void delay_10us(uint16_t n) 
@@ -131,21 +132,26 @@ void KEY_FUNCTION(void)
 			
 		if(WIND_KEY==1 && TIMER_KEY==1 && subutton ==0 ){
 			   
-			   pkey ++;
+			  
 			  //TM1650_Set(0x68,segNumber[ pkey ]);//初始化为5级灰度，开显示
-			if(pkey ==1){
+			if(Telecom->LockKey ==0){
 				
 				   subutton =1;
+				   P25=1;
 				  Telecom->LockKey =1;  // 这个参数改不过来
-			      lock =1;
-				
+			       pkey ++ ;
+				   if(pkey ==1) lock =1;
+				   else{ lock = 0;
+							pkey =0;
+				   }
+				  
 				     BUZZER_Config(); 
 			       
 				  
 				   BUZ_DisableBuzzer();
 				  
 				 
-				   TM1650_Set(0x68,segNumber[ pkey ]);//初始化为5级灰度，开显示
+				   TM1650_Set(0x68,segNumber[ Telecom->LockKey ]);//初始化为5级灰度，开显示
    
 
 						TM1650_Set(0x6A,segNumber[1]);//初始化为5级灰度，开显示
@@ -156,10 +162,10 @@ void KEY_FUNCTION(void)
 						
 					   TM1650_Set(0x6E,segNumber[3]);//初始化为5级灰度，开显示
 					
-				      delay_20us(200);
+				      
 			}
-			if(pkey !=1){
-				     P25=1;
+			else{
+				P25=1;
 				P26=1;
 				subutton =1;
 				    pkey =0;
@@ -170,7 +176,7 @@ void KEY_FUNCTION(void)
 			        delay_20us(1000);
 				    BUZ_DisableBuzzer();
 				    subutton =1;
-				    Init_Tm1650();
+				  
 				    TM1650_Set(0x68,segNumber[7]);//初始化为5级灰度，开显示
    
 
@@ -180,18 +186,18 @@ void KEY_FUNCTION(void)
 					    TM1650_Set(0x6C,segNumber[5]);//初始化为5级灰度，开显示
 
 						
-					   TM1650_Set(0x6E,segNumber[4]);//初始化为5级灰度，开显示
+					 //  TM1650_Set(0x6E,segNumber[4]);//初始化为5级灰度，开显示
 				
 			}
 		}
 
 	 }
+   TM1650_Set(0x6E,segNumber[lock]);//初始化为5级灰度，开显示
+   delay_20us(1000);
 
-   switch(lock){  //童琐按键
-
-   	case 0 :
+     if(lock==0){
     
-			if(POWER_KEY == 1){ //开关按键 P16
+			if(POWER_KEY == 1)//开关按键 P16
 				delay_20us(1000);
 				if(POWER_KEY ==1){   
 					P26=1;
@@ -211,8 +217,8 @@ void KEY_FUNCTION(void)
 						} 
 					}
 			    }
-			}
-			if(WIND_KEY == 1 && Telecom->power_state ==1){ //风速按键
+			
+			if(WIND_KEY == 1 && Telecom->power_state ==1)//风速按键
 				delay_20us(1000);
 				if(subutton ==0 && WIND_KEY==1 && Telecom->power_state ==1){
 					//Telecom->setWind_levels = wind_auto;
@@ -222,10 +228,10 @@ void KEY_FUNCTION(void)
 					subutton =1;
 					BUZZER_Config();
 				} 
-			}
-		 if(TIMER_KEY==1 && Telecom->power_state ==1){ //定时按键,定时时间 8个小时,循环增加数值
+			
+		 if(TIMER_KEY==1 && Telecom->power_state ==1)//定时按键,定时时间 8个小时,循环增加数值
 				delay_20us(1000);
-				P25=1;
+			
 				if(TIMER_KEY ==1 && Telecom->power_state ==1){
 					
 					Telecom->TimerEvent=1;
@@ -234,8 +240,8 @@ void KEY_FUNCTION(void)
 					Telecom->TimerEvent=0;
 					
 				}
-			}
-			 if(FILTER_KEY==1 && Telecom->power_state ==1){ //滤网重置按键,时间到3000小时更换虑网
+			
+			 if(FILTER_KEY==1 && Telecom->power_state ==1)//滤网重置按键,时间到3000小时更换虑网
 				delay_20us(1000);
 				if(subutton ==0 && FILTER_KEY ==1 && Telecom->power_state ==1){
 					subutton =1;
@@ -243,10 +249,10 @@ void KEY_FUNCTION(void)
 
 				}
 
-			}
-	  break ;
+			
+	  }
 
-	  case 1 :
+	  else{
 	
 		    if(POWER_KEY == 1 || WIND_KEY == 1 || TIMER_KEY ==1 || FILTER_KEY ==1){
 			   delay_20us(1000);
@@ -260,11 +266,11 @@ void KEY_FUNCTION(void)
 
 			   }
 		  }
-		break;
+	}
 	 
 
 	}
-}
+
 
 
 

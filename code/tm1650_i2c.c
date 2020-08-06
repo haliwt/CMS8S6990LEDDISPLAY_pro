@@ -107,11 +107,11 @@ void IIC_Stop_TM1650(void)
      // _nop_(); 
      // _nop_(); 
 	SDA = 0;		//保证数据线为低电平
-	delay_us(2);
+	//delay_us(2);
     SCL= 1;		//先保证时钟线为高电平
     //delay_us(1);    //延时 以得到一个可靠的电平信号            
     SDA = 1;        //数据线出现上升沿           
-    delay_us(2);    //延时 保证一个可靠的高电平      
+   // delay_us(2);    //延时 保证一个可靠的高电平      
 }
 /******************************************************************************
  ** 
@@ -128,11 +128,11 @@ void IIC_Ack_TM1650(void)
 	SET_SDA_OUT_TM1650();
 	//delay_us(1);
     SDA = 0;
-    delay_us(1);
+   // delay_us(1);
     SCL= 0;
-    delay_us(2);
+   // delay_us(2);
 	SCL = 1;
-	delay_us(2);
+	//delay_us(2);
     //应答完成后 将时钟线拉低 允许数据修改
     SCL = 0;
 }
@@ -152,9 +152,9 @@ void IIC_NAck_TM1650(void)
     SDA = 1;
    // delay_us(1);
 	SCL= 0;
-	delay_us(2);
+	//delay_us(2);
     SCL = 1;
-    delay_us(2);
+   // delay_us(2);
     //最后要将时钟线拉低 允许数据变化
     SCL = 0;
 }
@@ -175,12 +175,12 @@ uint8_t IIC_Wait_Ack_TM1650(void)
 	SET_SDA_OUT_TM1650();
     //delay_us(1);	
 	SDA = 1;//
-	delay_us(2);
+	//delay_us(2);
 	SET_SDA_IN_TM1650();//切换为输入模式
 	
     //时钟线拉高
     SCL = 1;
-    delay_us(2);
+    //delay_us(2);
     //等待数据线拉低应答
     while(SDA){
         //如果在该时间内仍未拉低
