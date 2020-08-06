@@ -126,7 +126,7 @@ void KEY_FUNCTION(void)
 
 	  if(WIND_KEY==1 && TIMER_KEY==1){//童琐按键 --长按3s---组合按键
 		    delay_20us(1000);
-		  //  delay_20us(1000);
+		    delay_20us(1000);
 		  //  delay_20us(1000);
 			
 		if(WIND_KEY==1 && TIMER_KEY==1 && subutton ==0 ){
