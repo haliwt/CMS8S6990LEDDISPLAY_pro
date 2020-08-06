@@ -7,10 +7,15 @@
 #include "tm1650_i2c.h"
 #include <stdio.h>
 
+#define  POWER_KEY      P16
+#define  WIND_KEY       P15
+#define  TIMER_KEY      P14
+#define  FILTER_KEY     P13 
+
 //通讯参数
 typedef struct _TELEC_
 {
-	
+	volatile uint8_t LockKey : 1;
 	uint8_t TimerEvent :1;                    //定时器通知信号
     uint8_t  TaskCompileFlag : 1;             //任务完成标志位
     
@@ -20,7 +25,7 @@ typedef struct _TELEC_
 	uint8_t setTimerValue ;               //设置定时时间的值
 	uint8_t getTimerSecond ;
 	uint8_t getTimerHour;                 //定时器时间小时
-	 int16_t  showtimes;                 //显示时间，数据，按键输入
+	int16_t  showtimes;                 //显示时间，数据，按键输入
 	
 } Telec;
 

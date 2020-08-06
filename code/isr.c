@@ -168,15 +168,7 @@ void P0EI_IRQHandler(void)  interrupt P0EI_VECTOR
 void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR 
 {
 	#if 0
-	static uint8_t pkey=0;
-	if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_6))
-	{
-		pkey = pkey ^ 0x01;
-		if(pkey ==1)
-		Telecom.power_state =1;
-		else 
-		GPIO_ClearIntFlag(GPIO1, GPIO_PIN_6);
-	}
+	
 	#endif 
 }
 /******************************************************************************

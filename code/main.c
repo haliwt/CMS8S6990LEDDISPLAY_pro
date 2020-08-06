@@ -48,13 +48,13 @@ int main(void)
 	LED_GPIO_Init();
 	UART0_Config();
 	UART1_Config();
-   Init_Tm1650();
+  Init_Tm1650();
     
 								
   while(1)
 	{
 		TaskKeySan();
-		
+		#if 0
 		TM1650_Set(0x68,segNumber[9]);//³õÊ¼»¯Îª5¼¶»Ò¶È£¬¿ªÏÔÊ¾
    
 
@@ -65,7 +65,7 @@ int main(void)
 
 	
    TM1650_Set(0x6E,segNumber[11]);//³õÊ¼»¯Îª5¼¶»Ò¶È£¬¿ªÏÔÊ¾
-		
+	#endif 	
 	
 		
 #if 0
@@ -159,19 +159,8 @@ void TaskLEDDisplay(void)
 void TaskKeySan(void)
 {
 	
-  
-   if(P13==1){
-		delay_30us(1000) ;
-	   if(P13==1){ 
-		 BUZZER_Config();
-		 P26=1;
-		 P25=0;	
-								
-		}
-	}
-//	BUZZER_Config();
-	 KEY_FUNCTION();
-	 P25=0;
+     KEY_FUNCTION();
+	 P25=1;
 	
 	
 	

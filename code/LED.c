@@ -1,20 +1,5 @@
 #include "LED.h"
-//8段LED显示
-const uint8_t seg[]={
 
-			0xBF,	// 0		
-			0x86,	// 1		
-			0xDB,	// 2		
-			0xCF,	// 3		
-			0xE6,	// 4		
-			0xED,	// 5		
-			0xFD,	// 6		
-			0x87,	// 7		
-			0xFF,	// 8		
-			0xEF,	// 9
-            0x80,   //DOT
-
-};
 static void LEDDisplay_BlueColorRing(void);
 /******************************************************************************
  **
@@ -133,11 +118,11 @@ void LEDDisplay_TimerTim(void)
 			}
 		}
         
-		 DispData[2] = seg[Telecom->showtimes %10];		//LED 显示个位  29分钟----‘9’
+		     DispData[2] = segNumber[Telecom->showtimes %10];		//LED 显示个位  29分钟----‘9’
           TM1650_Set(0x68, DispData[2]);//写入个位 
-        DispData[1] = seg[Telecom->showtimes / 10];		//LED 显示十位 分钟 29分--‘2’
+        DispData[1] = segNumber[Telecom->showtimes / 10];		//LED 显示十位 分钟 29分--‘2’
           TM1650_Set(0x6A, DispData[1]);
-        DispData[0] = seg[Telecom->getTimerHour / 10]; 	//---显示最高位时间，定时最大时间8小时
+        DispData[0] = segNumber[Telecom->getTimerHour / 10]; 	//---显示最高位时间，定时最大时间8小时
         TM1650_Set(0x6C, DispData[0]);
         P24=1; //PM2.5显示
         if(Telecom->getTimerHour >=8)Telecom->getTimerHour =0;  //最大定时时间是 8小时
