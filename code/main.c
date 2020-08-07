@@ -158,9 +158,8 @@ void TaskLEDDisplay(void)
 ***********************************************************/
 void TaskKeySan(void)
 {
-	 Lock_KEY_Set();
 	
-	 Lock_Key();
+     KEY_FUNCTION();
 	 
 	
 	

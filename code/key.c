@@ -120,73 +120,57 @@ void GPIO_Config(void)
  ** Return Ref:NO
  **   
  ******************************************************************************/
-void Lock_KEY_Set(void)
+void KEY_FUNCTION(void)
 {
-   static uint8_t pkey=0,lock=0;
-	 uint8_t subutton=0,i=0,read=0,read2=0,onceflg=0;
+	static uint8_t pkey=0;
+	 uint8_t subutton=0,i=0,readdata=0,readsecond=0;
 
 
-	  if(WIND_KEY==1 && TIMER_KEY==1 && subutton==0){//童琐按键 --长按3s---组合按键
+	  if(WIND_KEY==1 && TIMER_KEY==1){//童琐按键 --长按3s---组合按键
 		    delay_20us(1000);
-		   
-		   
-			subutton=1;
-	  	
+		    delay_20us(1000);
+		  //  delay_20us(1000);
+			subutton =1;
 		if(WIND_KEY==1 && TIMER_KEY==1 && subutton ==1 ){
 			   
-						P25=1;
-						subutton =3;
-		
-				      // Flash_ToWriteData(0x01,0x00); //写入一个地址：0x01,数据：0x01
-				       read = Flash_ToReadData(0x01);
-					   switch (read){
-						   
-						   case 0: 
-						            Flash_ToWriteData(0x01,0x01); //写入一个地址：0x01,数据：0x01
-									read2 =  Flash_ToReadData(0x01);
-							       
-							 break;
-							  
-							  case 1:
-							  
-									Flash_ToWriteData(0x01,0x00); //写入一个地址：0x01,数据：0x01
-						            read2 = Flash_ToReadData(0x01);
-							     
-							   
-							  break;
-					   	}
-						 BUZZER_Config(); 
+			  
+			  //TM1650_Set(0x68,segNumber[ pkey ]);//初始化为5级灰度，开显示
+			if(Telecom->LockKey ==0){
+				
+				   subutton =2;
+				   P25=1;
+				   Flash_ToWriteData(0x00,0x1);
+				   readdata = Flash_ToReadData(0x00);
+				   
+				  
+				     BUZZER_Config(); 
 			       
-				   TM1650_Set(0x68,segNumber[ read ]);//初始化为5级灰度，开显示
+				  
+				   BUZ_DisableBuzzer();
+				  
+				 
+				   TM1650_Set(0x68,segNumber[ readdata ]);//初始化为5级灰度，开显示
    
-					TM1650_Set(0x6A,segNumber[read2]);//初始化为5级灰度，开显示
 
-					//TM1650_Set(0x6C,segNumber[read3]);//初始化为5级灰度，开显示
-                        
+						TM1650_Set(0x6A,segNumber[1]);//初始化为5级灰度，开显示
+
+
+					    TM1650_Set(0x6C,segNumber[2]);//初始化为5级灰度，开显示
+
+						
+					   TM1650_Set(0x6E,segNumber[3]);//初始化为5级灰度，开显示
+					
 				      
 			}
-	  	}	
-	  
-}
-/******************************************************************************
- **
- ** Function Name:	void KEY_FUNCTION(void)
- ** Function : receive key input message 
- ** Input Ref:NO
- ** Return Ref:NO
- **   
- ******************************************************************************/
+			
+		}
 
-void Lock_Key(void)
-{
-   static uint8_t pkey =0;
-   uint8_t subutton =0,mdata=0;
+	 }
+	 readsecond = Flash_ToReadData(0x00);
+   TM1650_Set(0x6E,segNumber[readsecond]);//初始化为5级灰度，开显示
+   delay_20us(1000);
 
-     mdata= Flash_ToReadData(0x01);
-	 TM1650_Set(0x6C,segNumber[mdata]);//初始化为5级灰度，开显示
-     delay_20us(1000);
-
-     if(mdata==0){
+     if(readsecond==0){
     
 			if(POWER_KEY == 1)//开关按键 P16
 				delay_20us(1000);
@@ -258,9 +242,9 @@ void Lock_Key(void)
 			   }
 		  }
 	}
+	 
 
-
-}
+	}
 
 
 

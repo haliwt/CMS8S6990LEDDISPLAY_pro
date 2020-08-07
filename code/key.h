@@ -43,10 +43,8 @@ void delay_30us(uint16_t n) ;
 void delay_20us(uint16_t n) ;
 void delay_us(uint16_t n)  ;
 void GPIO_Config(void);
-void Lock_KEY_Set(void);
+void KEY_FUNCTION(void);
 
-
-void Lock_Key(void);
 
 #endif /* __DEMO_GPIO_H__ */
 
