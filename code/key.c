@@ -1,5 +1,6 @@
 #include "key.h"
 #include "demo_buzzer.h"
+#include "myflash.h"
 
 Telec *Telecom= NULL;
 static uint8_t Lockflag =0;
@@ -119,28 +120,41 @@ void GPIO_Config(void)
  ** Return Ref:NO
  **   
  ******************************************************************************/
-void KEY_FUNCTION(void)
+uint8_t KEY_FUNCTION(void)
 {
-   static uint8_t pkey,lock;
-	 uint8_t subutton=0,i=0;
+   static uint8_t pkey=0,lock=0;
+	 uint8_t subutton=0,i=0,read=0,read2=0;
 
 
 	  if(WIND_KEY==1 && TIMER_KEY==1){//童琐按键 --长按3s---组合按键
 		    delay_20us(1000);
-		    delay_20us(1000);
+		   // delay_20us(1000);
 		  //  delay_20us(1000);
 			
 		if(WIND_KEY==1 && TIMER_KEY==1 && subutton ==0 ){
 			   
 			  
 			  //TM1650_Set(0x68,segNumber[ pkey ]);//初始化为5级灰度，开显示
-			if(Telecom->LockKey ==0){
+			if(Telecom->LockKey ==0 && lock !=1){
 				
 				   subutton =1;
-				   P25=1;
+				  
 				  Telecom->LockKey =1;  // 这个参数改不过来
 			       pkey ++ ;
-				   if(pkey ==1) lock =1;
+				   if(pkey ==1){
+				   		lock =1;
+						P25=1;
+				      // Flash_ToWriteData(0x01,0x00); //写入一个地址：0x01,数据：0x01
+				       read = Flash_ToReadData(0x01);
+					   if(read == 0){
+					        Flash_ToWriteData(0x01,0x01); //写入一个地址：0x01,数据：0x01
+							read2 =  Flash_ToReadData(0x01);
+					   } 
+					   else {
+							Flash_ToWriteData(0x01,0x00); //写入一个地址：0x01,数据：0x01
+				            read2 = Flash_ToReadData(0x01);
+					   }
+				   	}
 				   else{ lock = 0;
 							pkey =0;
 				   }
@@ -151,17 +165,12 @@ void KEY_FUNCTION(void)
 				   BUZ_DisableBuzzer();
 				  
 				 
-				   TM1650_Set(0x68,segNumber[ Telecom->LockKey ]);//初始化为5级灰度，开显示
+				   TM1650_Set(0x68,segNumber[ read ]);//初始化为5级灰度，开显示
    
+					TM1650_Set(0x6A,segNumber[read2]);//初始化为5级灰度，开显示
 
-						TM1650_Set(0x6A,segNumber[1]);//初始化为5级灰度，开显示
-
-
-					    TM1650_Set(0x6C,segNumber[2]);//初始化为5级灰度，开显示
-
-						
-					   TM1650_Set(0x6E,segNumber[3]);//初始化为5级灰度，开显示
-					
+					//TM1650_Set(0x6C,segNumber[read3]);//初始化为5级灰度，开显示
+                        
 				      
 			}
 			else{
@@ -187,15 +196,26 @@ void KEY_FUNCTION(void)
 
 						
 					 //  TM1650_Set(0x6E,segNumber[4]);//初始化为5级灰度，开显示
+					 return 0;
 				
 			}
 		}
 
 	 }
-   TM1650_Set(0x6E,segNumber[lock]);//初始化为5级灰度，开显示
-   delay_20us(1000);
+	  if(lock==1) return 1;
+		else return 0;
+}
 
-     if(lock==0){
+void Lock_Key(uint8_t number)
+{
+   static uint8_t pkey =0;
+   uint8_t subutton =0,mdata=0;
+
+     mdata= Flash_ToReadData(0x01);
+	 TM1650_Set(0x6C,segNumber[mdata]);//初始化为5级灰度，开显示
+     delay_20us(1000);
+
+     if(mdata==0){
     
 			if(POWER_KEY == 1)//开关按键 P16
 				delay_20us(1000);
@@ -267,9 +287,9 @@ void KEY_FUNCTION(void)
 			   }
 		  }
 	}
-	 
 
-	}
+
+}
 
 
 
