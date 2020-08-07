@@ -158,12 +158,9 @@ void TaskLEDDisplay(void)
 ***********************************************************/
 void TaskKeySan(void)
 {
-	 uint8_t indata;
-	 
-    Telecom->LockKey = KEY_FUNCTION();
-	//TM1650_Set(0x6E,segNumber[ Telecom->LockKey ]);//初始化为5级灰度，开显示
+	 Lock_KEY_Set();
 	
-	 Lock_Key(Telecom->LockKey );
+	 Lock_Key();
 	 
 	
 	
