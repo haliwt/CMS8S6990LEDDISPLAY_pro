@@ -122,57 +122,40 @@ void GPIO_Config(void)
  ******************************************************************************/
 void KEY_FUNCTION(void)
 {
-	static uint8_t pkey=0;
+	static uint8_t pkey=0,datalogic=0;
 	 uint8_t subutton=0,i=0,readdata=0,readsecond=0,read1=0,read2=0;
 
 
 	  if(WIND_KEY==1 && TIMER_KEY==1){//童琐按键 --长按3s---组合按键
 		    delay_20us(1000);
 		    delay_20us(1000);
-		  //  delay_20us(1000);
-			subutton =1;
-		if(WIND_KEY==1 && TIMER_KEY==1 && subutton ==1 ){
+		    subutton =1;
+			 if(WIND_KEY==1 && TIMER_KEY==1 && subutton ==1 ){
 			   
-			  
-			  //TM1650_Set(0x68,segNumber[ pkey ]);//初始化为5级灰度，开显示
-			if(Telecom->LockKey ==0){
-				
-				   subutton =2;
+			     subutton =2;
 				   P25=1;
-				  
+				   
 				   readdata = Flash_ToReadData(0x00);
-				   switch (readdata)
-				   {
-					case 0:     
-						     Flash_ToWriteData(0x00,0x1);
-						     read1 =Flash_ToReadData(0x00);
-						break;
-					case 1:
-						     Flash_ToWriteData(0x00,0x0);
-							 read2 =  Flash_ToReadData(0x00);
-						break;
-				   }
-				  
-				     BUZZER_Config(); 
-			       
-				  
-				   BUZ_DisableBuzzer();
-				  
-				 
+				   if((readdata == 0 ||readdata == 1) && read2==0 && read1==0){
+						 switch (readdata)
+						 {
+							case 0:     
+										 Flash_ToWriteData(0x00,0x1);
+										 read1 =Flash_ToReadData(0x00);
+								break;
+							case 1:
+										 Flash_ToWriteData(0x00,0x0);
+									   read2 =  Flash_ToReadData(0x00);
+										 read1=1;
+								break;
+						 }
+				  }
 				   TM1650_Set(0x68,segNumber[ readdata ]);//初始化为5级灰度，开显示
-   
+           TM1650_Set(0x6A,segNumber[read1]);//初始化为5级灰度，开显示
 
-						TM1650_Set(0x6A,segNumber[read1]);//初始化为5级灰度，开显示
-
-
-					    TM1650_Set(0x6C,segNumber[read2]);//初始化为5级灰度，开显示
-
-						
-					  
-					
-				      
-			}
-			
+						TM1650_Set(0x6C,segNumber[read2]);//初始化为5级灰度，开显
+			       delay_20us(1000);
+				 
 		}
 
 	 }
