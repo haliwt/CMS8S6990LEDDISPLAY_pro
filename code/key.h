@@ -49,6 +49,13 @@ typedef  struct  _state_
 #define  TIMER_KEY      P14
 #define  FILTER_KEY     P13 
 
+
+#define POWER_PRES 	      1
+#define WIND_PRES	      2
+#define TIMER_PRES	      3
+#define FILTER_PRES      4
+
+
 //通讯参数
 typedef struct _TELEC_
 {
@@ -81,8 +88,11 @@ void delay_20us(uint16_t n) ;
 void delay_us(uint16_t n)  ;
 void GPIO_Config(void);
 uint8_t KEY_FUNCTION(void);
-uint8_t KEY_Scan(void);
-void KEY_Handing(void);
+uint8_t KEY_Scan(uint8_t mode);
+void KEY_Handler(void);
+
+void KeyHandler(uint8_t keyvalue);
+
 
 #endif /* __DEMO_GPIO_H__ */
 

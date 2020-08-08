@@ -159,8 +159,12 @@ void TaskLEDDisplay(void)
 void TaskKeySan(void)
 {
 	
-    // KEY_FUNCTION();
-	  KEY_Handing();
+  static uint8_t idkey =0;
+// KEY_FUNCTION();
+	//  KEY_Handler();
+	idkey  = KEY_Scan(0);
+
+	KeyHandler(idkey);
 	
 	
 	

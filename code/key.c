@@ -299,7 +299,7 @@ uint8_t KEY_FUNCTION(void)
  ** Return Ref:NO
  **   
  ******************************************************************************/
-void KEY_Handing(void)
+void KEY_Handler(void)
 {
 	static pkey =0,i=0;
 	uint8_t  temp8;
@@ -376,6 +376,7 @@ void KEY_Handing(void)
  ** Return Ref:NO
  **   
  ******************************************************************************/
+ #if 0
 uint8_t KEY_Scan(void)
 {
 	uint8_t  reval = 0;
@@ -416,7 +417,7 @@ uint8_t KEY_Scan(void)
 		{
 			if(key.read == key.buffer) //继续按下
 			{
-				if(++key.on_time> 120) //消抖  0.5us
+				if(++key.on_time> 150) //消抖70*   0.5us
 				{
 					key.value = key.buffer^_KEY_ALL_OFF; // key.value = 0x1b ^ 0x1f = 0x04
 					key.on_time = 0;
@@ -477,14 +478,63 @@ uint8_t KEY_Scan(void)
 }
 
 
+#endif 
+/******************************************************************************
+ **
+ ** Function Name:	void KEY_FUNCTION(void)
+ ** Function : receive key input message 
+ ** Input Ref:NO
+ ** Return Ref:NO
+ **   
+ ******************************************************************************/
+
+//°´¼ü´¦Àíº¯Êý
+//·µ»Ø°´¼üÖµ
+//mode:0,²»Ö§³ÖÁ¬Ðø°´;1,Ö§³ÖÁ¬Ðø°´;
+//0£¬Ã»ÓÐÈÎºÎ°´¼ü°´ÏÂ
+//1£¬WKUP°´ÏÂ WK_UP
+//×¢Òâ´Ëº¯ÊýÓÐÏìÓ¦ÓÅÏÈ¼¶,KEY0>KEY1>KEY2>WK_UP!!
+uint8_t KEY_Scan(uint8_t mode)
+{
+    static uint8_t key_up=1;     //°´¼üËÉ¿ª±êÖ¾
+    if(mode==1)key_up=1;    //Ö§³ÖÁ¬°´
+    if(key_up&&(POWER_KEY==1||WIND_KEY==1||TIMER_KEY==1||FILTER_KEY==1))
+    {
+        delay_20us(1000);
+        key_up=0;
+        if(POWER_KEY==1)       return POWER_PRES;
+        else if(WIND_KEY==1)    return WIND_PRES;
+        else if(TIMER_KEY==1)  return TIMER_PRES;
+        else if(FILTER_KEY==1) return FILTER_PRES;          
+    }else if(WIND_KEY==0&&POWER_KEY==0&&TIMER_KEY==0&&FILTER_KEY==0)key_up=1;
+    return 0;   //没有按键按下
+}
+
+
+void KeyHandler(uint8_t keyvalue)
+{
+     switch(keyvalue)
+		{				 
+			case POWER_PRES:			//¿ØÖÆLED0,LED1»¥³âµãÁÁ
+				LED1=!LED1;
+				LED0=!LED1;
+				break;
+			case WIND_PRES:			//¿ØÖÆLED0·­×ª
+				LED0=!LED0;
+				break;
+			case TIMER_PRES:			//¿ØÖÆLED1·­×ª	 
+				LED1=!LED1;
+				break;
+			case FILTER_PRES:			//Í¬Ê±¿ØÖÆLED0,LED1·­×ª 
+				LED0=!LED0;
+				LED1=!LED1;
+				break;
+		}
+      //  delay_ms(10);
 
 
 
-
-
-
-
-
+}
 
 
 

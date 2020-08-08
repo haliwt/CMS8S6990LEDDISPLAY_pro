@@ -1,3 +1,4 @@
+
 #ifndef __LED_H__
 #define __LED_H__
 #include "tm1650_i2c.h"
@@ -11,6 +12,10 @@
 #define COM6   P32
 #define COM7   P36
 #define COM8   P05
+
+
+#define   LED0   P25
+#define   LED1  P26
 
 //extern volatile uint8_t DispData[3];//显示LED位数
 #define		BitSET(x,y)		x|=(1<<y)				//置1
