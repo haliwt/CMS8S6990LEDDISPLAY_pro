@@ -159,8 +159,8 @@ void TaskLEDDisplay(void)
 void TaskKeySan(void)
 {
 	
-     KEY_FUNCTION();
-	 
+    // KEY_FUNCTION();
+	  KEY_Handing();
 	
 	
 	

@@ -2,6 +2,8 @@
 #include "demo_buzzer.h"
 #include "myflash.h"
 
+//static uint8_t KEY_Scan(void);
+key_types   key;
 Telec *Telecom= NULL;
 static uint8_t Lockflag =0;
 
@@ -120,11 +122,11 @@ void GPIO_Config(void)
  ** Return Ref:NO
  **   
  ******************************************************************************/
-void KEY_FUNCTION(void)
+uint8_t KEY_FUNCTION(void)
 {
 	static uint8_t pkey=0,datalogic=0;
-	 uint8_t subutton=0,i=0,readdata=0,readsecond=0,read1=0,read2=0;
-
+	uint8_t subutton=0,i=0,readdata=0,readsecond=0,read1=0,read2=0;
+	uint8_t arr[2]={0,0};
 
 	  if(WIND_KEY==1 && TIMER_KEY==1){//童琐按键 --长按3s---组合按键
 		    delay_20us(1000);
@@ -134,32 +136,81 @@ void KEY_FUNCTION(void)
 			   
 			     subutton =2;
 				   P25=1;
+				   i++;
 				   
 				   readdata = Flash_ToReadData(0x00);
+				   if(i==0){
+					   
+					   arr[0] = Flash_ToReadData(0x00);
+					   if(arr[0]==0)Telecom->LockKey = 2;
+					   if(arr[0]==1)Telecom->LockKey = 3;
+				    }
 				   if((readdata == 0 ||readdata == 1) && read2==0 && read1==0){
 						 switch (readdata)
 						 {
 							case 0:     
 										 Flash_ToWriteData(0x00,0x1);
 										 read1 =Flash_ToReadData(0x00);
+										 arr[1]= read1;
+										 i++;
 								break;
 							case 1:
 										 Flash_ToWriteData(0x00,0x0);
-									   read2 =  Flash_ToReadData(0x00);
+									    read2 =  Flash_ToReadData(0x00);
+									    arr[1]= read2;
 										 read1=1;
+										 i++;
 								break;
 						 }
 				  }
+				   
+				  if(Telecom -> LockKey ==2){
+					  
+					  if(arr[1]==1) return 1;
+				  }
+				  else if(Telecom -> LockKey ==3){
+					  
+					  if(arr[1]==0) return 1;
+				  }
+				  else{}
+				  
+				  if(arr[0]==arr[1]){
+					  
+					  switch(arr[0]){
+						  
+						  case 0: 
+						  			Flash_ToWriteData(0x00,0x1);
+									read1 =Flash_ToReadData(0x00);
+									 arr[1]= read1;
+						  break;
+						  
+						  case 1:
+						  			Flash_ToWriteData(0x00,0x0);
+									    read2 =  Flash_ToReadData(0x00);
+									    arr[1]= read2;
+						  break;
+						  
+						  
+					  }
+					  
+					  
+				  }
+				  if(arr[0] != arr[1]){
 				   TM1650_Set(0x68,segNumber[ readdata ]);//初始化为5级灰度，开显示
-           TM1650_Set(0x6A,segNumber[read1]);//初始化为5级灰度，开显示
+           		  TM1650_Set(0x6A,segNumber[read1]);//初始化为5级灰度，开显示
 
-						TM1650_Set(0x6C,segNumber[read2]);//初始化为5级灰度，开显
+				  TM1650_Set(0x6C,segNumber[read2]);//初始化为5级灰度，开显
 			       delay_20us(1000);
+				   delay_20us(1000);
+				   return 1;
+				    
+				  }
 				 
 		}
 
 	 }
-	 readsecond = Flash_ToReadData(0x00);
+	readsecond = Flash_ToReadData(0x00);
+//	if(readdata !=1 || readdata !=0) Flash_ToWriteData(0x00,0x0);
    TM1650_Set(0x6E,segNumber[readsecond]);//初始化为5级灰度，开显示
    delay_20us(1000);
 
@@ -240,11 +291,190 @@ void KEY_FUNCTION(void)
 	}
 
 
-
-
-
-
-
+/******************************************************************************
+ **
+ ** Function Name:	void KEY_FUNCTION(void)
+ ** Function : receive key input message 
+ ** Input Ref:NO
+ ** Return Ref:NO
+ **   
+ ******************************************************************************/
+void KEY_Handing(void)
+{
+	static pkey =0,i=0;
+	uint8_t  temp8;
+	temp8 = KEY_Scan();
+	switch(temp8)
+	{
+		case	_KEY_CONT_3_TIMER_WIND: //长按按键按键值
+		
+				i++;
+				if(i==1){
+				   Telecom->LockKey =1;
+				   TM1650_Set(0x68,segNumber[ Telecom->LockKey]);
+				} 
+				else{
+					Telecom->LockKey =0;
+					i=0;
+					TM1650_Set(0x68,segNumber[ Telecom->LockKey]);
+				}
+			break;
+		
+		case	_KEY_TRG_1_POWER: //
+				    P26=1;
+					pkey = pkey ^ 0x01;
+					if(pkey==1){
+						
+							Telecom->power_state =1;
+							LEDDisplay_GreenColorRing();//背光是绿色
+							BUZZER_Config();
+						  delay_20us(100);
+						
+					}
+					else{
+							
+							Telecom->power_state =0;
+							LEDDisplay_RedColorRing();//电源指示灯红色，闪烁。
+							BUZZER_Config();
+						  delay_20us(100);
+						
+					
+			    }
+			
+		
+			break;
+		
+	
+		
+		case	_KEY_TRG_2_WIND:
+		        P25=1;
+		       
+			break;
+		
+		case  _KEY_TRG_3_TIMER:
+		        P26=1;
+		        P25=1;
+		      
+		     break;
+		case	_KEY_TRG_4_FILTER:
+		       P26=1;
+		    
+	
+		break;
+			
+			break;
+		
+		default:
+			break;
+	}
+}
+/******************************************************************************
+ **
+ ** Function Name:	void KEY_FUNCTION(void)
+ ** Function : receive key input message 
+ ** Input Ref:NO
+ ** Return Ref:NO
+ **   
+ ******************************************************************************/
+uint8_t KEY_Scan(void)
+{
+	uint8_t  reval = 0;
+	
+  
+	key.read = _KEY_ALL_OFF; //0x1F 
+	
+	if(POWER_KEY == 1)
+	{
+		key.read &= ~0x01; // 0x1E
+	}
+	if(WIND_KEY == 1)
+	{
+		key.read &= ~0x02;   //0x1C
+	}
+	if(TIMER_KEY == 1)
+	{
+		key.read &= ~0x04;  //0x1B
+	}
+	if(FILTER_KEY == 1)
+	{
+		key.read &= ~0x08;  //0x17
+	}
+	switch(key.state )
+	{
+		case start:
+		{
+			if(key.read != _KEY_ALL_OFF)
+			{
+				key.buffer   = key.read; //例如：key.buffer = 0x1B
+				key.state    = first;
+				key.on_time  = 0;
+				key.off_time = 0;
+			}
+			break;
+		}
+		case first:
+		{
+			if(key.read == key.buffer) //继续按下
+			{
+				if(++key.on_time> 120) //消抖  0.5us
+				{
+					key.value = key.buffer^_KEY_ALL_OFF; // key.value = 0x1b ^ 0x1f = 0x04
+					key.on_time = 0;
+					key.state   = second;
+				}
+			}
+			else
+			{
+				key.state   = start;
+			}
+			break;
+		}
+		case second:
+		{
+			if(key.read == key.buffer) //再次确认按键是否按下
+			{
+				if(++key.on_time>300)//长按按键
+				{
+					key.value = key.value|0x80; //key.value = 0x04 | 0x80  =0x84
+					key.on_time = 0;
+					
+					key.state   = finish;
+				}
+			}
+			else if(key.read == _KEY_ALL_OFF)  //普通按键检查
+			{
+				if(++key.off_time>5) //松开按键消抖
+				{
+					key.state   = finish;
+				}
+			}
+			break;
+		}
+		case finish:
+		{
+			reval = key.value; //分两种情况： 1.普通按键的按下返回值 TIMER_KEY = 0x04  2.长按键返回值：TIMER_KEY = 0X84
+			key.state   = end;
+			break;
+		}
+		case end:
+		{
+			if(key.read == _KEY_ALL_OFF)
+			{
+				if(++key.off_time>100)
+				{
+					key.state   = start;
+				}
+			}
+			break;
+		}
+		default:
+		{
+			key.state   = start;
+			break;
+		}
+	}
+	return  reval;
+}
 
 
 

@@ -7,6 +7,43 @@
 #include "tm1650_i2c.h"
 #include <stdio.h>
 
+
+#define		_KEY_ALL_OFF				0X1F
+
+//普通按键按下值
+#define		_KEY_TRG_1_POWER     			0x01  //电源普通按键按下---按键值
+#define		_KEY_TRG_2_WIND     			0x02  //风速按键按下--按键值
+#define		_KEY_TRG_3_TIMER     			0x04   //定时按键
+#define		_KEY_TRG_4_FILTER     			0x08
+#define		_KEY_TRG_5     			0x10
+
+//长按按键检查 按键值或者组合按键值
+#define		_KEY_CONT_1_POWER     	    0x81    //电源按键长按--按键值
+#define		_KEY_CONT_2_WIND     		0x82    //风速按键长按--按键值
+#define		_KEY_CONT_3_TIMER_WIND     	0x84    //定时按键长按 + 风速按键 ===长按按键。
+#define		_KEY_CONT_4_FILTER     	     0x88
+#define		_KEY_CONT_5     		     0x90
+
+typedef  struct  _state_
+{
+ unsigned char         read;
+ unsigned char         buffer;
+ unsigned char         value;
+ unsigned short int    on_time;
+ unsigned short int    off_time;
+ enum{
+  start  = 0,
+  first  = 1,
+  second = 2,
+  cont   = 3,
+  end    = 4,
+  finish = 5,
+ }state;
+}key_types;
+
+ extern key_types key;
+
+
 #define  POWER_KEY      P16
 #define  WIND_KEY       P15
 #define  TIMER_KEY      P14
@@ -43,8 +80,9 @@ void delay_30us(uint16_t n) ;
 void delay_20us(uint16_t n) ;
 void delay_us(uint16_t n)  ;
 void GPIO_Config(void);
-void KEY_FUNCTION(void);
-
+uint8_t KEY_FUNCTION(void);
+uint8_t KEY_Scan(void);
+void KEY_Handing(void);
 
 #endif /* __DEMO_GPIO_H__ */
 
