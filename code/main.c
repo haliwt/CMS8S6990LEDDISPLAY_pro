@@ -52,54 +52,10 @@ int main(void)
 							
   while(1)
 	{
-		TaskKeySan();
-		#if 0
-		TM1650_Set(0x68,segNumber[9]);//³õÊ¼»¯Îª5¼¶»Ò¶È£¬¿ªÏÔÊ¾
-   
-
-	TM1650_Set(0x6A,segNumber[1]);//³õÊ¼»¯Îª5¼¶»Ò¶È£¬¿ªÏÔÊ¾
-
-
-    TM1650_Set(0x6C,segNumber[2]);//³õÊ¼»¯Îª5¼¶»Ò¶È£¬¿ªÏÔÊ¾
-
-	
-   TM1650_Set(0x6E,segNumber[11]);//³õÊ¼»¯Îª5¼¶»Ò¶È£¬¿ªÏÔÊ¾
-	#endif 	
-	
 		
-#if 0
-	  switch(taskState){
+	
+		TaskProcess();
 
-          case 0 :
-                    TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
-					TaskLEDDisplay();
-                
-                  taskState =1;
-          break;
-
-          case 1:
-                  
-					 
-					TaskKeySan();
-          TM1650_Set(0x6A,segNumber[1]);//初始化为5级灰度，开显示       
-                  taskState =2;
-		  break;
-
-		  case 2: 
-		            TM1650_Set(0x6C,segNumber[2]);//初始化为5级灰度，开显示
-			       TaskReceiveAirSensor();
-		         
-		           taskState =3;
-		  break;
-
-		  case 3: 
-		  				TM1650_Set(0x6E,segNumber[3]);//初始化为5级灰度，开显示
-			        TaskTelecStatus();
-		  		
-                    taskState =0;
-		  break;
-      }
-#endif 
 	   
 	}		
 }
@@ -137,12 +93,12 @@ void TaskProcess(void)
 ***********************************************************/
 void TaskLEDDisplay(void)
 {
-   
+      BUZZER_Config();
 	  
 	  LEDDisplay_TimerTim();
     //LEDDisplay_SleepLamp();
 	  
-	  delay_30us(100)  ;
+	//  delay_30us(100)  ;
 	
 	  
 
@@ -178,10 +134,13 @@ void TaskReceiveAirSensor(void)
 {
  // BUZZER_Config();  
 	P26=0;
-	Analysis_UART0_ReceiveData() ;
+	//Analysis_UART0_ReceiveData() ;
+	BUZZER_Config();
 	 delay_30us(1000)  ;//(25ms)
-	
-	 
+	//BUZ_EnableBuzzer();	
+	BUZ_DisableBuzzer();
+    delay_30us(1000)  ;//(25ms)
+    BUZZER_Config();
 	
 
 }
@@ -198,7 +157,20 @@ void TaskTelecStatus(void)
   P25=1;
   USART1_SendDataToMain();
   delay_30us(1000) ;  //28ms
+  TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
 
-	  
+  
+	TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
+   
+
+	TM1650_Set(0x6A,segNumber[8]);//初始化为5级灰度，开显示
+
+
+    TM1650_Set(0x6C,segNumber[7]);//初始化为5级灰度，开显示
+
+	
+   TM1650_Set(0x6E,segNumber[6]);//初始化为5级灰度，开显示
+
+  
 	
 }

@@ -33,40 +33,41 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
 	uint8_t i;
 	  seconds++;
 	  TimerCnt++;
-	  for (i=0; i<TASKS_MAX; i++)          // 逐个任务轮询时间处理
-	  {
-	        if (TaskComps[i].Timer)          // 时间不为0
-	        {
-	            TaskComps[i].Timer--;         // 减去一个节拍
-	            if (TaskComps[i].Timer == 0 )       // 时间减完了
-	            {
-	                 TaskComps[i].Timer = TaskComps[i].ItervalTime;       // 恢复计时器值，从新运行下一次
-	                 TaskComps[i].Run = 1;           // 任务可以运行
-								  
-	            }
-	        }
-		}
+	  if(seconds < 60500){
+			  for (i=0; i<TASKS_MAX; i++)          // 逐个任务轮询时间处理
+			  {
+			        if (TaskComps[i].Timer)          // 时间不为0
+			        {
+			            TaskComps[i].Timer--;         // 减去一个节拍
+			            if (TaskComps[i].Timer == 0 )       // 时间减完了
+			            {
+			                 TaskComps[i].Timer = TaskComps[i].ItervalTime;       // 恢复计时器值，从新运行下一次
+			                 TaskComps[i].Run = 1;           // 任务可以运行
+										  
+			            }
+			        }
+				}
 
-		if(seconds==60000){ //计时：6.0s
-			seconds =0;
-			 minutes ++;
-			 TimerCnt =0;
-			if(minutes ==10){ //1分钟时间
-				minutes =0;
-			    getMinute++; 
-		    }
-		}
-		
-		if(cmdArriving == 1 && TimerCnt == 500)
-		{
-			cmdArrived = 1;
-			pUart->ReceNum = cmdIndex;
-			cmdIndex = 0;
-			TimerCnt = 0;
-			cmdArriving =0;
-			pUart->achieveUartFlag=1;
-		}
-	//	SysTick_Handler();
+				if(seconds==60000){ //计时：6.0s
+					seconds =0;
+					 minutes ++;
+					 TimerCnt =0;
+					if(minutes ==10){ //1分钟时间
+						minutes =0;
+					    getMinute++; 
+				    }
+				}
+				
+				if(cmdArriving == 1 && TimerCnt == 500)
+				{
+					cmdArrived = 1;
+					pUart->ReceNum = cmdIndex;
+					cmdIndex = 0;
+					TimerCnt = 0;
+					cmdArriving =0;
+					pUart->achieveUartFlag=1;
+				}
+	  	}
 
 }
 /******************************************************************************

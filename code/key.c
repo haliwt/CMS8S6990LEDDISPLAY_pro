@@ -134,33 +134,28 @@ void KEY_FUNCTION(void)
 	switch(key)
 		{				 
       //常规一般按键测试（按下键就起作用）：
-			//case KEY_EVENT(TIMER_PRES,PRESS_DOWN):	//KEY3按下即有效，定时器键
-			  case TIMER_PRES:
+		
+			  case TIMER_PRES:	//KEY3按下即有效，定时器键
 				BUZZER_Config();
 			    delay_20us(10);
-			    	IIC_Init_TM1650();
-					delay_30us(100);			//需要延时一小段时间，否则开显示会无响应
+			    IIC_Init_TM1650();
 					TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
-				TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
 				TM1650_Set(0x68,segNumber[9]);//初始化为5级灰度，开显示
-		    	TM1650_Set(0x6A,segNumber[1]);//初始化为5级灰度，开显示
-		    	TM1650_Set(0x6C,segNumber[1]);//初始化为5级灰度，开显示
+		    	TM1650_Set(0x6A,segNumber[3]);//初始化为5级灰度，开显示
+		    	TM1650_Set(0x6C,segNumber[2]);//初始化为5级灰度，开显示
 		     	TM1650_Set(0x6E,segNumber[1]);//初始化为5级灰度，开显示
 				break;
-		//	case KEY_EVENT(POWER_PRES,PRESS_DOWN):	//KEY0按下即有效，电源键 
 		    case POWER_PRES:
 			    BUZZER_Config();
 			    delay_20us(10);
 				break;
 			
-		//	case KEY_EVENT(WIND_PRES,PRESS_DOWN):	//KEY1按下即有效，风速键
-		    case WIND_PRES:
+		    case WIND_PRES:	//KEY1按下即有效，风速键
 			    BUZZER_Config();
 			    delay_20us(10);
 				break;
 
-		//	case KEY_EVENT(FILTER_PRES,PRESS_DOWN):	//KEY3按下即有效，虑网置换键
-		    case FILTER_PRES:
+		    case FILTER_PRES://KEY3按下即有效，虑网置换键
 			    BUZZER_Config();
 			    delay_20us(10);
 				break;
@@ -516,7 +511,7 @@ void SysTick_Handler(void)
 	nTicks ++ ;
 	if(!(nTicks%3000)) nTicks=0; //300ms 赋初值一次
 
-	if (( nTicks % TICKS_INTERVAL) == 0 )
+	if (( nTicks % TICKS_INTERVAL * 10) == 0 )
 	 {
 		Key_Scan_Stick(); //每5ms扫键一次，读出消抖之后的按键值，以及按下的时间
 		if ( nTicks % (TICKS_INTERVAL*12) == 0 ) 
