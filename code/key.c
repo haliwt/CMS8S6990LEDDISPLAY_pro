@@ -130,7 +130,7 @@ void KEY_FUNCTION(void)
 	switch(key)
 		{				 
       //常规一般按键测试（按下键就起作用）：
-			case KEY_EVENT(TIMER_PRES,PRESS_DOWN):	//KEY2按下即有效，定时器键
+			case KEY_EVENT(TIMER_PRES,PRESS_DOWN):	//KEY3按下即有效，定时器键
 				BUZZER_Config();
 			    delay_20us(10);
 			    	IIC_Init_TM1650();
@@ -180,14 +180,14 @@ void KEY_FUNCTION(void)
 
 //硬件按键编码（为应用三行读键程序而准备）
 //以战舰版的四键为例（最大暂支持16键，KeyS_Type定义为u32则可支持32键）
-KeyS_Type GetHalKeyCode(void)
+uint8_t GetHalKeyCode(void)
 {
 	uint8_t ktmp=0;
 	if(KEY0_IN) 	   return POWER_PRES ;//ktmp|=1<<POWER_PRES;
 	else if(KEY1_IN)   return WIND_PRES;	//ktmp|=1<<WIND_PRES;
 	else if(KEY2_IN)   return TIMER_PRES;//ktmp|=1<<TIMER_PRES;    //if(!KEY2_IN) 	ktmp|=1<<TIMER_PRES;低电平有效
 	else if(KEY3_IN)   return FILTER_PRES; //ktmp|=1<<TIMER_PRES;    //注意本键为高电平有效 
-	//return ktmp;
+	return ktmp;
 }
 
 //********************************************************************************
@@ -219,7 +219,7 @@ uint16_t KeyTime=0;  //全局变量：存有本次读键时当前键态持续的
 #define WKUP_PRESSED 				(Trg==WKUP_ON)
 /******************************************************************************
  **
- ** Function Name:	void KEY_FUNCTION(void)
+ ** Function Name: Get_Key(void)
  ** Function : receive key input message 
  ** Input Ref:NO
  ** Return Ref:NO
@@ -270,18 +270,18 @@ uint8_t Get_Key(void)
 //模式三（前两种的折中方案）：强实时性需要紧急处理的键，直接在这里写执行代码，其它允许延时的键留待主循环查询处理，形式如下例所示。
 uint8_t Key_PrePro(void)
 {
-	//return Get_Key(); //模式二时，本函数简化到只须这一句，以下可全部删除。
-	uint8_t newkeytmp,ret=0;
-	newkeytmp=Get_Key();
-	switch(newkeytmp)
-	{
-		case KEY_EVENT(WIND_PRES,DOUBLE_CLICK)://KEY1双击，执行两灯同时翻转（仅作为示例）
-			LED0=!LED0;LED1=!LED1; //控制两灯翻转
-      break;
-    default:
-			ret=newkeytmp;
-	}
-	return ret;
+	return Get_Key(); //模式二时，本函数简化到只须这一句，以下可全部删除。
+	//uint8_t newkeytmp,ret=0;
+	//newkeytmp=Get_Key();
+	//switch(newkeytmp)
+	//{
+		//case KEY_EVENT(WIND_PRES,DOUBLE_CLICK)://KEY1双击，执行两灯同时翻转（仅作为示例）
+		//	LED0=!LED0;LED1=!LED1; //控制两灯翻转
+     // break;
+   // default:
+		//	ret=newkeytmp;
+	//}
+	//return ret;
 }
 
 
@@ -334,10 +334,10 @@ uint8_t Read_A_Key(void)
 //该函数将影响全局变量：消除抖动后的稳定键态值KeyStable及累计时长KeyTime
 void Key_Scan_Stick(void)
 {
-	KeyS_Type KeyValTemp;
-	static uint16_t KeyValTempOld=0;
-	static uint16_t debounce_cnt=0;
-	static uint16_t debouncing=0;
+	 uint8_t KeyValTemp;
+	static uint8_t KeyValTempOld=0;
+	static uint8_t debounce_cnt=0;
+	static uint8_t debouncing=0;
 	
 	KeyTime++;//在稳定键态（包括无键）状态下，全局变量KeyTime是持续增加的
 	if((!debouncing) && (KeyTime%NORMAL_SCAN_FREQ))//非消抖期间且累计计时不是6的倍数(即6*5＝30ms才扫描一次)						NORMAL_SCAN_FREQ=6
@@ -381,22 +381,35 @@ void Key_Scan_Stick(void)
 #define THE_KEY_IS_OFF			(!(Cont & KeyOnCode))
 #define THE_KEY_IS_ON				(Cont & KeyOnCode)
 #define THE_KEY_PRESSED			((Trg & KeyOnCode) && (Cont & KeyOnCode))
-
+/*********************************************************************
+ *
+ *Function Name:Get_Key_State(uint8_t KeyNum)
+ *Function: -
+ *Iinput Ref:keyNum --输入的实体按键数
+ *Return Ref:返回按键的键值
+ *
+**********************************************************************/
 uint8_t Get_Key_State(uint8_t KeyNum)
 {
 	//按键记忆状态(每字节低四位存state，高4位存repeat)
 	static uint8_t KeyState[KeyNumMax];
+   
 	
-	KeyS_Type KeyOnCode;
+	uint8_t KeyOnCode,keyHardNum;
 	uint8_t i,state,repeat,event=0;
+	keyHardNum = KeyNum;
 	if(KeyNum==KB_CLR) //参数为KB_CLR时，则消除所有按键记忆状态
 	{
 		for(i=0;i<KeyNumMax;i++) KeyState[i]=0;
 		return 0;
 	}
-	KeyOnCode=(KeyS_Type)1<<KeyNum;
+	//KeyOnCode=(uint8_t)1<<KeyNum;WT.EDIT 
+	if(keyHardNum  ==0)KeyOnCode =0x01;
+	else if(keyHardNum ==1)KeyOnCode =0x02;
+	else if(keyHardNum ==2)KeyOnCode =0x04;
+	else if(keyHardNum ==3)KeyOnCode =0x08;
 	state=KeyState[KeyNum]&0x0f; //取相应的记忆状态值
-	repeat=KeyState[KeyNum]>>4;
+	repeat=KeyState[KeyNum]>>4; //4个按键循环，查询按键，按下状态
 	
 	if(Trg && (Trg!=KeyOnCode)) state=0; //出现其它键，则状态清0
 	

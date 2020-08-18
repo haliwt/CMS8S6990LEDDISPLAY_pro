@@ -59,10 +59,10 @@ typedef		unsigned char			KeyS_Type;    //键态字类型定义（根据按键总
 #define KEY3_IN 	P13//PAin(0)			FILTER_KEY//按键3输入端口(WK_UP)  
 
 //硬件实体按键编号，键态字KeyS_Type依此顺序按位组合，每BIT位对应一个实体按键
-#define POWER_PRES 		0     //POWER_KEY
-#define WIND_PRES 		1     //WIND_KEY
-#define TIMER_PRES  		2    //TIMER_KEY
-#define FILTER_PRES 		3    //FILTER_KEY
+#define POWER_PRES 		0x01     //POWER_KEY
+#define WIND_PRES 		0x02     //WIND_KEY
+#define TIMER_PRES     	0x04   //TIMER_KEY
+#define FILTER_PRES 	0x08   //FILTER_KEY
 
 
 
@@ -81,7 +81,7 @@ typedef		unsigned char			KeyS_Type;    //键态字类型定义（根据按键总
 
 #define KEY_EVENT(m,n)					(uint8_t)(10*(m+2)+n) 		//按键事件(即键值)宏定义
 //有了上述宏定义后，无须再为各个按键单独写宏定义，使用KEY_EVENT(键编号,键值事件)就可以代表特定按键事件了。
-//例如：用KEY_EVENT(KB_KEY3,DOUBLE_CLICK)就表示了WKUP键双击的键值（或称事件值）
+//例如：用KEY_EVENT(KB_WKUP,DOUBLE_CLICK)就表示了WKUP键双击的键值（或称事件值）
 
 
 //状态机键值事件宏定义如下：
