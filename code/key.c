@@ -130,7 +130,12 @@ void KEY_FUNCTION(void)
 	switch(key)
 		{				 
       //常规一般按键测试（按下键就起作用）：
-			case KEY_EVENT(KB_KEY2,PRESS_DOWN):	//KEY2按下即有效，定时器键
+			case KEY_EVENT(TIMER_PRES,PRESS_DOWN):	//KEY2按下即有效，定时器键
+				BUZZER_Config();
+			    delay_20us(10);
+			    	IIC_Init_TM1650();
+					delay_30us(100);			//需要延时一小段时间，否则开显示会无响应
+					TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
 				TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
 				TM1650_Set(0x68,segNumber[9]);//初始化为5级灰度，开显示
 		    	TM1650_Set(0x6A,segNumber[1]);//初始化为5级灰度，开显示
@@ -138,17 +143,17 @@ void KEY_FUNCTION(void)
 		     	TM1650_Set(0x6E,segNumber[1]);//初始化为5级灰度，开显示
 				break;
 
-			case KEY_EVENT(KB_KEY0,PRESS_DOWN):	//KEY0按下即有效，电源键 
+			case KEY_EVENT(POWER_PRES,PRESS_DOWN):	//KEY0按下即有效，电源键 
 			    BUZZER_Config();
 			    delay_20us(10);
 				break;
 			
-			case KEY_EVENT(KB_KEY1,PRESS_DOWN):	//KEY1按下即有效，风速键
+			case KEY_EVENT(WIND_PRES,PRESS_DOWN):	//KEY1按下即有效，风速键
 			    BUZZER_Config();
 			    delay_20us(10);
 				break;
 
-			case KEY_EVENT(KB_KEY3,PRESS_DOWN):	//KEY3按下即有效，虑网置换键
+			case KEY_EVENT(FILTER_PRES,PRESS_DOWN):	//KEY3按下即有效，虑网置换键
 			    BUZZER_Config();
 			    delay_20us(10);
 				break;
@@ -177,19 +182,19 @@ void KEY_FUNCTION(void)
 //以战舰版的四键为例（最大暂支持16键，KeyS_Type定义为u32则可支持32键）
 KeyS_Type GetHalKeyCode(void)
 {
-	KeyS_Type ktmp=0;
-	if(KEY0_IN) 	ktmp|=1<<KB_KEY0;
-	if(KEY1_IN) 	ktmp|=1<<KB_KEY1;
-	if(KEY2_IN) 	ktmp|=1<<KB_KEY2;    //if(!KEY2_IN) 	ktmp|=1<<KB_KEY2;低电平有效
-	if(WKUP_IN) 	ktmp|=1<<KB_KEY3;    //注意本键为高电平有效 
-	return ktmp;
+	uint8_t ktmp=0;
+	if(KEY0_IN) 	   return POWER_PRES ;//ktmp|=1<<POWER_PRES;
+	else if(KEY1_IN)   return WIND_PRES;	//ktmp|=1<<WIND_PRES;
+	else if(KEY2_IN)   return TIMER_PRES;//ktmp|=1<<TIMER_PRES;    //if(!KEY2_IN) 	ktmp|=1<<TIMER_PRES;低电平有效
+	else if(KEY3_IN)   return FILTER_PRES; //ktmp|=1<<TIMER_PRES;    //注意本键为高电平有效 
+	//return ktmp;
 }
 
 //********************************************************************************
 static KeyS_Type KeyStable=0; //存有稳定(消除抖动后)的键态(读键前)
 
-KeyS_Type Trg=0;  		//全局变量：存有本次读键时的按键触发状态
-KeyS_Type Cont=0; 		//全局变量：存有本次读键时的实时键态
+uint16_t Trg=0;  		//全局变量：存有本次读键时的按键触发状态
+uint16_t Cont=0; 		//全局变量：存有本次读键时的实时键态
 uint16_t KeyTime=0;  //全局变量：存有本次读键时当前键态持续的时长
 
 /******************** 用户应用程序按键判断接口函数(请根据具体需求修改) *********************************/
@@ -204,10 +209,10 @@ uint16_t KeyTime=0;  //全局变量：存有本次读键时当前键态持续的
 //组合：双键组合（其实多键组合也可同理实现）
 /**********************************************************************************/
 //不使用组合按键等条件判断时，以下宏定义可删除
-#define KEY0_ON 						(0x0001<<KB_KEY0)  //宏定义：按键未释放值
-#define KEY1_ON 						(0x0001<<KB_KEY1)
-#define KEY2_ON 						(0x0001<<KB_KEY2)
-#define WKUP_ON 						(0x0001<<KB_KEY3)
+#define KEY0_ON 						(0x0001<<POWER_PRES)  //宏定义：按键未释放值
+#define KEY1_ON 						(0x0001<<WIND_PRES)
+#define KEY2_ON 						(0x0001<<TIMER_PRES)
+#define WKUP_ON 						(0x0001<<TIMER_PRES)
 #define KEY0_PRESSED 				(Trg==KEY0_ON)  //宏定义：按键触发值
 #define KEY1_PRESSED 				(Trg==KEY1_ON)
 #define KEY2_PRESSED 				(Trg==KEY2_ON)
@@ -270,7 +275,7 @@ uint8_t Key_PrePro(void)
 	newkeytmp=Get_Key();
 	switch(newkeytmp)
 	{
-		case KEY_EVENT(KB_KEY1,DOUBLE_CLICK)://KEY1双击，执行两灯同时翻转（仅作为示例）
+		case KEY_EVENT(WIND_PRES,DOUBLE_CLICK)://KEY1双击，执行两灯同时翻转（仅作为示例）
 			LED0=!LED0;LED1=!LED1; //控制两灯翻转
       break;
     default:
@@ -330,7 +335,7 @@ uint8_t Read_A_Key(void)
 void Key_Scan_Stick(void)
 {
 	KeyS_Type KeyValTemp;
-	static KeyS_Type KeyValTempOld=0;
+	static uint16_t KeyValTempOld=0;
 	static uint16_t debounce_cnt=0;
 	static uint16_t debouncing=0;
 	

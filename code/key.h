@@ -46,7 +46,7 @@ enum WindSpeed{wind_sleep,wind_middle,wind_high,wind_auto};
 #define NORMAL_SCAN_FREQ    6   //正常情况下扫键频率因子，如为6则表示稳定后扫键周期为6*TICKS_INTERVAL＝30ms
 #define SHORT_TICKS       	(300 /TICKS_INTERVAL)  //短按时间定义300ms
 #define LONG_TICKS        	(1200 /TICKS_INTERVAL) //长按时间定义1200ms
-#define KEYBUFFSIZE					5  //按键缓存FIFO深度，定义保存16个键值
+#define KEYBUFFSIZE					8  //按键缓存FIFO深度，定义保存16个键值
 
 //***************** 以下与具体系统的硬件相关 ********************************************
 #define 	KeyNumMax					4			//硬件实体按键数量
@@ -56,13 +56,13 @@ typedef		unsigned char			KeyS_Type;    //键态字类型定义（根据按键总
 #define KEY0_IN  	P16//PCin(1)			POWER_KEY//按键0输入端口
 #define KEY1_IN  	P15//PCin(13)			WIND_KEY//按键1输入端口
 #define KEY2_IN  	P14//PEin(2)			TIMER_KEY //按键2输入端口 
-#define WKUP_IN 	P13//PAin(0)			FILTER_KEY//按键3输入端口(WK_UP)  
+#define KEY3_IN 	P13//PAin(0)			FILTER_KEY//按键3输入端口(WK_UP)  
 
 //硬件实体按键编号，键态字KeyS_Type依此顺序按位组合，每BIT位对应一个实体按键
-#define KB_KEY0  		0     //POWER_KEY
-#define KB_KEY1  		1     //WIND_KEY
-#define KB_KEY2  		2    //TIMER_KEY
-#define KB_KEY3 		3    //FILTER_KEY
+#define POWER_PRES 		0     //POWER_KEY
+#define WIND_PRES 		1     //WIND_KEY
+#define TIMER_PRES  		2    //TIMER_KEY
+#define FILTER_PRES 		3    //FILTER_KEY
 
 
 
@@ -86,7 +86,7 @@ typedef		unsigned char			KeyS_Type;    //键态字类型定义（根据按键总
 
 //状态机键值事件宏定义如下：
 #define NONE_PRESS				0
-#define PRESS_UP					1
+#define PRESS_UP				1
 #define PRESS_DOWN				2
 #define SINGLE_CLICK			3
 #define DOUBLE_CLICK			4

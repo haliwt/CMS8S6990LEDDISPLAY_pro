@@ -159,8 +159,8 @@ void TaskKeySan(void)
 {
 	Key_Scan_Stick();
 	GetAndSaveKey();
-	
-     KEY_FUNCTION();
+
+    KEY_FUNCTION();
 	 
 	
 	
