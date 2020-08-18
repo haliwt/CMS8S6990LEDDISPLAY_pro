@@ -39,18 +39,17 @@ int main(void)
     static uint8_t taskState =0;
 	  
     TMR0_Config();
-   // BUZZER_Config();
-  //  BUZZER_Init();
+    BUZZER_Init();
     IIC_Init_TM1650();
 	
 	GPIO_Config();
-	//I2C_Config();							/*设置I2C主控模式*/		
+								
 	LED_GPIO_Init();
 	UART0_Config();
 	UART1_Config();
   Init_Tm1650();
-    
-	Telecom->LockKey=0;							
+  
+							
   while(1)
 	{
 		TaskKeySan();
@@ -158,9 +157,11 @@ void TaskLEDDisplay(void)
 ***********************************************************/
 void TaskKeySan(void)
 {
+	Key_Scan_Stick();
+	GetAndSaveKey();
 	
-    // KEY_FUNCTION();
-	  KEY_Handing();
+     KEY_FUNCTION();
+	 
 	
 	
 	

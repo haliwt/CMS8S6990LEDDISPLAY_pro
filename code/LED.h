@@ -7,10 +7,14 @@
 #define PJ   P25
 #define PK   P26
 #define PL   P30
+
 #define COM5   P31
 #define COM6   P32
 #define COM7   P36
 #define COM8   P05
+
+#define LED0   P24 
+#define LED1   P25
 
 //extern volatile uint8_t DispData[3];//显示LED位数
 #define		BitSET(x,y)		x|=(1<<y)				//置1
