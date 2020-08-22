@@ -129,6 +129,7 @@ void GPIO_Config(void)
  ******************************************************************************/
 void KEY_FUNCTION(void)
 {
+   static uint8_t powerSt=0 ;
 	vu8 key=0;	
 	key=Read_A_Key();	//得到键值
 	switch(key)
@@ -147,7 +148,15 @@ void KEY_FUNCTION(void)
 		    case POWER_PRES:
 			    BUZZER_Config();
 			    delay_20us(10);
-			    LEDDisplay_RedColorRing();
+			   // powerSt = powerSt ^ 0x01;
+				if(powerSt ==0){
+					LEDDisplay_GreenColorRing();
+					powerSt ++;
+				}
+				else{
+				 		LEDDisplay_RedColorRing();
+						powerSt =0;
+				}
 				break;
 			
 		    case WIND_PRES:	//KEY1按下即有效，风速键

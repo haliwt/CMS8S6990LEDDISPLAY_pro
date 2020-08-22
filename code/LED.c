@@ -168,15 +168,14 @@ void LEDDisplay_RedColorRing(void)
 void LEDDisplay_GreenColorRing(void)
 {
    
-   //100% 显示
-  // TM1650_write_byte(TM1650_5_NDISP,TM1650_COM1_ADDR , &seg[8]);
+  
    PI= 1;
    PJ =1;
    PK =1;
    PL = 1;
+   COM5=0;
    COM6=0;
-  // TM1650_write_byte(TM1650_5_NDISP,TM1650_COM1_ADDR , &seg[8]);
-   
+  TM1650_FULL_DISP();
    
 
 }
@@ -206,7 +205,7 @@ void LEDDisplay_BlueColorRing(void)
    PI= 0;
    PJ =1;
    PK =1;
- 
+   TM1650_FULL_DISP();
 }
 /****************************************************************************************************
  * 	*
