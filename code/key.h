@@ -45,7 +45,7 @@ enum WindSpeed{wind_sleep,wind_middle,wind_high,wind_auto};
 #define DEBOUNCE_TICKS    	4				//消除抖动次数，即时长至少为5ms*4
 #define NORMAL_SCAN_FREQ    6   //正常情况下扫键频率因子，如为6则表示稳定后扫键周期为6*TICKS_INTERVAL＝30ms
 #define SHORT_TICKS       	(300 /TICKS_INTERVAL)  //短按时间定义300ms
-#define LONG_TICKS        	(1200 /TICKS_INTERVAL) //长按时间定义1200ms
+#define LONG_TICKS        	(60000/TICKS_INTERVAL )//(1200 /TICKS_INTERVAL) //长按时间定义1200ms
 #define KEYBUFFSIZE					8  //按键缓存FIFO深度，定义保存16个键值
 
 //***************** 以下与具体系统的硬件相关 ********************************************

@@ -190,7 +190,7 @@ void KEY_FUNCTION(void)
 uint8_t GetHalKeyCode(void)
 {
 	uint8_t ktmp=0;
-	if(KEY1_IN && KEY2_IN)    	return WIND_TIMER_PRES; //组合按键wind + timer key
+	if(KEY1_IN && KEY2_IN)    	return WIND_TIMER_PRES; //组合按键wind + timer key //WT.EDIT
 	else if(KEY0_IN) 	   		return POWER_PRES ;//ktmp|=1<<POWER_PRES;//WT.EDIT 
 	else if(KEY1_IN)   			return WIND_PRES;	//ktmp|=1<<WIND_PRES;
 	else if(KEY2_IN)   			return TIMER_PRES;//ktmp|=1<<TIMER_PRES;    //if(!KEY2_IN) 	ktmp|=1<<TIMER_PRES;低电平有效
@@ -384,7 +384,7 @@ uint8_t Get_Key(void)
 		} 
 	#endif 
 	   if(Cont==(WIND_ON + TIMER_ON))	// 0X06 = 0X02 + 0X04
-		{ //WKUP+KEY0组合按键（先按下WKUP再按下KEY0）
+		{ 
 			Get_Key_State(KB_CLR); //复位状态机，防止本按键对其干扰(本按键与状态机有冲突时请调用此句)
 			return WIND_TIMER_PRES  ;//WKUP_PLUSKEY0_PRES;
 		} 
