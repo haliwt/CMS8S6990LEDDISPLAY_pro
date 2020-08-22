@@ -147,6 +147,7 @@ void KEY_FUNCTION(void)
 		    case POWER_PRES:
 			    BUZZER_Config();
 			    delay_20us(10);
+			    LEDDisplay_RedColorRing();
 				break;
 			
 		    case WIND_PRES:	//KEY1按下即有效，风速键

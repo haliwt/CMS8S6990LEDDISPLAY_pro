@@ -8,10 +8,11 @@
 #define PK   P26
 #define PL   P30
 
-#define COM5   P31
-#define COM6   P32
-#define COM7   P36
-#define COM8   P05
+#define COM5   P31    //5i
+#define COM6   P32   //6i
+#define COM7   P36   //7i
+#define COM8   P05   //8i
+
 
 #define LED0   P24 
 #define LED1   P25
@@ -103,6 +104,8 @@ void LEDDisplay_TimerTim(void );
 void LEDDisplay_RedColorRing(void);
 void LEDDisplay_GreenColorRing(void);
 //void LEDDisplay_BlueColorRing(void);
+
+void TM1650_FULL_DISP(void);
 
 
 

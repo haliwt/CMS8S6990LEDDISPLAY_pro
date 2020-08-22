@@ -15,9 +15,10 @@ const unsigned char segNumber[]={
          seg_a+seg_c+seg_d+seg_e+seg_f+seg_g,        // char "6"  0x06
          seg_a+seg_b+seg_c+seg_f,                    // char "7"  0x07
          seg_a+seg_b+seg_c+seg_d+seg_e+seg_f+seg_g,  // char "8"  0x08
-         seg_a+seg_b+seg_c+seg_d+seg_f+seg_g,        // char "9"  0x09
-         seg_h,                                      // char "."  0x0A
-         0                                           // Dont't display
+         seg_a+seg_b+seg_c+seg_d+seg_f+seg_g,        		// char "9"  0x09
+         seg_h,                                      		// char "."  0x0A
+         seg_a+seg_b+seg_c+seg_d+seg_e+seg_f+seg_g+seg_h,  	// full led  0x0B
+         0                                           		// Dont't display  0x0c
          
 };
 
