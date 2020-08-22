@@ -5,7 +5,7 @@
 //static uint8_t KEY_Scan(void);
 
 //key_types   key;
-Telec *Telecom= NULL;
+Telec Telecom;
 static uint8_t Lockflag =0;
 
 uint8_t New_KeyBuff[KEYBUFFSIZE];

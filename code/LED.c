@@ -58,7 +58,7 @@ void LED_GPIO_Init(void)
  ******************************************************************************/
 void LEDDisplay_SleepLamp(void)
 {
-   if(Telecom->setWind_levels == wind_sleep)
+   if(Telecom.setWind_levels == wind_sleep)
    {
        LEDDisplay_BlueColorRing();
 
@@ -79,53 +79,53 @@ void LEDDisplay_TimerTim(void)
 	 static uint8_t minhour=0;
 	 uint8_t DispData[3];
 
-   if(Telecom->showtimes <=60 && Telecom->getTimerHour < 1){//显示分钟时间
-        if(Telecom->showtimes ==60 && Telecom->TimerEvent ==0){  //设置定时时间，按键输入定时时间值
-			Telecom->getTimerHour++;
-			Telecom->showtimes=0;
+   if(Telecom.showtimes <=60 && Telecom.getTimerHour < 1){//显示分钟时间
+        if(Telecom.showtimes ==60 && Telecom.TimerEvent ==0){  //设置定时时间，按键输入定时时间值
+			Telecom.getTimerHour++;
+			Telecom.showtimes=0;
 		}
-		if(Telecom->TimerEvent == 1){ //显示定时时间，每次减一分钟 ，定时事件=1，定时开始
-			Telecom->showtimes  = Telecom->showtimes - getMinute;
-			if(Telecom->showtimes <=0) {
+		if(Telecom.TimerEvent == 1){ //显示定时时间，每次减一分钟 ，定时事件=1，定时开始
+			Telecom.showtimes  = Telecom.showtimes - getMinute;
+			if(Telecom.showtimes <=0) {
 				minhour ++;    				//分钟时间减完了，---再减小时时间参数
-				Telecom->showtimes=0;
+				Telecom.showtimes=0;
 				getMinute =0;
 			}
  
 		}
 
-       	DispData[2] = segNumber[Telecom->showtimes %10];// LED个位
+       	DispData[2] = segNumber[Telecom.showtimes %10];// LED个位
     	TM1650_Set(0x68, DispData[2]);//初始化为5级灰度，开显示 //写入个位 
-       	DispData[1] = segNumber[Telecom->showtimes /10];// LED十位
+       	DispData[1] = segNumber[Telecom.showtimes /10];// LED十位
         TM1650_Set(0x6A, DispData[1]);//写入十位
        	DispData[0] = segNumber[0];         //小时，个位
         TM1650_Set(0x6C, DispData[0]);//写入百位
         P24=1; //PM2.5显示
     }
-    else if(Telecom->getTimerHour >=1){ //显示小时时间，分钟时间
-        if(Telecom->showtimes ==60 && Telecom->TimerEvent==0){
-			Telecom->getTimerHour++;
-			Telecom->showtimes=0;
+    else if(Telecom.getTimerHour >=1){ //显示小时时间，分钟时间
+        if(Telecom.showtimes ==60 && Telecom.TimerEvent==0){
+			Telecom.getTimerHour++;
+			Telecom.showtimes=0;
 		}
-		if(Telecom->TimerEvent == 1){ //定时事件开始
-			if(Telecom->getTimerHour !=0){ //定时时间，大于一个小时
-				Telecom->showtimes  = Telecom->showtimes - getMinute;
-				if(Telecom->showtimes <=0) {
+		if(Telecom.TimerEvent == 1){ //定时事件开始
+			if(Telecom.getTimerHour !=0){ //定时时间，大于一个小时
+				Telecom.showtimes  = Telecom.showtimes - getMinute;
+				if(Telecom.showtimes <=0) {
 					minhour ++;
-					Telecom->showtimes=60;
+					Telecom.showtimes=60;
 				}
-				Telecom->getTimerHour  = Telecom->getTimerHour - minhour; //减小时时间
+				Telecom.getTimerHour  = Telecom.getTimerHour - minhour; //减小时时间
 			}
 		}
         
-		     DispData[2] = segNumber[Telecom->showtimes %10];		//LED 显示个位  29分钟----‘9’
+		     DispData[2] = segNumber[Telecom.showtimes %10];		//LED 显示个位  29分钟----‘9’
           TM1650_Set(0x68, DispData[2]);//写入个位 
-        DispData[1] = segNumber[Telecom->showtimes / 10];		//LED 显示十位 分钟 29分--‘2’
+        DispData[1] = segNumber[Telecom.showtimes / 10];		//LED 显示十位 分钟 29分--‘2’
           TM1650_Set(0x6A, DispData[1]);
-        DispData[0] = segNumber[Telecom->getTimerHour / 10]; 	//---显示最高位时间，定时最大时间8小时
+        DispData[0] = segNumber[Telecom.getTimerHour / 10]; 	//---显示最高位时间，定时最大时间8小时
         TM1650_Set(0x6C, DispData[0]);
         P24=1; //PM2.5显示
-        if(Telecom->getTimerHour >=8)Telecom->getTimerHour =0;  //最大定时时间是 8小时
+        if(Telecom.getTimerHour >=8)Telecom.getTimerHour =0;  //最大定时时间是 8小时
     }
 
     

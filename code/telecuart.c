@@ -112,7 +112,7 @@ void USART1_SendDataToMain(void)
 		//	PM10 = (pUart->ReceiveDataBuffer[4]*16 + 1+ (pUart->ReceiveDataBuffer[5]*16 + 1)*256) * 0.1;
     }
     
-	if(Telecom->setWind_levels == wind_auto){
+	if(Telecom.setWind_levels == wind_auto){
           if(PM25<=75) autoWindValue = 0x01;             //当PM2.5检查到PM2.5值小于75ug/m^3 风速一档
 		  if(PM25 >75 && PM25<=150) autoWindValue  = 0x02; //风速 2档
 		  if(PM25 >150 && PM25<=300)  autoWindValue  = 0x03; //风速 3档
@@ -120,15 +120,15 @@ void USART1_SendDataToMain(void)
 
 	}
      
-    Telecom->setWind_levels |=Telecom->setWind_levels <<0; //风速4档，睡眠风速，中速风速，高速风速 自动风速
+    Telecom.setWind_levels |=Telecom.setWind_levels <<0; //风速4档，睡眠风速，中速风速，高速风速 自动风速
 	
-	Telecom->power_state |= Telecom->power_state << 0;       //电源开关量
+	Telecom.power_state |= Telecom.power_state << 0;       //电源开关量
 	
-    Telecom->runstart  |=Telecom->runstart<<2;             //电机开启开关量
+    Telecom.runstart  |=Telecom.runstart<<2;             //电机开启开关量
 
-	senddata[0]=Telecom->power_state |Telecom->runstart;  //head code 8bit
+	senddata[0]=Telecom.power_state |Telecom.runstart;  //head code 8bit
 	senddata[1]=autoWindValue ;     //自动档，风速判定，PM2.5值调节风速大小
-	senddata[2]=Telecom->setWind_levels;									//风扇档位值：
+	senddata[2]=Telecom.setWind_levels;									//风扇档位值：
 	
    
   	bcc_data=BCC(senddata,3);

@@ -23,8 +23,8 @@ TASK_COMPONENTS TaskComps[TASK_NUM]={
 
     {0, 30, 30, TaskLEDDisplay},           // 显示数字 15ms = 100us * 10 *15，扫描一次
     {0, 20, 20, TaskKeySan},              // 按键扫描 10ms=100us * 10* 2扫描一次
-    {0, 50, 50, TaskReceiveAirSensor},     // 接收到空气传感器   40ms = 100us * 10* 40 执行一次
-    {0, 60, 60, TaskTelecStatus}       // 同主板通讯 1.0s= 100us * 10000  执行一次 
+    {0, 100, 100, TaskReceiveAirSensor},     // 接收到空气传感器   40ms = 100us * 10* 40 执行一次
+    {0, 200, 200, TaskTelecStatus}       // 同主板通讯 1.0s= 100us * 10000  执行一次 
 
 };
 uint32_t Systemclock = 24000000;
@@ -54,8 +54,8 @@ int main(void)
   while(1)
 	{
 		
-	
-		TaskProcess();
+	//TaskKeySan();
+	TaskProcess();
 
 	   
 	}		

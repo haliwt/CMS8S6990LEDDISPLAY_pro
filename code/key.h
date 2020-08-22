@@ -33,7 +33,7 @@ typedef struct _TELEC_
 	
 } Telec;
 
-extern Telec *Telecom;
+extern Telec Telecom;
 
 enum WindSpeed{wind_sleep,wind_middle,wind_high,wind_auto};
 
