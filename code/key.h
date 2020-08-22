@@ -49,7 +49,7 @@ enum WindSpeed{wind_sleep,wind_middle,wind_high,wind_auto};
 #define KEYBUFFSIZE					8  //按键缓存FIFO深度，定义保存16个键值
 
 //***************** 以下与具体系统的硬件相关 ********************************************
-#define 	KeyNumMax					4			//硬件实体按键数量
+#define 	KeyNumMax					5			//硬件实体按键数量,第5个按键是 组合按键
 typedef		unsigned char			KeyS_Type;    //键态字类型定义（根据按键总数定义足够长度的数据类型，
 //本例程只有4个键，用uint8_t足矣，但为扩充方便这里用了u16，最大可满足16键,大于16键时请定义为u32）
 //按键硬件读端口位置
@@ -66,6 +66,7 @@ typedef		unsigned char			KeyS_Type;    //键态字类型定义（根据按键总
 
 
 
+
 //************ 以下基本与硬件无关（除增删组合键码定义外一般无须修改） *********************
 
 //定义一个特殊值用于复位状态机
@@ -73,8 +74,8 @@ typedef		unsigned char			KeyS_Type;    //键态字类型定义（根据按键总
 
 
 //这里可以定义一些特殊键码（如组合键等）
-#define WKUP_PLUSKEY0_PRES	1							//示例：WKUP+KEY0组合按键（先按下WKUP再按下KEY0）
-
+#define WKUP_PLUSKEY0_PRES   	1							//示例：WKUP+KEY0组合按键（先按下WKUP再按下KEY0）
+#define WIND_TIMER_PRES        0x06
 
 //功能键值输出：
 #define KEYOUT_BASE_DEF					10*(KeyNum+2) //为保留组合键值等空间，这里定义为20以上，可视情修改）

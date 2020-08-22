@@ -11,6 +11,7 @@
 #include "telecuart.h"
 
 
+
 void TaskLEDDisplay(void);
 void TaskKeySan(void);
 void TaskReceiveAirSensor(void);
@@ -20,10 +21,10 @@ void TaskProcess(void);
 
 TASK_COMPONENTS TaskComps[TASK_NUM]={
 
-    {0, 60, 60, TaskLEDDisplay},           // 显示数字 15ms = 100us * 10 *15，扫描一次
-    {0, 20,  20, TaskKeySan},              // 按键扫描 20ms=100us * 10* 2扫描一次
-    {0, 400, 400, TaskReceiveAirSensor},     // 接收到空气传感器   40ms = 100us * 10* 40 执行一次
-    {0, 10000, 10000, TaskTelecStatus}       // 同主板通讯 1.0s= 100us * 10000  执行一次 
+    {0, 30, 30, TaskLEDDisplay},           // 显示数字 15ms = 100us * 10 *15，扫描一次
+    {0, 20, 20, TaskKeySan},              // 按键扫描 10ms=100us * 10* 2扫描一次
+    {0, 50, 50, TaskReceiveAirSensor},     // 接收到空气传感器   40ms = 100us * 10* 40 执行一次
+    {0, 60, 60, TaskTelecStatus}       // 同主板通讯 1.0s= 100us * 10000  执行一次 
 
 };
 uint32_t Systemclock = 24000000;
@@ -36,7 +37,7 @@ uint32_t Systemclock = 24000000;
  *****************************************************************************/
 int main(void)
 {		
-    static uint8_t taskState =0;
+  //  static uint8_t taskState =0;
 	  
     TMR0_Config();
     BUZZER_Init();
@@ -76,10 +77,9 @@ void TaskProcess(void)
 			if(TaskComps[i].Run)           // 时间不为0
         {
              TaskComps[i].TaskHook();         // 运行任务
-             TaskComps[i].Run = 0;  // 标志清0
-					   
-					   
-        }
+					   TaskComps[i].Run = 0;  // 标志清0
+					  
+				}
     }
 
 }
@@ -93,14 +93,21 @@ void TaskProcess(void)
 ***********************************************************/
 void TaskLEDDisplay(void)
 {
-      BUZZER_Config();
-	  
-	  LEDDisplay_TimerTim();
-    //LEDDisplay_SleepLamp();
-	  
-	//  delay_30us(100)  ;
+ 
+
+	TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
+
+  
+	TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
+   
+
+	TM1650_Set(0x6A,segNumber[8]);//初始化为5级灰度，开显示
+
+
+    TM1650_Set(0x6C,segNumber[7]);//初始化为5级灰度，开显示
+
 	
-	  
+   TM1650_Set(0x6E,segNumber[ 4]);//初始化为5级灰度，开显示
 
 }
 /***********************************************************
@@ -118,9 +125,6 @@ void TaskKeySan(void)
 
     KEY_FUNCTION();
 	 
-	
-	
-	
 }
 /***********************************************************
 	*
@@ -135,12 +139,22 @@ void TaskReceiveAirSensor(void)
  // BUZZER_Config();  
 	P26=0;
 	//Analysis_UART0_ReceiveData() ;
-	BUZZER_Config();
-	 delay_30us(1000)  ;//(25ms)
-	//BUZ_EnableBuzzer();	
-	BUZ_DisableBuzzer();
-    delay_30us(1000)  ;//(25ms)
-    BUZZER_Config();
+//	BUZZER_Config();
+	TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
+
+  
+	TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
+   
+
+	TM1650_Set(0x6A,segNumber[0]);//初始化为5级灰度，开显示
+
+
+    TM1650_Set(0x6C,segNumber[0]);//初始化为5级灰度，开显示
+
+	
+   TM1650_Set(0x6E,segNumber[0]);//初始化为5级灰度，开显示
+	
+
 	
 
 }
@@ -155,21 +169,21 @@ void TaskReceiveAirSensor(void)
 void TaskTelecStatus(void)
 {
   P25=1;
-  USART1_SendDataToMain();
-  delay_30us(1000) ;  //28ms
+ 
+ 
   TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
 
   
-	TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
+	TM1650_Set(0x68,segNumber[1]);//初始化为5级灰度，开显示
    
 
-	TM1650_Set(0x6A,segNumber[8]);//初始化为5级灰度，开显示
+	TM1650_Set(0x6A,segNumber[1]);//初始化为5级灰度，开显示
 
 
-    TM1650_Set(0x6C,segNumber[7]);//初始化为5级灰度，开显示
+    TM1650_Set(0x6C,segNumber[1]);//初始化为5级灰度，开显示
 
 	
-   TM1650_Set(0x6E,segNumber[6]);//初始化为5级灰度，开显示
+   TM1650_Set(0x6E,segNumber[1]);//初始化为5级灰度，开显示
 
   
 	

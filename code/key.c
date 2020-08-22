@@ -137,8 +137,7 @@ void KEY_FUNCTION(void)
 		
 			  case TIMER_PRES:	//KEY3按下即有效，定时器键
 				BUZZER_Config();
-			    delay_20us(10);
-			    IIC_Init_TM1650();
+			
 					TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
 				TM1650_Set(0x68,segNumber[9]);//初始化为5级灰度，开显示
 		    	TM1650_Set(0x6A,segNumber[3]);//初始化为5级灰度，开显示
@@ -161,9 +160,15 @@ void KEY_FUNCTION(void)
 				break;
 			//下面可自由增加其它按键测试，比如（仅举数例）：
 	
-			//case WKUP_PLUSKEY0_PRES:	//WKUP+KEY0组合按键（先按下WKUP再按下KEY0）
+			case WIND_TIMER_PRES :	//WKUP+KEY0组合按键（先按下WKUP再按下KEY0）
+			   
+				TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
+				TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
+		    	TM1650_Set(0x6A,segNumber[9]);//初始化为5级灰度，开显示
+		    	TM1650_Set(0x6C,segNumber[9]);//初始化为5级灰度，开显示
+		     	TM1650_Set(0x6E,segNumber[9]);//初始化为5级灰度，开显示
 				
-			//	break;
+				break;
 			
 		
 		}
@@ -185,10 +190,12 @@ void KEY_FUNCTION(void)
 uint8_t GetHalKeyCode(void)
 {
 	uint8_t ktmp=0;
-	if(KEY0_IN) 	   return POWER_PRES ;//ktmp|=1<<POWER_PRES;
-	else if(KEY1_IN)   return WIND_PRES;	//ktmp|=1<<WIND_PRES;
-	else if(KEY2_IN)   return TIMER_PRES;//ktmp|=1<<TIMER_PRES;    //if(!KEY2_IN) 	ktmp|=1<<TIMER_PRES;低电平有效
-	else if(KEY3_IN)   return FILTER_PRES; //ktmp|=1<<TIMER_PRES;    //注意本键为高电平有效 
+	if(KEY1_IN && KEY2_IN)    	return WIND_TIMER_PRES; //组合按键wind + timer key
+	else if(KEY0_IN) 	   		return POWER_PRES ;//ktmp|=1<<POWER_PRES;//WT.EDIT 
+	else if(KEY1_IN)   			return WIND_PRES;	//ktmp|=1<<WIND_PRES;
+	else if(KEY2_IN)   			return TIMER_PRES;//ktmp|=1<<TIMER_PRES;    //if(!KEY2_IN) 	ktmp|=1<<TIMER_PRES;低电平有效
+	else if(KEY3_IN)  		    return FILTER_PRES; //ktmp|=1<<TIMER_PRES;    //注意本键为高电平有效 
+    
 	return ktmp;
 }
 
@@ -211,14 +218,14 @@ uint16_t KeyTime=0;  //全局变量：存有本次读键时当前键态持续的
 //组合：双键组合（其实多键组合也可同理实现）
 /**********************************************************************************/
 //不使用组合按键等条件判断时，以下宏定义可删除
-#define KEY0_ON 						(0x0001<<POWER_PRES)  //宏定义：按键未释放值
-#define KEY1_ON 						(0x0001<<WIND_PRES)
-#define KEY2_ON 						(0x0001<<TIMER_PRES)
-#define WKUP_ON 						(0x0001<<TIMER_PRES)
-#define KEY0_PRESSED 				(Trg==KEY0_ON)  //宏定义：按键触发值
-#define KEY1_PRESSED 				(Trg==KEY1_ON)
-#define KEY2_PRESSED 				(Trg==KEY2_ON)
-#define WKUP_PRESSED 				(Trg==WKUP_ON)
+#define POWER_ON 						0x01//(0x0001<<POWER_PRES)  //宏定义：按键未释放值
+#define WIND_ON 						0x02//(0x0001<<WIND_PRES)
+#define TIMER_ON 						0x04//(0x0001<<TIMER_PRES)
+#define FILTER_ON 					0x08//	(0x0001<<FILTER_PRES)
+#define POWER_PRESSED 				(Trg==POWER_ON)  //宏定义：按键触发值
+#define WIND_PRESSED 				(Trg==WIND_ON)
+#define TIMER_PRESSED 				(Trg==TIMER_ON)
+#define FILTER_PRESSED 				(Trg==FILTER_ON)
 
 /******************************************************************************
  **
@@ -239,7 +246,7 @@ uint8_t Read_A_Key(void)
 /******************************************************************************
  **
  ** Function Name:	void Key_Scan_Stick(void)
- ** Function : key scan ,得到实体按键输入的键值
+ ** Function : key scan ,得到实体按键输入的键值---正常按键扫描程序
              //按键扫描函数：一般由Systick中断服务程序以5ms一次的时间节拍调用此函数
 			 //采用了键盘自适应变频扫描措施，在键盘正常稳定期间（非消抖期间）扫描频率降低以减少CPU资源占用
 			//该函数将影响全局变量：消除抖动后的稳定键态值KeyStable及累计时长KeyTime
@@ -255,11 +262,12 @@ void Key_Scan_Stick(void)
 	static uint8_t debouncing=0;
 	
 	KeyTime++;//在稳定键态（包括无键）状态下，全局变量KeyTime是持续增加的
+	
 	if((!debouncing) && (KeyTime%NORMAL_SCAN_FREQ))//非消抖期间且累计计时不是6的倍数(即6*5＝30ms才扫描一次)						NORMAL_SCAN_FREQ=6
 		return;	//则不扫描键盘直接返回，这里可调整NORMAL_SCAN_FREQ为其它数，估计最大到40即120ms扫描一次都问题不大的。
 	
 	KeyValTemp=GetHalKeyCode();//扫描键盘，得到实时键值（合并），可存16个键值（按下相应位为1松开为0）;
-	
+							   //普通按键扫描程序，到此结束
 	if(KeyValTemp!=KeyStable) //如果当前值不等于旧存值，即键值有变化，处理按键按下消抖
 	{
 		debouncing=1;//标示为消抖期
@@ -288,26 +296,25 @@ void Key_Scan_Stick(void)
 /******************************************************************************
  **
  ** Function Name:	void GetAndSaveKey(void)
- ** Function : 得到键值 
+ ** Function : 得到键值 ，Trg = 按键按下的键值
  			 //本函数由SYSTICK调用，在后台读键，如果有键值则存入按键缓冲区
  ** Input Ref:NO
  ** Return Ref:NO
  **   
  ******************************************************************************/
-
-
-
 void GetAndSaveKey(void)
 {
 	uint8_t newkeytmp;
 	if(KeyTime>=LONG_TICKS && KEY_RELEASED)
-		{//键盘长时间闲置，直接返回（绝大部分时间基本都是这种状态，此举将大大节省CPU资源）
+	{//键盘长时间闲置，直接返回（绝大部分时间基本都是这种状态，此举将大大节省CPU资源）
 			KeyTime=LONG_TICKS;//此句防止KeyTime溢出(KeyTime由扫键程序累增)
 			return; 
-	  }
-	Trg=KeyStable & (KeyStable ^ Cont); //调用三行读键方法,其实核心只有此行，使得Trg在某按键被按下后有且只有一次读取到对应位为1;
-	//KeyStable --在按键扫描函数中---得到输入按键的-键值
-	Cont=KeyStable; //键值
+	 }
+	Trg=KeyStable & (KeyStable ^ Cont); //调用三行读键方法,其实核心只有此行，
+	//使得Trg在某按键被按下后有且只有一次读取到对应位为1;Cont必须是“0”
+	//KeyStable --在按键扫描函数中Key_Scan_Stick(void)---得到输入按键的-键值,得到按键按下的键值
+	
+	Cont=KeyStable; //键值，Cont 也得到按键按下的键值
 	newkeytmp=Key_PrePro();//从键预处理程序中读键值
 	if(newkeytmp)//如果有新的键值
 	{
@@ -334,17 +341,19 @@ void GetAndSaveKey(void)
 uint8_t Key_PrePro(void)
 {
 	return Get_Key(); //模式二时，本函数简化到只须这一句，以下可全部删除。
-	//uint8_t newkeytmp,ret=0;
-	//newkeytmp=Get_Key();
-	//switch(newkeytmp)
-	//{
-		//case KEY_EVENT(WIND_PRES,DOUBLE_CLICK)://KEY1双击，执行两灯同时翻转（仅作为示例）
-		//	LED0=!LED0;LED1=!LED1; //控制两灯翻转
-     // break;
-   // default:
-		//	ret=newkeytmp;
-	//}
-	//return ret;
+	#if 0
+	u8 newkeytmp,ret=0;
+	newkeytmp=Get_Key();
+	switch(newkeytmp)
+	{
+		case KEY_EVENT(KB_KEY1,DOUBLE_CLICK)://KEY1双击，执行两灯同时翻转（仅作为示例）
+			LED0=!LED0;LED1=!LED1; //控制两灯翻转
+      break;
+    default:
+			ret=newkeytmp;
+	}
+	return ret;
+	#endif
 }
 /******************************************************************************
  **
@@ -357,22 +366,29 @@ uint8_t Key_PrePro(void)
 uint8_t Get_Key(void)
 {
 	uint8_t i,keyp=0;
-/*按键的判断条件设定技巧：
+	/*按键的判断条件设定技巧：
 	全局变量Trg中体现了对应按键的触发状态，在某按键被按下后有且只有一次读取到对应位为1;
 	全局变量Cont则体现了当前按键的状态，处于按下的对应位为1，处于松开的对应位为0;
 	而全局变量KeyTime里面，记录了当前键态持续的时间
-*/
+	*/
 	
 	//以下是按键判断，用户可根据需要随意添加或删改（注释掉的部分也可根据需要作为参考语句使用）
 	
 //注意：排在前面的判断条件具有高的优先级，一旦条件满足即刻返回，不再执行后续语句。
+	//注意：排在前面的判断条件具有高的优先级，一旦条件满足即刻返回，不再执行后续语句。
+	#if 0
 	if((Cont==(WKUP_ON+KEY0_ON)) && KEY0_PRESSED)	
 		{ //WKUP+KEY0组合按键（先按下WKUP再按下KEY0）
 			Get_Key_State(KB_CLR); //复位状态机，防止本按键对其干扰(本按键与状态机有冲突时请调用此句)
 			return WKUP_PLUSKEY0_PRES;
 		} 
-
-//以下是使用状态机得到判断单击、双击、长按、保持等键码	
+	#endif 
+	   if(Cont==(WIND_ON + TIMER_ON))	// 0X06 = 0X02 + 0X04
+		{ //WKUP+KEY0组合按键（先按下WKUP再按下KEY0）
+			Get_Key_State(KB_CLR); //复位状态机，防止本按键对其干扰(本按键与状态机有冲突时请调用此句)
+			return WIND_TIMER_PRES  ;//WKUP_PLUSKEY0_PRES;
+		} 
+    //以下是使用状态机得到判断单击、双击、长按、保持等键码	
 	for(i=0;i<KeyNumMax;i++)
 	  {
 			keyp=Get_Key_State(i);	
@@ -417,11 +433,12 @@ uint8_t Get_Key_State(uint8_t KeyNum)
 		return 0;
 	}
 	//KeyOnCode=(uint8_t)1<<KeyNum;//WT.EDIT 
-	if(keyHardNum  ==0)KeyOnCode =0x01;
-	else if(keyHardNum ==1)KeyOnCode =0x02;
-	else if(keyHardNum ==2)KeyOnCode =0x04;
+	if(keyHardNum  ==0)KeyOnCode =0x01;          //按下实体按键值
+	else if(keyHardNum ==1)KeyOnCode =0x02; //WIND_KEY
+	else if(keyHardNum ==2)KeyOnCode =0x04; //TIMER_KEY
 	else if(keyHardNum ==3)KeyOnCode =0x08;
-	state=KeyState[KeyNum]&0x0f; //取相应的记忆状态值
+	else if(keyHardNum ==4)KeyOnCode =0x06;  //组合按键 WIND_ON + TIMER_ON
+	state=KeyState[KeyNum]&0x0f; //取相应的记忆状态值，低4位保存按下按键值
 	repeat=KeyState[KeyNum]>>4; //4个按键循环，查询按键，按下状态
 	//Trg = 在按键扫描函数中，得到键值，列如;POWER_KEY 0X01
 	if(Trg && (Trg!=KeyOnCode)) state=0; //出现其它键，则状态清0
@@ -487,7 +504,11 @@ uint8_t Get_Key_State(uint8_t KeyNum)
 	}
 	KeyState[KeyNum]=state; //保存相应的记忆状态值
 	KeyState[KeyNum]+= repeat<<4;
-	if(event>=(uint8_t)PRESS_DOWN) //设定只输出特殊功能键（修改此处可输出按下/松开等一般事件）
+	if( event >= (uint8_t)LONG_PRESS_HOLD){
+
+	     return WIND_TIMER_PRES ;
+	}
+	else if(event>=(uint8_t)PRESS_DOWN) //设定只输出特殊功能键（修改此处可输出按下/松开等一般事件）
 	{
 		return KeyOnCode ; //WT.EDIT 返回按键，按下
 	}

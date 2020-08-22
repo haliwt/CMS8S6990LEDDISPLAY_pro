@@ -2,8 +2,12 @@
 #include "timer0.h"
 #include "key.h"
 #include "telecuart.h"
+#include "demo_buzzer.h"
+
+uint16_t TimerCnt ;
+
 volatile uint16_t getMinute; 
-volatile uint16_t TimerCnt;
+
 uint8_t cmdArrived=0,cmdIndex=0,cmdArriving=0;
  UART *pUart=NULL;
 
@@ -30,11 +34,12 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
 {
 	
 	static uint16_t seconds=0,minutes=0;
+	
 	uint8_t i;
 	  seconds++;
 	  TimerCnt++;
-	  if(seconds < 60500){
-			  for (i=0; i<TASKS_MAX; i++)          // 逐个任务轮询时间处理
+	
+	 for (i=0; i<TASKS_MAX; i++)          // 逐个任务轮询时间处理
 			  {
 			        if (TaskComps[i].Timer)          // 时间不为0
 			        {
@@ -46,7 +51,7 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
 										  
 			            }
 			        }
-				}
+			}
 
 				if(seconds==60000){ //计时：6.0s
 					seconds =0;
@@ -67,9 +72,9 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
 					cmdArriving =0;
 					pUart->achieveUartFlag=1;
 				}
-	  	}
+		}
 
-}
+
 /******************************************************************************
  ** \brief	 INT0 interrupt service function
  **			
