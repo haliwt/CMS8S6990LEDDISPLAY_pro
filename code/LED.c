@@ -1,6 +1,7 @@
 #include "LED.h"
 
 static void LEDDisplay_BlueColorRing(void);
+static void TM1650_CLOSE_DISP(void);
 /******************************************************************************
  **
  ** Function Name:	void LED_GPIO_Init(void)
@@ -141,21 +142,20 @@ void LEDDisplay_TimerTim(void)
 *******************************************************************************************************/
 void LEDDisplay_RedColorRing(void)
 {
-    
     COM7 = 0; 
     COM8 = 0;   
- //   TM1650_write_byte(TM1650_5_NDISP,TM1650_COM1_ADDR , &seg[8]);
+    TM1650_FULL_DISP();
 
     PI= 1;
     PJ =1;
     PK =1;
-    delay_30us(5000); //50ms
+    delay_30us(1000); //50ms
     COM7=1;
     COM8=1;
     PI= 0;
     PJ =0;
     PK =0;
-    TM1650_FULL_DISP();
+    TM1650_CLOSE_DISP();
 }
 /****************************************************************************************************
  * 	*
@@ -168,13 +168,13 @@ void LEDDisplay_RedColorRing(void)
 void LEDDisplay_GreenColorRing(void)
 {
    
-  
+   COM6=0;
    PI= 1;
    PJ =1;
    PK =1;
    PL = 1;
-   COM5=0;
-   COM6=0;
+ //  COM5=0;
+ //  COM6=0;
   TM1650_FULL_DISP();
    
 
@@ -190,12 +190,10 @@ void LEDDisplay_GreenColorRing(void)
 void LEDDisplay_BlueColorRing(void)
 {
 
- // TM1650_write_byte(TM1650_5_NDISP,TM1650_COM4_ADDR , &seg[8]);
+
    COM5= 0;
 
- //  TM1650_write_byte(TM1650_5_NDISP,TM1650_COM1_ADDR , &seg[11]);
 
-  // TM1650_write_byte(TM1650_5_NDISP,TM1650_COM2_ADDR , &seg[11]);
    
    PI= 1;
    PJ =1;
@@ -223,6 +221,20 @@ void TM1650_FULL_DISP(void){
 	TM1650_Set(0x6C,segNumber[0x0B]);//初始化为5级灰度，开显示
  	TM1650_Set(0x6E,segNumber[0x0B]);//初始化为5级灰度，开显示
 
+}
 
+/****************************************************************************************************
+ * 	*
+	*函数名称：void TM1650_CLOSE_DISP(void)
+	*函数功能：LED数码管，光圈显示蓝色---睡眠灯
+	*入口参数：NO
+	*出口参数：NO
+	*
+*******************************************************************************************************/
+static void TM1650_CLOSE_DISP(void)
+{
+
+	TM1650_Set(0x48,0x00);//初始化为5级灰度，开显示
+	
 
 }

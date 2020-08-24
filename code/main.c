@@ -9,9 +9,10 @@
 #include "tm1650_i2c.h"
 #include "LED.h"
 #include "telecuart.h"
+#include "myflash.h"
 
-
-
+  
+ 
 void TaskLEDDisplay(void);
 void TaskKeySan(void);
 void TaskReceiveAirSensor(void);
@@ -37,8 +38,9 @@ uint32_t Systemclock = 24000000;
  *****************************************************************************/
 int main(void)
 {		
-  //  static uint8_t taskState =0;
-	  
+    uint8_t taskState =0;
+	  static uint8_t s =0,q=0;
+     static uint8_t pk =0;
     TMR0_Config();
     BUZZER_Init();
     IIC_Init_TM1650();
@@ -53,10 +55,50 @@ int main(void)
 							
   while(1)
 	{
-		
+		if(taskState ==0){
+			taskState++;
+				FLASH_UnLock();
+				FLASH_Erase(FLASH_DATA,0x00);
+			 FLASH_Write(FLASH_DATA,0x00, 0x0a);	
+		}
 	//TaskKeySan();
-	TaskProcess();
-
+	//TaskProcess();
+	Key_Scan_Stick();
+	GetAndSaveKey();
+			    pk = pk ^ 0x01;
+			    if(pk ==1){
+							if(P16==1){
+							LEDDisplay_GreenColorRing();
+							Telecom.gVariable =6 ;
+								FLASH_UnLock();
+							FLASH_Erase(FLASH_DATA,0x210);
+							 // if(Telecom.gVariable == 0xff)Telecom.gVariable=10;
+								FLASH_UnLock();
+								 FLASH_Write(FLASH_DATA,0x210, 0x80);	
+							
+								delay_20us(1000);
+							}
+				}
+				else {
+					if(P16==1){
+							LEDDisplay_RedColorRing();
+								FLASH_UnLock();
+							  FLASH_Erase(FLASH_CODE,0x00);
+							 // if(Telecom.gVariable == 0xff)Telecom.gVariable=10;
+								FLASH_UnLock();
+								FLASH_Write(FLASH_CODE,0x00, 0x06);	
+								delay_20us(1000);
+							}
+				
+				
+				}
+        s= FLASH_Read(FLASH_DATA,0X00);	
+			  q= FLASH_Read(FLASH_DATA,0X210);	
+				if(s==0x0A)	LEDDisplay_RedColorRing();
+				 
+				if(q==0x80)LEDDisplay_GreenColorRing();
+			
+				 if(s == 0x06)LEDDisplay_GreenColorRing();
 	   
 	}		
 }

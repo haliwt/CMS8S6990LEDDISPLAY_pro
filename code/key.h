@@ -30,6 +30,7 @@ typedef struct _TELEC_
 	uint8_t getTimerSecond ;
 	uint8_t getTimerHour;                 //定时器时间小时
 	int16_t  showtimes;                 //显示时间，数据，按键输入
+	volatile  uint8_t  gVariable;
 	
 } Telec;
 

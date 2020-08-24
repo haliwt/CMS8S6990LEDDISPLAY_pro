@@ -7,6 +7,7 @@
 //key_types   key;
 Telec Telecom;
 static uint8_t Lockflag =0;
+static uint8_t powerSt=0 ;
 
 uint8_t New_KeyBuff[KEYBUFFSIZE];
 uint8_t pNewKey=0;
@@ -129,7 +130,7 @@ void GPIO_Config(void)
  ******************************************************************************/
 void KEY_FUNCTION(void)
 {
-   static uint8_t powerSt=0 ;
+   
 	vu8 key=0;	
 	key=Read_A_Key();	//得到键值
 	switch(key)
@@ -148,14 +149,16 @@ void KEY_FUNCTION(void)
 		    case POWER_PRES:
 			    BUZZER_Config();
 			    delay_20us(10);
-			   // powerSt = powerSt ^ 0x01;
-				if(powerSt ==0){
+			    powerSt = powerSt ^ 0x01;
+				if(powerSt ==1){
 					LEDDisplay_GreenColorRing();
-					powerSt ++;
+					Telecom.gVariable ++ ;
+				    if(Telecom.gVariable == 0xff)Telecom.gVariable=0;
+					
 				}
 				else{
 				 		LEDDisplay_RedColorRing();
-						powerSt =0;
+						
 				}
 				break;
 			

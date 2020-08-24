@@ -15,7 +15,7 @@ void Flash_ToWriteData(uint16_t addr,uint16_t dat)
 uint8_t Flash_ToReadData(uint16_t addr)
 {
 	volatile uint8_t temp=0;
-//	FLASH_UnLock();
+	FLASH_UnLock();
 	temp = FLASH_Read(FLASH_DATA,addr);	
     return temp;
 }
