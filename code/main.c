@@ -36,9 +36,10 @@ uint32_t Systemclock = 24000000;
  **
  ** \return 0
  *****************************************************************************/
+ 
 int main(void)
 {		
-    uint8_t taskState =0;
+  uint8_t taskState ;
 	  static uint8_t s =0,q=0;
      static uint8_t pk =0;
     TMR0_Config();
@@ -51,55 +52,51 @@ int main(void)
 	UART0_Config();
 	UART1_Config();
   Init_Tm1650();
-  
+  FLASH_Erase(FLASH_DATA,0x00);
+		FLASH_Write(FLASH_DATA,0x00, 0x0a);	
 							
   while(1)
 	{
-		if(taskState ==0){
-			taskState++;
-				FLASH_UnLock();
-				FLASH_Erase(FLASH_DATA,0x00);
-			 FLASH_Write(FLASH_DATA,0x00, 0x0a);	
-		}
+		static uint8_t taskState =0;
 	//TaskKeySan();
 	//TaskProcess();
 	Key_Scan_Stick();
 	GetAndSaveKey();
-			    pk = pk ^ 0x01;
-			    if(pk ==1){
+			
+		
+			 
 							if(P16==1){
 							LEDDisplay_GreenColorRing();
 							Telecom.gVariable =6 ;
+								taskState++;
 								FLASH_UnLock();
 							FLASH_Erase(FLASH_DATA,0x210);
-							 // if(Telecom.gVariable == 0xff)Telecom.gVariable=10;
 								FLASH_UnLock();
 								 FLASH_Write(FLASH_DATA,0x210, 0x80);	
+								delay_20us(1000);
 							
-								delay_20us(1000);
-							}
-				}
-				else {
-					if(P16==1){
-							LEDDisplay_RedColorRing();
-								FLASH_UnLock();
-							  FLASH_Erase(FLASH_CODE,0x00);
-							 // if(Telecom.gVariable == 0xff)Telecom.gVariable=10;
-								FLASH_UnLock();
-								FLASH_Write(FLASH_CODE,0x00, 0x06);	
-								delay_20us(1000);
+								taskState= FLASH_Read(FLASH_DATA,0X210);
+								
+						
+								
 							}
 				
-				
-				}
-        s= FLASH_Read(FLASH_DATA,0X00);	
-			  q= FLASH_Read(FLASH_DATA,0X210);	
-				if(s==0x0A)	LEDDisplay_RedColorRing();
-				 
-				if(q==0x80)LEDDisplay_GreenColorRing();
 			
+      //  s= FLASH_Read(FLASH_DATA,0X00);		
+			//  q= FLASH_Read(FLASH_DATA,0X210);
+     			
+				if(taskState==0x80)LEDDisplay_RedColorRing();
+				 if(taskState >0) LEDDisplay_GreenColorRing();
+			#if 0	
+				if(q==0x80){LEDDisplay_GreenColorRing();
+			     delay_20us(500);
+				}
+				 else{
+					 if(s==0x0A)	LEDDisplay_RedColorRing();
+					 delay_20us(500);
 				 if(s == 0x06)LEDDisplay_GreenColorRing();
-	   
+				}
+			#endif 
 	}		
 }
 /***********************************************************
