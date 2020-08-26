@@ -99,6 +99,7 @@ void LEDDisplay_TimerTim(void );
 void LEDDisplay_RedColorRing(void);
 void LEDDisplay_GreenColorRing(void);
 //void LEDDisplay_BlueColorRing(void);
+void TM1650_FULL_DISP(void);
 
 
 

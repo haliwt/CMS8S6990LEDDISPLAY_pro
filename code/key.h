@@ -15,14 +15,21 @@
 #define		_KEY_TRG_2_WIND     			0x02  //风速按键按下--按键值
 #define		_KEY_TRG_3_TIMER     			0x04   //定时按键
 #define		_KEY_TRG_4_FILTER     			0x08
-#define		_KEY_TRG_5     			0x10
+#define		_KEY_TRG_5     			        0x10
 
 //长按按键检查 按键值或者组合按键值
-#define		_KEY_CONT_1_POWER     	    0x81    //电源按键长按--按键值
-#define		_KEY_CONT_2_WIND     		0x82    //风速按键长按--按键值
-#define		_KEY_CONT_3_TIMER_WIND     	0x84    //定时按键长按 + 风速按键 ===长按按键。
-#define		_KEY_CONT_4_FILTER     	     0x88
+#define		_KEY_CONT_1_POWER     	     0x81    //电源按键长按--按键值
+#define		_KEY_CONT_2_WIND     		 0x82    //风速按键长按--按键值
+#define		_KEY_CONT_3_TIMER     	     0x84    //定时按键长按 长按按键。
+#define		_KEY_CONT_4_FILTER     	     0x88    //长按键 --设置滤网键
 #define		_KEY_CONT_5     		     0x90
+
+
+#define		_KEY_CONT_1     	    0x81    //按键计数值
+#define		_KEY_CONT_2     		0x82
+#define		_KEY_CONT_3     		0x84
+#define		_KEY_CONT_4     	    0x88
+#define		_KEY_CONT_5     		0x90
 
 typedef  struct  _state_
 {
