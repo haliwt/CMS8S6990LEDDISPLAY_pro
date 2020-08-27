@@ -49,11 +49,11 @@ int main(void)
         
         #if 1
 		if(childLock  ==1){
-            if(poweron==0){
+            if(BuzzerSound==1){
                     BUZZER_Config();
 				delay_20us(10000);
 	           DisableBUZZER_Config();
-                poweron =1;
+               BuzzerSound =0;
             }
          TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
 									
@@ -62,11 +62,11 @@ int main(void)
         
         }
         if(childLock  ==0){
-            if(poweron==0){
+            if(BuzzerSound==1){
                     BUZZER_Config();
 				delay_20us(10000);
 	           DisableBUZZER_Config();
-                poweron =1;
+               BuzzerSound =0;
             }
             #if 0
             TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
