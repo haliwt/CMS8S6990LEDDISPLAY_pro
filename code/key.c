@@ -142,10 +142,11 @@ void KEY_Handing(void)
 
 	uint8_t  temp8,flashvalue;
 	temp8 = KEY_Scan();
-	flashvalue = Flash_ToReadData(0x00);
+	
 	switch(temp8)
 	{
-        if(flashvalue ==1){
+#if 0
+        if(childLock ==1){
             BUZZER_Config();
             delay_20us(10000);
             BUZ_DisableBuzzer();	
@@ -155,7 +156,9 @@ void KEY_Handing(void)
             BUZ_DisableBuzzer();	
             delay_20us(10000);
         }
-        else {
+        else
+        #endif 
+            {
 					case	_KEY_CONT_3_TIMER: //长按按键按键值
 					      //   BUZZER_Config();
 						  

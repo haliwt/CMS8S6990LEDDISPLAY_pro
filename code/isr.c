@@ -5,8 +5,6 @@
 uint16_t getMinute;
 uint16_t TimerCnt;
 
-
-
 volatile uint16_t Timer1_num;
 uint8_t childLock ;
 static uint8_t locklg=0;
@@ -97,10 +95,10 @@ void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR
 				
                 Timer1_num =0;
 				childLock =1;
-				BUZZER_Config();
-				delay_20us(10000);
-	            DisableBUZZER_Config();
-				Flash_ToWriteData(0x00,0x01);
+			//	BUZZER_Config();
+			//	delay_20us(10000);
+	         //   DisableBUZZER_Config();
+				//Flash_ToWriteData(0x00,0x01);
 	           
 			
 			}
@@ -110,9 +108,9 @@ void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR
                 childLock=0;
 	             Timer1_num =0;
                 childLock =0;
-	             BUZZER_Config();
-				 delay_20us(10000);
-	              DisableBUZZER_Config();
+	           //  BUZZER_Config();
+				// delay_20us(10000);
+	            //  DisableBUZZER_Config();
 				 
             }
         }
