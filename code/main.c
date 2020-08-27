@@ -44,9 +44,24 @@ int main(void)
 
 	while(1)
 	{	
-
-        KEY_HDScan(1);
-        KEY_Handing();
+        if(childLock  ==1){
+         TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
+									TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
+								    TM1650_Set(0x6A,segNumber[1]);//初始化为5级灰度，开显示
+									TM1650_Set(0x6C,segNumber[1]);//初始化为5级灰度，开显示
+									TM1650_Set(0x6E,segNumber[1]);//初始化为5级灰度，开显示
+        
+        }
+        if(childLock  ==0){
+            TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
+									TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
+								    TM1650_Set(0x6A,segNumber[2]);//初始化为5级灰度，开显示
+									TM1650_Set(0x6C,segNumber[2]);//初始化为5级灰度，开显示
+									TM1650_Set(0x6E,segNumber[2]);//初始化为5级灰度，开显示
+        
+        }
+       // KEY_HDScan(1);
+       // KEY_Handing();
         //TaskProcess();
 	}		
 }

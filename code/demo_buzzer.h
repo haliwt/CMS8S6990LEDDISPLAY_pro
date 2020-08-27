@@ -15,7 +15,8 @@
  ** \return  none
  ** \note  
  ******************************************************************************/
-void BUZZER_Init(void);
+void DisableBUZZER_Config(void);
+
 void BUZZER_Config(void);
 
 #endif /* __DEMO_LSE_H__ */

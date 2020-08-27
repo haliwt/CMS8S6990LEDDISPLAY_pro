@@ -1,10 +1,17 @@
 #include "demo_buzzer.h"
 #include "key.h"
+#include "myflash.h"
+
 uint16_t getMinute;
 uint16_t TimerCnt;
+
+
+
 volatile uint16_t Timer1_num;
-volatile uint8_t childLock ;
+uint8_t childLock ;
 static uint8_t locklg=0;
+
+
 /******************************************************************************
  ** \brief	 INT0 interrupt service function
  **			
@@ -75,26 +82,38 @@ void INT1_IRQHandler(void)  interrupt INT1_VECTOR
 ******************************************************************************/
 void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR 
 {
-	//P24 = ~P24; 
+	uint8_t num =0; 
     Timer1_num ++;
     
     if(Timer1_num ==35){
          Timer1_num =0;
        
-        if(KEY_HDScan(1)== WINDTI_PRES )
+        if(KEY_HDScan(1)== WINDTI_PRES && num ==0)
         {
-              locklg = locklg ^ 0x01;
-			if(locklg==1){
-				BUZZER_Config();
-	            BUZ_DisableBuzzer();	
-	            Timer1_num =0;
+            locklg = locklg ^ 0x01;
+			if(locklg==1 && num ==0){
+                childLock=1;
+			    num = 1;
+				
+                Timer1_num =0;
 				childLock =1;
+				BUZZER_Config();
+				delay_20us(10000);
+	            DisableBUZZER_Config();
+				Flash_ToWriteData(0x00,0x01);
+	           
 			
 			}
-            else{  
+            else if(num==0){  
+                locklg =0;
+				num =1;
+                childLock=0;
 	             Timer1_num =0;
-	             BUZ_DisableBuzzer();	
-				 childLock =0;
+                childLock =0;
+	             BUZZER_Config();
+				 delay_20us(10000);
+	              DisableBUZZER_Config();
+				 
             }
         }
     }
