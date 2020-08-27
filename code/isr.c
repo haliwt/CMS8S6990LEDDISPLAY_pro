@@ -3,7 +3,8 @@
 uint16_t getMinute;
 uint16_t TimerCnt;
 volatile uint16_t Timer1_num;
-uint8_t i=0;
+volatile uint8_t childLock ;
+static uint8_t locklg=0;
 /******************************************************************************
  ** \brief	 INT0 interrupt service function
  **			
@@ -79,18 +80,22 @@ void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR
     
     if(Timer1_num ==35){
          Timer1_num =0;
-        i++;
-        if(i==1 && KEY_HDScan(1)== WINDTI_PRES )
-         {
-            BUZZER_Config();
        
-            Timer1_num =0;
-     
-        }
-       else{
-             i=0;
-             Timer1_num =0;
-             BUZ_DisableBuzzer();	
+        if(KEY_HDScan(1)== WINDTI_PRES )
+        {
+              locklg = locklg ^ 0x01;
+			if(locklg==1){
+				BUZZER_Config();
+	            BUZ_DisableBuzzer();	
+	            Timer1_num =0;
+				childLock =1;
+			
+			}
+            else{  
+	             Timer1_num =0;
+	             BUZ_DisableBuzzer();	
+				 childLock =0;
+            }
         }
     }
 	TH1 =(65536-60000)>>8 ;

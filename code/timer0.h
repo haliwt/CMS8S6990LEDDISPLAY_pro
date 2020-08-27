@@ -11,6 +11,7 @@
 extern volatile uint16_t getMinute; 
 extern volatile uint16_t getHour;
 extern volatile uint16_t Timer1_num;
+extern volatile uint8_t  childLock ;
 
 typedef struct _TASK_COMPONENTS
 {

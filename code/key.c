@@ -142,134 +142,140 @@ void KEY_Handing(void)
 	uint8_t  temp8;
 	temp8 = KEY_Scan();
 	//temp8= ReadKey();
-	switch(temp8)
-	{
-	
+	if(childLock ==1){
 		
-		case	_KEY_CONT_3_TIMER: //长按按键按键值
-		      //   BUZZER_Config();
-			  
-		          TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
-						TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
-					    TM1650_Set(0x6A,segNumber[1]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6C,segNumber[1]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6E,segNumber[1]);//初始化为5级灰度，开显示
+
+	}
+	else{
+				switch(temp8)
+				{
 				
-			break;
-			
-		case _KEY_CONT_2_WIND :
-		      //  BUZZER_Config();
-			   
-		          TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
-						TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
-					    TM1650_Set(0x6A,segNumber[2]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6C,segNumber[2]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6E,segNumber[2]);//初始化为5级灰度，开显示
-		
-		break;
-		
-		case _KEY_CONT_1_POWER :
-		      //  BUZZER_Config();
-			   
-		          TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
-						TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
-					    TM1650_Set(0x6A,segNumber[3]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6C,segNumber[3]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6E,segNumber[3]);//初始化为5级灰度，开显示
-		
-		break;
-		
-	     case _KEY_CONT_4_FILTER :
-		     //   BUZZER_Config();
-			
-		          TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
-						TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
-					    TM1650_Set(0x6A,segNumber[4]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6C,segNumber[4]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6E,segNumber[4]);//初始化为5级灰度，开显示
-		
-		break;
-		
-		case	_KEY_TRG_1_POWER: //一般按键按下
-		             BUZZER_Config();
-			
-		     LEDDisplay_GreenColorRing();//背光是绿色
-			
-			 
-			 	LEDDisplay_RedColorRing();//电源指示灯红色，闪烁。
-				    P26=1;
-					pkey = pkey ^ 0x01;
-					if(pkey==1){
-						
-							Telecom->power_state =1;
-							LEDDisplay_GreenColorRing();//背光是绿色
-							BUZZER_Config();
-						  delay_20us(100);
-						
-					}
-					else{
+					
+					case	_KEY_CONT_3_TIMER: //长按按键按键值
+					      //   BUZZER_Config();
+						  
+					          TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
+									TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
+								    TM1650_Set(0x6A,segNumber[1]);//初始化为5级灰度，开显示
+									TM1650_Set(0x6C,segNumber[1]);//初始化为5级灰度，开显示
+									TM1650_Set(0x6E,segNumber[1]);//初始化为5级灰度，开显示
 							
-							Telecom->power_state =0;
-							LEDDisplay_RedColorRing();//电源指示灯红色，闪烁。
-							BUZZER_Config();
-						  delay_20us(500);
+						break;
+						
+					case _KEY_CONT_2_WIND :
+					      //  BUZZER_Config();
+						   
+					          TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
+									TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
+								    TM1650_Set(0x6A,segNumber[2]);//初始化为5级灰度，开显示
+									TM1650_Set(0x6C,segNumber[2]);//初始化为5级灰度，开显示
+									TM1650_Set(0x6E,segNumber[2]);//初始化为5级灰度，开显示
+					
+					break;
+					
+					case _KEY_CONT_1_POWER :
+					      //  BUZZER_Config();
+						   
+					          TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
+									TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
+								    TM1650_Set(0x6A,segNumber[3]);//初始化为5级灰度，开显示
+									TM1650_Set(0x6C,segNumber[3]);//初始化为5级灰度，开显示
+									TM1650_Set(0x6E,segNumber[3]);//初始化为5级灰度，开显示
+					
+					break;
+					
+				     case _KEY_CONT_4_FILTER :
+					     //   BUZZER_Config();
+						
+					          TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
+									TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
+								    TM1650_Set(0x6A,segNumber[4]);//初始化为5级灰度，开显示
+									TM1650_Set(0x6C,segNumber[4]);//初始化为5级灰度，开显示
+									TM1650_Set(0x6E,segNumber[4]);//初始化为5级灰度，开显示
+					
+					break;
+					
+					case	_KEY_TRG_1_POWER: //一般按键按下
+					             BUZZER_Config();
+						
+					     LEDDisplay_GreenColorRing();//背光是绿色
+						
+						 
+						 	LEDDisplay_RedColorRing();//电源指示灯红色，闪烁。
+							    P26=1;
+								pkey = pkey ^ 0x01;
+								if(pkey==1){
+									
+										Telecom->power_state =1;
+										LEDDisplay_GreenColorRing();//背光是绿色
+										BUZZER_Config();
+									  delay_20us(100);
+									
+								}
+								else{
+										
+										Telecom->power_state =0;
+										LEDDisplay_RedColorRing();//电源指示灯红色，闪烁。
+										BUZZER_Config();
+									  delay_20us(500);
+									
+								
+						    }
 						
 					
-			    }
-			
-		
-			break;
-		
-	
-		
-		case	_KEY_TRG_2_WIND:
-		 
-		   
-		      LEDDisplay_RedColorRing();//电源指示灯红色，闪烁。
-			    TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
-						TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
-					    TM1650_Set(0x6A,segNumber[2]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6C,segNumber[5]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6E,segNumber[4]);//初始化为5级灰度，开显示
-						BUZZER_Config();
-			    delay_20us(500);
-		       
-			break;
-		
-		case  _KEY_TRG_3_TIMER:
-		// BUZZER_Config();
-			
-		         TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
-						TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
-					    TM1650_Set(0x6A,segNumber[3]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6C,segNumber[6]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6E,segNumber[5]);//初始化为5级灰度，开显示
-						BUZZER_Config();
-			   
-		      
-		     break;
-		case	_KEY_TRG_4_FILTER:
-		      
-			  //  BUZZER_Config();
-			
-				  TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
-						TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
-					    TM1650_Set(0x6A,segNumber[4]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6C,segNumber[7]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6E,segNumber[5]);//初始化为5级灰度，开显示
-						BUZZER_Config();
-		
-		    
-	
-		break;
-		
-		
-			
-			break;
-		
-		default:
-			break;
-	}
+						break;
+					
+				
+					
+					case	_KEY_TRG_2_WIND:
+					 
+					   
+					      LEDDisplay_RedColorRing();//电源指示灯红色，闪烁。
+						    TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
+									TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
+								    TM1650_Set(0x6A,segNumber[2]);//初始化为5级灰度，开显示
+									TM1650_Set(0x6C,segNumber[5]);//初始化为5级灰度，开显示
+									TM1650_Set(0x6E,segNumber[4]);//初始化为5级灰度，开显示
+									BUZZER_Config();
+						    delay_20us(500);
+					       
+						break;
+					
+					case  _KEY_TRG_3_TIMER:
+					// BUZZER_Config();
+						
+					         TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
+									TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
+								    TM1650_Set(0x6A,segNumber[3]);//初始化为5级灰度，开显示
+									TM1650_Set(0x6C,segNumber[6]);//初始化为5级灰度，开显示
+									TM1650_Set(0x6E,segNumber[5]);//初始化为5级灰度，开显示
+									BUZZER_Config();
+						   
+					      
+					     break;
+					case	_KEY_TRG_4_FILTER:
+					      
+						  //  BUZZER_Config();
+						
+							  TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
+									TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
+								    TM1650_Set(0x6A,segNumber[4]);//初始化为5级灰度，开显示
+									TM1650_Set(0x6C,segNumber[7]);//初始化为5级灰度，开显示
+									TM1650_Set(0x6E,segNumber[5]);//初始化为5级灰度，开显示
+									BUZZER_Config();
+					
+					    
+				
+					break;
+					
+					
+						
+						break;
+					
+					default:
+						break;
+				}
+		}
 }
 /******************************************************************************
  **
