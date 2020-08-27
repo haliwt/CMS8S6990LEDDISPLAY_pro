@@ -45,20 +45,21 @@ int main(void)
 
 	while(1)
 	{	
-	   //  KEY_Handing();
+	 
         
-        #if 1
+       
 		if(childLock  ==1){
             if(BuzzerSound==1){
-                    BUZZER_Config();
+                 BUZZER_Config();
 				delay_20us(10000);
 	           DisableBUZZER_Config();
                BuzzerSound =0;
+               
             }
          TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
 									
 								    TM1650_Set(0x6A,segNumber[1]);//初始化为5级灰度，开显示
-									
+				LockKey_Function();					
         
         }
         if(childLock  ==0){
@@ -68,20 +69,12 @@ int main(void)
 	           DisableBUZZER_Config();
                BuzzerSound =0;
             }
-            #if 0
-            TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
-									TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
-								    TM1650_Set(0x6A,segNumber[2]);//初始化为5级灰度，开显示
-									TM1650_Set(0x6C,segNumber[2]);//初始化为5级灰度，开显示
-									TM1650_Set(0x6E,segNumber[2]);//初始化为5级灰度，开显示
-            #endif 
+           
              KEY_Handing();
         
         }
-		#endif 
-        //KEY_HDScan(1);
-        //KEY_Handing();
-       // TaskProcess();
+		
+    
 	}		
 }
 

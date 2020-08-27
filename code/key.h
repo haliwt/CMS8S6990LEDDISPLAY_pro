@@ -97,7 +97,8 @@ uint8_t KEY_FUNCTION(void);
 uint8_t KEY_Scan(void);
 void KEY_Handing(void);
 uint8_t KEY_HDScan(uint8_t mode);
- uint8_t ReadKey(void);
+void LockKey_Function(void);
+
 
 #endif /* __DEMO_GPIO_H__ */
 

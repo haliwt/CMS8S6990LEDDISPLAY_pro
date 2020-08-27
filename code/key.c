@@ -140,72 +140,60 @@ void GPIO_Config(void)
 void KEY_Handing(void)
 {
 
-	uint8_t  temp8,flashvalue;
+	uint8_t  temp8;
 	temp8 = KEY_Scan();
 	
 	switch(temp8)
 	{
-#if 0
-        if(childLock ==1){
-            BUZZER_Config();
-            delay_20us(10000);
-            BUZ_DisableBuzzer();	
-            delay_20us(10000);
-            BUZZER_Config();
-            delay_20us(10000);
-            BUZ_DisableBuzzer();	
-            delay_20us(10000);
-        }
-        else
-        #endif 
-            {
-					case	_KEY_CONT_3_TIMER: //长按按键按键值
-					      //   BUZZER_Config();
-						  
-					          TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
-									TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
-								    TM1650_Set(0x6A,segNumber[1]);//初始化为5级灰度，开显示
-									TM1650_Set(0x6C,segNumber[1]);//初始化为5级灰度，开显示
-									TM1650_Set(0x6E,segNumber[1]);//初始化为5级灰度，开显示
-							
-						break;
-						
-					case _KEY_CONT_2_WIND :
-					      //  BUZZER_Config();
-						   
-					          TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
-									TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
-								    TM1650_Set(0x6A,segNumber[2]);//初始化为5级灰度，开显示
-									TM1650_Set(0x6C,segNumber[2]);//初始化为5级灰度，开显示
-									TM1650_Set(0x6E,segNumber[2]);//初始化为5级灰度，开显示
-					
-					break;
-					
-					case _KEY_CONT_1_POWER :
-					      //  BUZZER_Config();
-						   
-					          TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
-									TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
-								    TM1650_Set(0x6A,segNumber[3]);//初始化为5级灰度，开显示
-									TM1650_Set(0x6C,segNumber[3]);//初始化为5级灰度，开显示
-									TM1650_Set(0x6E,segNumber[3]);//初始化为5级灰度，开显示
-					
-					break;
-					
-				     case _KEY_CONT_4_FILTER :
-					     //   BUZZER_Config();
-						
-					          TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
-									TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
-								    TM1650_Set(0x6A,segNumber[4]);//初始化为5级灰度，开显示
-									TM1650_Set(0x6C,segNumber[4]);//初始化为5级灰度，开显示
-									TM1650_Set(0x6E,segNumber[4]);//初始化为5级灰度，开显示
-					
-					break;
-					default:
-						break;
-           }
-	}
+
+
+		case	_KEY_CONT_3_TIMER: //长按按键按键值
+		      //   BUZZER_Config();
+			  
+		          TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
+						TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
+					    TM1650_Set(0x6A,segNumber[1]);//初始化为5级灰度，开显示
+						TM1650_Set(0x6C,segNumber[1]);//初始化为5级灰度，开显示
+						TM1650_Set(0x6E,segNumber[1]);//初始化为5级灰度，开显示
+				
+			break;
+			
+		case _KEY_CONT_2_WIND :
+		      //  BUZZER_Config();
+			   
+		          TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
+						TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
+					    TM1650_Set(0x6A,segNumber[2]);//初始化为5级灰度，开显示
+						TM1650_Set(0x6C,segNumber[2]);//初始化为5级灰度，开显示
+						TM1650_Set(0x6E,segNumber[2]);//初始化为5级灰度，开显示
+		
+		break;
+		
+		case _KEY_CONT_1_POWER :
+		      //  BUZZER_Config();
+			   
+		          TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
+						TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
+					    TM1650_Set(0x6A,segNumber[3]);//初始化为5级灰度，开显示
+						TM1650_Set(0x6C,segNumber[3]);//初始化为5级灰度，开显示
+						TM1650_Set(0x6E,segNumber[3]);//初始化为5级灰度，开显示
+		
+		break;
+		
+	     case _KEY_CONT_4_FILTER :
+		     //   BUZZER_Config();
+			
+		          TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
+						TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
+					    TM1650_Set(0x6A,segNumber[4]);//初始化为5级灰度，开显示
+						TM1650_Set(0x6C,segNumber[4]);//初始化为5级灰度，开显示
+						TM1650_Set(0x6E,segNumber[4]);//初始化为5级灰度，开显示
+		
+		break;
+		default:
+			break;
+    }
+	
 		
 }
 /******************************************************************************
@@ -344,14 +332,47 @@ uint8_t KEY_HDScan(uint8_t mode)
        
         key_up =0 ;
 		if(WIND_KEY==1 &&TIMER_KEY==1 )		return WINDTI_PRES;
-		//else if(POWER_KEY==1)       return POWER_PRES;
-        //else if(WIND_KEY==1)    return WIND_PRES;
-       // else if(TIMER_KEY==1)  return TIMER_PRES;
-       // else if(FILTER_KEY==1) return FILTER_PRES;
+	//	else if(POWER_KEY==1)       return POWER_PRES;
+     //   else if(WIND_KEY==1)    return WIND_PRES;
+     //   else if(TIMER_KEY==1)  return TIMER_PRES;
+    //    else if(FILTER_KEY==1) return FILTER_PRES;
 		
     }else if(WIND_KEY==0&&TIMER_KEY==0)key_up=1;
     return 0;   //没有按键按下
 }
+/******************************************************************************
+ **
+ ** Function Name:	void LockKey_Fuction(void)
+ ** Function : receive key input message 
+ ** Input Ref:连续按键选择，1 -支持连续按键  0- 不支持连续按键 
+  			  //  按键优先级 KEY0>KEY1>KEY2>WK_UP!!
+ ** Return Ref: 0--没有按键按下， 1---有按键按下
+ **   
+ ******************************************************************************/
+void LockKey_Function(void)
+{
+   uint8_t  temp=0;
+  temp = KEY_Scan();
+  if(temp !=0)
+  {
+                BUZZER_Config();
+			    delay_20us(10000);
+	           BUZ_DisableBuzzer();	
+				BUZZER_Config();
+			    delay_20us(10000);
+	            BUZ_DisableBuzzer();
+                delay_20us(10000);
+                 BUZZER_Config();
+                 delay_20us(10000);
+                 BUZ_DisableBuzzer();
+		
+   }
+
+
+}
+  
+
+
 
 
 
