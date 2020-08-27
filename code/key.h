@@ -7,6 +7,12 @@
 #include "tm1650_i2c.h"
 #include <stdio.h>
 
+#define POWER_PRES 	      1
+#define WIND_PRES	      2
+#define TIMER_PRES	      3
+#define FILTER_PRES       4
+#define WINDTI_PRES       5
+
 
 #define		_KEY_ALL_OFF				0X1F
 
