@@ -21,14 +21,14 @@
 #define		_KEY_TRG_2_WIND     			0x02  //风速按键按下--按键值
 #define		_KEY_TRG_3_TIMER     			0x04   //定时按键
 #define		_KEY_TRG_4_FILTER     			0x08
-#define		_KEY_TRG_5     			        0x10
+#define		_KEY_TRG_5_WINDTI   			0x09
 
 //长按按键检查 按键值或者组合按键值
 #define		_KEY_CONT_1_POWER     	     0x81    //电源按键长按--按键值
 #define		_KEY_CONT_2_WIND     		 0x82    //风速按键长按--按键值
 #define		_KEY_CONT_3_TIMER     	     0x84    //定时按键长按 长按按键。
 #define		_KEY_CONT_4_FILTER     	     0x88    //长按键 --设置滤网键
-#define		_KEY_CONT_5     		     0x90
+#define		_KEY_CONT_5_WINDTI     		 0x89
 
 
 #define		_KEY_CONT_1     	    0x81    //按键计数值
@@ -96,6 +96,8 @@ void GPIO_Config(void);
 uint8_t KEY_FUNCTION(void);
 uint8_t KEY_Scan(void);
 void KEY_Handing(void);
+uint8_t KEY_HDScan(uint8_t mode);
+ uint8_t ReadKey(void);
 
 #endif /* __DEMO_GPIO_H__ */
 

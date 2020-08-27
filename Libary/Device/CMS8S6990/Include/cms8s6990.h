@@ -1030,18 +1030,18 @@ sfr   MCTRL = 0xff;
 /*-----------------------------------------------------------------
 **I2C
 ------------------------------------------------------------------*/
-/*------I2CMCR主控模式控制寄存器----------------------------------------------------*/
-#define I2C_I2CMCR_RSTS_Pos			(7) //I2C主动模块复位控制位 1=复位主控模块 0-I2C主控模式下中断标志位清“0”
-#define I2C_I2CMCR_RSTS_Msk			(0x1 << I2C_I2CMCR_RSTS_Pos)  
-#define I2C_I2CMCR_ACK_Pos			(3) //应答位 1-使能 0-禁止
+/*------I2CMCR----------------------------------------------------*/
+#define I2C_I2CMCR_RSTS_Pos			(7)
+#define I2C_I2CMCR_RSTS_Msk			(0x1 << I2C_I2CMCR_RSTS_Pos)
+#define I2C_I2CMCR_ACK_Pos			(3)
 #define I2C_I2CMCR_ACK_Msk			(0x1 << I2C_I2CMCR_ACK_Pos)
-#define I2C_I2CMCR_STOP_Pos			(2)  //停止位 1-使能 0-禁止
+#define I2C_I2CMCR_STOP_Pos			(2)
 #define I2C_I2CMCR_STOP_Msk			(0x1 << I2C_I2CMCR_STOP_Pos)
-#define I2C_I2CMCR_START_Pos		(1) //启动位: 1-使能 0-禁止
+#define I2C_I2CMCR_START_Pos		(1)
 #define I2C_I2CMCR_START_Msk		(0x1 << I2C_I2CMCR_START_Pos)
-#define I2C_I2CMCR_RUN_Pos			(0)  //运行位： 1-使能 0-禁止
+#define I2C_I2CMCR_RUN_Pos			(0)
 #define I2C_I2CMCR_RUN_Msk			(0x1 << I2C_I2CMCR_RUN_Pos)
-/*------I2CMSR主控模式状态寄存器----------------------------------------------------*/
+/*------I2CMSR----------------------------------------------------*/
 #define I2C_I2CMSR_I2CMIF_Pos		(7)
 #define I2C_I2CMSR_I2CMIF_Msk		(0x1 << I2C_I2CMSR_I2CMIF_Pos)
 #define I2C_I2CMSR_BUS_BUSY_Pos		(6)
