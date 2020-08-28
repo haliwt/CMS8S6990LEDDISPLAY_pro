@@ -6,7 +6,7 @@
 
 //static uint8_t KEY_Scan(void);
 key_types   key;
-Telec *Telecom= NULL;
+
 static uint8_t Lockflag =0;
 
 
@@ -87,7 +87,18 @@ void GPIO_Config(void)
 	/*
 	(1)设置P23 IO功能
 	*/
+
+	GPIO_SET_MUX_MODE(P22CFG, GPIO_MUX_GPIO);   //	PM2.5 sensor Input
+	GPIO_ENABLE_INPUT(P2TRIS, GPIO_PIN_2);
+	GPIO_ENABLE_UP(P2UP,GPIO_PIN_2) ;
 	
+    GPIO_SET_MUX_MODE(P02CFG,GPIO_MUX_GPIO);   //开机按键  P02
+	GPIO_ENABLE_INPUT(P0TRIS,GPIO_PIN_2); 
+	GPIO_ENABLE_RD(P0RD,GPIO_PIN_2) ; 
+   
+    
+    
+    
 	GPIO_SET_MUX_MODE(P13CFG,GPIO_MUX_GPIO);   //开机按键  P13
 	GPIO_ENABLE_INPUT(P1TRIS,GPIO_PIN_3); 
 	GPIO_ENABLE_RD(P1RD,GPIO_PIN_3) ; 
@@ -325,7 +336,8 @@ uint8_t KEY_Scan(void)
  ******************************************************************************/
 uint8_t KEY_HDScan(uint8_t mode)
 {
-    static uint8_t key_up=1;     //°´¼üËÉ¿ª±êÖ¾
+    
+	static uint8_t key_up=1;     //°´¼üËÉ¿ª±êÖ¾
     if(mode==1)key_up=1;    // 支持连续按键
     if(key_up&&(WIND_KEY==1&&TIMER_KEY==1))
     {

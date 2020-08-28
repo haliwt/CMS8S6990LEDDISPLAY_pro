@@ -1,6 +1,7 @@
 #include "demo_buzzer.h"
 #include "key.h"
 #include "myflash.h"
+#include "tm1650_i2c.h"
 
 uint16_t getMinute;
 uint16_t TimerCnt;
@@ -10,6 +11,15 @@ uint8_t  BuzzerSound ;
 volatile uint16_t Timer1_num;
 uint8_t childLock ;
 static uint8_t locklg=0;
+uint8_t Timer2_num=0;
+uint8_t CC2_num =0;
+
+
+uint16_t timer0_num;
+uint16_t timer0_ten_num;
+uint8_t  vairI;
+uint16_t rec_num;
+uint16_t rec2_num;
 
 
 /******************************************************************************
@@ -26,39 +36,32 @@ void INT0_IRQHandler(void)  interrupt INT0_VECTOR
 /******************************************************************************
  ** \brief	 Timer 0 interrupt service function
  **
- ** \param [in]  none   
+ ** \param [in]  none   100us PM2.5
  **
  ** \return none
 ******************************************************************************/
 void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR 
 {
-    static uint16_t seconds=0,minutes=0;
-    uint8_t i;
-      seconds++;
-      TimerCnt++;
-      for (i=0; i<TASKS_MAX; i++)          // 逐个任务轮询时间处理
-      {
-            if (TaskComps[i].Timer)          // 时间不为0
-            {
-                TaskComps[i].Timer--;         // 减去一个节拍
-                if (TaskComps[i].Timer == 0 )       // 时间减完了
-                {
-                     TaskComps[i].Timer = TaskComps[i].ItervalTime;       // 恢复计时器值，从新运行下一次
-                     TaskComps[i].Run = 1;           // 任务可以运行
-                                  
+  
+    timer0_ten_num++;
+    timer0_num ++ ;
+    if(timer0_num <9000){
+          if(timer0_ten_num==40){
+              timer0_ten_num=0;
+              if(P22==0){
+                   if(vairI==0){
+                   rec_num++ ; 
+                   rec2_num=0;
                 }
-            }
-        }
-
-        if(seconds==60000){ //计时：6.0s
-            seconds =0;
-             minutes ++;
-             TimerCnt =0;
-            if(minutes ==10){ //1分钟时间
-                minutes =0;
-                getMinute++; 
-            }
-        }
+                else{
+                   
+                    rec2_num++;
+                    rec_num=0;
+                }
+              }
+            
+          }
+   }
       
 
 }
@@ -136,7 +139,35 @@ void UART0_IRQHandler(void)  interrupt UART0_VECTOR
 ******************************************************************************/
 void Timer2_IRQHandler(void)  interrupt TMR2_VECTOR 
 {
-	
+	if(TMR2_GetOverflowIntFlag())
+	{
+        Timer2_num ++ ;
+		TMR2_ConfigTimerPeriod((65536 - 20000)); 			//10ms
+		TMR2_ClearOverflowIntFlag();
+	}	
+    #if 0
+	if(TMR2_GetCaptureIntFlag(TMR2_CC0))
+	{
+		P24 = ~P24;
+		TMR2_ClearCaptureIntFlag(TMR2_CC0);
+	}	
+    #endif 
+	if(TMR2_GetCaptureIntFlag(TMR2_CC1))
+	{
+		CC2_num ++ ;
+        TMR2_ClearCaptureIntFlag(TMR2_CC1);
+       
+	}
+  #if 0	
+	if(TMR2_GetCaptureIntFlag(TMR2_CC2))
+	{
+		TMR2_ClearCaptureIntFlag(TMR2_CC2);
+	}	
+	if(TMR2_GetCaptureIntFlag(TMR2_CC3))
+	{
+		TMR2_ClearCaptureIntFlag(TMR2_CC3);
+	}	
+	#endif 
 }
 /******************************************************************************
  ** \brief	 UART 1 interrupt service function

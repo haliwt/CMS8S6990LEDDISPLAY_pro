@@ -76,10 +76,10 @@ typedef struct _TELEC_
 	uint8_t getTimerSecond ;
 	uint8_t getTimerHour;                 //定时器时间小时
 	int16_t  showtimes;                 //显示时间，数据，按键输入
-	
+	uint16_t PMaverageValue;          //PM sensor averageValue 
 } Telec;
 
-extern Telec *Telecom;
+extern Telec Telecom;
 
 enum WindSpeed{wind_sleep,wind_middle,wind_high,wind_auto};
 /******************************************************************************
