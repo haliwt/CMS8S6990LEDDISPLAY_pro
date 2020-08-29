@@ -17,7 +17,7 @@ extern uint8_t CC2_num ;
  ** \return  none
  ** \note  
  ******************************************************************************/
-void TMR2_Config(void);
+void TMR2_Config(uint8_t wind);
 
 
 

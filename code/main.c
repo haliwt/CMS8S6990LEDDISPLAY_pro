@@ -7,6 +7,7 @@
 #include "led.h"
 #include "tm1650_i2c.h"
 #include "timer2.h"
+#include "output.h"
 
 
 uint32_t Systemclock = 24000000;
@@ -16,7 +17,9 @@ extern uint16_t timer0_ten_num;
 extern uint16_t timer0_num;
 extern uint16_t rec_num;
 extern uint16_t rec2_num;
-static uint8_t state =0;
+
+
+struct _WindLevel_ wdl;
 
 Telec Telecom;
 
@@ -31,10 +34,10 @@ int main(void)
 {		
 	uint16_t disp =0,pmarr[10];
 	uint8_t poweron=0,i=0,j=0;
+    static uint8_t wdl=0;
 
     TMR1_Config();
 	TMR0_Config();
- //   TMR2_Config();
     GPIO_Config();
     LED_GPIO_Init();
 	IIC_Init_TM1650();
@@ -46,7 +49,7 @@ int main(void)
 		if(childLock  ==1){
             if(BuzzerSound==1){
                  BUZZER_Config();
-				delay_20us(10000);
+				delay_20us(1000);
 	           DisableBUZZER_Config();
                BuzzerSound =0;
                
@@ -57,7 +60,7 @@ int main(void)
         else if(childLock  ==0){
             if(BuzzerSound==1){
                     BUZZER_Config();
-				delay_20us(10000);
+				delay_20us(1000);
 	           DisableBUZZER_Config();
                BuzzerSound =0;
             }
@@ -101,10 +104,14 @@ int main(void)
 				  Telecom.PMaverageValue = Telecom.PMaverageValue + pmarr[i];
 					
 				}
-                Telecom.PMaverageValue = Telecom.PMaverageValue / 10;
-
-			}
-			
+                Telecom.PMaverageValue = (Telecom.PMaverageValue * 4)/ 10;
+				if(Telecom.PMaverageValue < 75) wdl = wind_sleep;
+				else if(Telecom.PMaverageValue > 75 && Telecom.PMaverageValue <150)wdl = wind_middle;
+				else if(Telecom.PMaverageValue > 150 && Telecom.PMaverageValue  < 300)wdl = wind_high;
+				else if(Telecom.PMaverageValue > 300)wdl = wind_high;
+            }
+            
+			OutputData(wdl);
 			
                                 
         

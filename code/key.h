@@ -81,7 +81,7 @@ typedef struct _TELEC_
 
 extern Telec Telecom;
 
-enum WindSpeed{wind_sleep,wind_middle,wind_high,wind_auto};
+
 /******************************************************************************
  ** \brief	 GPIO_Config
  ** \param [in] 

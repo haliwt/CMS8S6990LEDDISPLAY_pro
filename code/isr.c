@@ -2,6 +2,7 @@
 #include "key.h"
 #include "myflash.h"
 #include "tm1650_i2c.h"
+#include "output.h"
 
 uint16_t getMinute;
 uint16_t TimerCnt;
@@ -20,6 +21,9 @@ uint16_t timer0_ten_num;
 uint8_t  vairI;
 uint16_t rec_num;
 uint16_t rec2_num;
+uint16_t timer0_20ms_num;
+uint16_t timer0_duty_num;
+
 
 
 /******************************************************************************
@@ -45,6 +49,8 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
   
     timer0_ten_num++;
     timer0_num ++ ;
+	timer0_20ms_num++;
+	timer0_duty_num++;
     if(timer0_num <9000){
           if(timer0_ten_num==40){
               timer0_ten_num=0;
@@ -139,35 +145,15 @@ void UART0_IRQHandler(void)  interrupt UART0_VECTOR
 ******************************************************************************/
 void Timer2_IRQHandler(void)  interrupt TMR2_VECTOR 
 {
-	if(TMR2_GetOverflowIntFlag())
+	 if(TMR2_GetOverflowIntFlag())
 	{
-        Timer2_num ++ ;
-		TMR2_ConfigTimerPeriod((65536 - 20000)); 			//10ms
+
+        
+     TMR2_ConfigTimerPeriod((65536 - 78900)); //= 20.00ms
+        
 		TMR2_ClearOverflowIntFlag();
+        
 	}	
-    #if 0
-	if(TMR2_GetCaptureIntFlag(TMR2_CC0))
-	{
-		P24 = ~P24;
-		TMR2_ClearCaptureIntFlag(TMR2_CC0);
-	}	
-    #endif 
-	if(TMR2_GetCaptureIntFlag(TMR2_CC1))
-	{
-		CC2_num ++ ;
-        TMR2_ClearCaptureIntFlag(TMR2_CC1);
-       
-	}
-  #if 0	
-	if(TMR2_GetCaptureIntFlag(TMR2_CC2))
-	{
-		TMR2_ClearCaptureIntFlag(TMR2_CC2);
-	}	
-	if(TMR2_GetCaptureIntFlag(TMR2_CC3))
-	{
-		TMR2_ClearCaptureIntFlag(TMR2_CC3);
-	}	
-	#endif 
 }
 /******************************************************************************
  ** \brief	 UART 1 interrupt service function

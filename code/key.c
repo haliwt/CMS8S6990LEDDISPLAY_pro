@@ -368,14 +368,14 @@ void LockKey_Function(void)
   if(temp !=0)
   {
                 BUZZER_Config();
-			    delay_20us(10000);
+			    delay_20us(1000);
 	           BUZ_DisableBuzzer();	
 				BUZZER_Config();
-			    delay_20us(10000);
+			    delay_20us(1000);
 	            BUZ_DisableBuzzer();
-                delay_20us(10000);
+                delay_20us(1000);
                  BUZZER_Config();
-                 delay_20us(10000);
+                 delay_20us(1000);
                  BUZ_DisableBuzzer();
 		
    }

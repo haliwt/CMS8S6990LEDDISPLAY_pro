@@ -9,73 +9,64 @@
 ** \return  none
 ** \note  
 ******************************************************************************/
-void TMR2_Config(void)
+void TMR2_Config(uint8_t windl)
 {
 	/*
-	(1)设置Timer的运行模式
+	(1)设置运行模式
 	*/
 	TMR2_ConfigRunMode(TMR2_MODE_TIMING, TMR2_LOAD_DISBALE);
-	TMR2_EnableCapture(TMR2_CC0, TMR2_CAP_EDGE_RISING);
-	TMR2_EnableCapture(TMR2_CC1, TMR2_CAP_EDGE_RISING);	
-	TMR2_EnableCapture(TMR2_CC2, TMR2_CAP_EDGE_RISING);	
-	TMR2_EnableCapture(TMR2_CC3, TMR2_CAP_EDGE_RISING);	
+	
+	TMR2_EnableCompare(TMR2_CC1,TMR2_CMP_MODE_0);		
 		
+	
 	/*
-	(2)设置Timer 运行时钟
+	(2)设置时钟
 	*/
-	TMR2_ConfigTimerClk( TMR2_CLK_DIV_12);						/*Fsys = 24Mhz，Ftimer = 2Mhz,Ttmr=0.5us*/
+	TMR2_ConfigTimerClk( TMR2_CLK_DIV_12);						/*Fsys = 24Mhz->Ftimer = 2Mhz,Ttmr=0.5us*/
 	/*
-	(3)设置Timer周期
+	(3)设置周期	
 	*/	
-	TMR2_ConfigTimerPeriod((65536 - 20000)); 			//10ms
-		
+
+	 TMR2_ConfigTimerPeriod((65536 - 40000)); 		//20ms	
 	/*
-	(5)开启中断
+	(4)设置比较值
+	*/
+	 if(windl==0)
+	 	 TMR2_ConfigCompareValue(TMR2_CC1,(65536-0)); //输出占空比 99.83%
+     else if(windl==1)
+	   TMR2_ConfigCompareValue(TMR2_CC1,(65536-300)); //输出占空比 2%， 风速-----1档
+	 else if(windl==2)
+	 	TMR2_ConfigCompareValue(TMR2_CC1,(65536-500)); //输出占空比：占空比 4%  ----风速2档
+     else if(windl==3)
+	 	TMR2_ConfigCompareValue(TMR2_CC1,(65536-1000)); //输出占空比 7% ------风速3档
+    
+
+	/*
+	(5)设置中断
 	*/
 	TMR2_EnableOverflowInt();
-	TMR2_EnableCaptureInt(TMR2_CC0);
-	TMR2_EnableCaptureInt(TMR2_CC1);	
-	TMR2_EnableCaptureInt(TMR2_CC2);	
-	TMR2_EnableCaptureInt(TMR2_CC3);	
+
+	TMR2_EnableCompareInt(TMR2_CC1);	
 	
+			
+	TMR2_ConfigCompareIntMode(TMR2_CMP_INT_MODE0);		
 	/*
-	(6)设置Timer中断优先级
-	*/	
-	IRQ_SET_PRIORITY(IRQ_TMR2,IRQ_PRIORITY_LOW);
-	
+	(6)设置优先级
+	*/		
+	IRQ_SET_PRIORITY(IRQ_TMR2,IRQ_PRIORITY_LOW);	
 	TMR2_AllIntEnable();
 	IRQ_ALL_ENABLE();	
 	
 	/*
-	(7)设置Timer捕获
-	*/
-  	#if 0
-	GPIO_SET_MUX_MODE(P00CFG, GPIO_MUX_GPIO);
-	GPIO_SET_PS_MODE(PS_CAP0, GPIO_P00);				/*捕获通道0输入*/
-	GPIO_ENABLE_RD(P0RD, GPIO_PIN_0);					/*开下拉*/	
-	
-	GPIO_SET_MUX_MODE(P01CFG, GPIO_MUX_GPIO);
-	GPIO_SET_PS_MODE(PS_CAP1, GPIO_P01);				/*捕获通道0输入*/
-	GPIO_ENABLE_RD(P0RD, GPIO_PIN_1);					/*开下拉*/		
-	
-	
-	
-	GPIO_SET_MUX_MODE(P03CFG, GPIO_MUX_GPIO);
-	GPIO_SET_PS_MODE(PS_CAP3, GPIO_P03);				/*捕获通道0输入*/
-	GPIO_ENABLE_RD(P0RD, GPIO_PIN_3);					/*开下拉*/
-    #endif 
-    
-    GPIO_SET_MUX_MODE(P02CFG, GPIO_MUX_GPIO);
-	GPIO_SET_PS_MODE(PS_CAP2, GPIO_P02);				/*捕获通道0输入*/
-	GPIO_ENABLE_RD(P0RD, GPIO_PIN_2);					/*开下拉*/		
-	
+	(7)设置IO复用
+	*/	
+
+    GPIO_SET_MUX_MODE(P01CFG, GPIO_MUX_CC1); //配置GPIO口复用
+
 	/*
-
-	(8)开启Timer
+	(8开启Tiemr2
 	*/
-    TMR2_EnableGATE(); //WT.EDIT 门控定时器功能
 	TMR2_Start();
-
 }
 
 
