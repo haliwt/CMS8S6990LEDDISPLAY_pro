@@ -16,6 +16,7 @@ extern uint16_t timer0_ten_num;
 extern uint16_t timer0_num;
 extern uint16_t rec_num;
 extern uint16_t rec2_num;
+static uint8_t state =0;
 
 Telec Telecom;
 
@@ -30,6 +31,7 @@ int main(void)
 {		
 	uint16_t disp =0,pmarr[10];
 	uint8_t poweron=0,i=0,j=0;
+
     TMR1_Config();
 	TMR0_Config();
  //   TMR2_Config();
@@ -41,8 +43,6 @@ int main(void)
 	while(1)
 	{	
 	 
-        
-       
 		if(childLock  ==1){
             if(BuzzerSound==1){
                  BUZZER_Config();
@@ -51,13 +51,10 @@ int main(void)
                BuzzerSound =0;
                
             }
-         TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
-									
-				TM1650_Set(0x6A,segNumber[1]);//初始化为5级灰度，开显示
-				LockKey_Function();					
+           LockKey_Function();					
         
         }
-        if(childLock  ==0){
+        else if(childLock  ==0){
             if(BuzzerSound==1){
                     BUZZER_Config();
 				delay_20us(10000);
@@ -79,7 +76,7 @@ int main(void)
                 disp = rec2_num;
                 vairI=0;
             }
-			if(disp !=0){
+			if(disp >2){
 				if(i==1)pmarr[i-1]=disp;
 				else if(i==2)pmarr[i-1]=disp;
 				else if(i==3)pmarr[i-1]=disp;
@@ -92,11 +89,11 @@ int main(void)
 				else if(i==10)pmarr[i-1]=disp;
 			}
             TM1650_Set(0x6A,segNumber[disp %10]);// 个位
-            delay_20us(1000);
+           
             TM1650_Set(0x6C,segNumber[ (disp /10) %10]);//十位
-            delay_20us(1000);
+          
              TM1650_Set(0x6E,segNumber[(disp /100) %10 ]);// 百位
-            delay_20us(1000);
+        
             timer0_num =0;
 			if(i==1){
 				for(j=0;j<10;j++)
@@ -113,7 +110,7 @@ int main(void)
         
         }
 		
-    
+       
 	}		
 }
 
