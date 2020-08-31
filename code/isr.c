@@ -23,7 +23,7 @@ uint16_t rec_num;
 uint16_t rec2_num;
 uint16_t timer0_20ms_num;
 uint16_t timer0_duty_num;
-
+uint16_t timer0_key_num;
 
 
 /******************************************************************************
@@ -52,9 +52,12 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
 	timer0_20ms_num++;
 	timer0_duty_num++;
     
+    if(childLock  ==0) KEY_Handing();
     if(timer0_ten_num==10){
               timer0_ten_num=0;
 			  timer0_num ++ ;
+             timer0_key_num++;
+             
               if(P22==0){
                    if(vairI==0){
                    rec_num++ ; 
@@ -66,7 +69,8 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
                     //rec_num=0;
                 }
               }
-            
+           
+         
           
    }
       

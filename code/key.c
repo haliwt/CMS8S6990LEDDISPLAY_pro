@@ -123,9 +123,9 @@ void GPIO_Config(void)
 	
    
      //key gpio
-	//GPIO_SET_MUX_MODE(P17CFG,GPIO_MUX_GPIO);   //开机按键  P17
-	//GPIO_ENABLE_INPUT(P1TRIS,GPIO_PIN_7); 
-	//GPIO_ENABLE_RD(P1RD,GPIO_PIN_7) ; 
+	GPIO_SET_MUX_MODE(P17CFG,GPIO_MUX_GPIO);   //开机按键  P17
+	GPIO_ENABLE_INPUT(P1TRIS,GPIO_PIN_7); 
+	GPIO_ENABLE_RD(P1RD,GPIO_PIN_7) ; 
 
 	
 	GPIO_SET_MUX_MODE(P16CFG,GPIO_MUX_GPIO);   //风速按键P16
@@ -175,41 +175,45 @@ void KEY_Handing(void)
 
 
 		case	_KEY_CONT_3_TIMER: //长按按键按键值
+		         Telecom.gEventKey =1;
 		         Telecom.greeflg =1;
 		         BUZZER_Config();
-			    delay_20us(100);
-				  BUZ_DisableBuzzer();
+			    delay_20us(10000);
+				BUZ_DisableBuzzer();
 					
-			  
+			   Telecom.gEventKey =0;
 		break;
 			
 		case _KEY_CONT_2_WIND :
+		Telecom.gEventKey =1;
 			    Telecom.greeflg =1;
 		        BUZZER_Config();
-			  delay_20us(100);
+			  delay_20us(10000);
 		        BUZ_DisableBuzzer();
-			   
+			   Telecom.gEventKey =0;
 		break;
-		#if 0
+	
 		case _KEY_CONT_1_POWER :
+		   Telecom.gEventKey =1;
 			  BUZZER_Config();
-			  delay_20us(100);
+			  delay_20us(10000);
 		      BUZ_DisableBuzzer();
 		      powerkey = powerkey ^ 0x01;
-			  if(powerkey ==1)Telecom.power_state = 1;
-			  else powerOn = 0;
-			   
+			    if(powerkey ==1)Telecom.power_state = 1;
+			  else Telecom.power_state = 0;
+			   Telecom.gEventKey =0;
 		
 		break;
-		#endif 
+		 
 	     case _KEY_CONT_4_FILTER :
+		 Telecom.gEventKey =1;
 		 	   Telecom.greeflg =1;
 		       BUZZER_Config();
-			  delay_20us(100);
+			  delay_20us(10000);
 		    
 			  BUZ_DisableBuzzer();
 			
-		        
+		    Telecom.gEventKey =0;
 		
 		break;
 		default:
@@ -234,11 +238,10 @@ uint8_t KEY_Scan(void)
 	key.read = _KEY_ALL_OFF; //0x1F 
 
 
-	
-//	if(POWER_KEY == 1)
-//	{
-//		key.read &= ~0x01; // 0x1E
-//	}
+	if(POWER_KEY == 1)
+	{
+		key.read &= ~0x01; // 0x1E
+	}
 	if(WIND_KEY == 1)
 	{
 		key.read &= ~0x02;   //0x1C
@@ -270,7 +273,7 @@ uint8_t KEY_Scan(void)
 		{
 			if(key.read == key.buffer) //继续按下
 			{
-				if(++key.on_time> 100) //消抖  0.5us
+				if(++key.on_time> 10) //消抖  0.5us
 				{
 					key.value = key.buffer^_KEY_ALL_OFF; // key.value = 0x1E ^ 0x1f = 0x01
 					key.on_time = 0;
@@ -319,7 +322,7 @@ uint8_t KEY_Scan(void)
 		{
 			if(key.read == _KEY_ALL_OFF)
 			{
-				if(++key.off_time>100)
+				if(++key.off_time>10)
 				{
 					key.state   = start;
 				}

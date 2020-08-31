@@ -41,7 +41,7 @@ int main(void)
     TMR1_Config();
 	TMR0_Config();
     GPIO_Config();
-	GPIO_Interrupt_Init();
+//	GPIO_Interrupt_Init();
     LED_GPIO_Init();
 
 
@@ -70,12 +70,33 @@ int main(void)
             }
            
              KEY_Handing();
+			 if(Telecom.power_state == 0){
+				
+				cont++;
+		        if(cont >=500){
+					
+                    LEDDisplay_TurnOff();
+                    if(timer0_num >500) {
+                        cont=0;
+                        timer0_num=0;
+                    }
+                    
+				}
+                else{
+                     LEDDisplay_RedColorRing();
+                    cont++;
+                }
+			   
+        }
+		else{
+			LEDDisplay_GreenColorRing();
+
+		}
 			
         }
 
 	   if((timer0_num >= 1000 && timer0_num <=1060 )&& Telecom.power_state == 1){
 	  	       timer0_num =0;
-
 				i++;
             if(vairI==0){
                 disp =rec_num ;
@@ -105,6 +126,7 @@ int main(void)
 				else if(i==8)pmarr[i-1]=disp;
 				else if(i==9)pmarr[i-1]=disp;
 				else if(i==10)pmarr[i-1]=disp;
+				
 			}
 			
             LEDDisplay_TimerTim(disdat3,disdat2,disdat1);
@@ -117,38 +139,19 @@ int main(void)
 					
 				}
                 Telecom.PMaverageValue = Telecom.PMaverageValue / 10;
+			
 				if(Telecom.PMaverageValue < 75) wdl = wind_sleep;
 				else if(Telecom.PMaverageValue > 75 && Telecom.PMaverageValue <150)wdl = wind_middle;
 				else if(Telecom.PMaverageValue > 150 && Telecom.PMaverageValue  < 300)wdl = wind_high;
 				else if(Telecom.PMaverageValue > 300)wdl = wind_high;
+				
             }
             
 			OutputData(wdl);
 			
          }	
        #if 1
-		if(Telecom.power_state == 0){
-				
-				cont++;
-		        if(cont >=500){
-					
-                    LEDDisplay_TurnOff();
-                    if(timer0_num >500) {
-                        cont=0;
-                        timer0_num=0;
-                    }
-                    
-				}
-                else{
-                     LEDDisplay_RedColorRing();
-                    cont++;
-                }
-			   
-        }
-		else{
-			LEDDisplay_GreenColorRing();
-
-		}
+		
 	  
        #endif 
 	   
