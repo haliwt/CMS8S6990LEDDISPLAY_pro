@@ -75,7 +75,7 @@ int main(void)
 			
         }
 
-	   if((timer0_num >= 1000 && timer0_num <=1100 )&& Telecom.power_state == 1){
+	   if((timer0_num >= 1000 && timer0_num <=1060 )&& Telecom.power_state == 1){
 	  	       timer0_num =0;
 
 				i++;
@@ -153,7 +153,7 @@ int main(void)
 	   
 		
 		#endif 
-	    #endif 
+	   
 
 	} 
 
