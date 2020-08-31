@@ -67,16 +67,32 @@ void LEDDisplay_TurnOff(void)
 			  Tm1629DSentData(AddrFixed);//AddrFixed 写固定地址
 			  //写显示，固定定制模式
 			  STB_TM1629D=1; 
+
+		         /************WORKS DISPLAY**************/
+		         STB_TM1629D=0;	
+				 Tm1629DSentData(Addr08H);
+				 Tm1629DSentData(GreeNumber[0]); //指向地址08 ---GRID5
+			     STB_TM1629D=1; 
+
+		         STB_TM1629D=0;	 
+			     Tm1629DSentData(Addr0AH);
+				 Tm1629DSentData(0xFF); //指向地址0A	 ---GRID6
+			     STB_TM1629D=1; 
+		         /*******High bit*************/
+				  STB_TM1629D=0;   
+				Tm1629DSentData(Addr09H);  //地址 09 COM5 高段 
+			    Tm1629DSentData(0x0E);
+			    STB_TM1629D=1; 
+
+				 STB_TM1629D=0;   
+				Tm1629DSentData(Addr0BH);  //地址 0B COM6 高段
+			    Tm1629DSentData(0xFF);
+			    STB_TM1629D=1; 
+				/***********END*****************/
+
+
 			  
-			  STB_TM1629D=0;   
-			  Tm1629DSentData(Addr0DH); //高字节  
-			  Tm1629DSentData(0x00); //COM7
-			  STB_TM1629D=1; 
-			  
-			  STB_TM1629D=0;   
-			  Tm1629DSentData(Addr0FH); //高字节   
-			  Tm1629DSentData(0x00); //COM8
-			  STB_TM1629D=1; 
+			
 			  /****************SEG9~SEG12**********************/
 			   STB_TM1629D=0;	
 			  Tm1629DSentData(Addr01H);  //地址 01 COM1 高段
@@ -103,23 +119,22 @@ void LEDDisplay_TurnOff(void)
 			  Tm1629DSentData(0x00);
 			  STB_TM1629D=1; 
 	   
-			   STB_TM1629D=0;	
-			  Tm1629DSentData(Addr09H);  //地址 09 COM5 高段
-			  //指向地址0E	 
-			  Tm1629DSentData(0x00);
+			    
+			  STB_TM1629D=0;   
+			  Tm1629DSentData(Addr0DH); //高字节  
+			  Tm1629DSentData(0x00); //COM7
 			  STB_TM1629D=1; 
-	   
-			   STB_TM1629D=0;	
-			  Tm1629DSentData(Addr0BH);  //地址 0B COM6 高段
-			  //指向地址0E	 
-			  Tm1629DSentData(0x00);
+			  
+			  STB_TM1629D=0;   
+			  Tm1629DSentData(Addr0FH); //高字节   
+			  Tm1629DSentData(0x00); //COM8
 			  STB_TM1629D=1; 
 	   
 			  
-	   
+	 
 			  /***************低段显示SEG1~SEG8********************/
 			  
-			 
+			#if 0 
 			 STB_TM1629D=0;   
 			  Tm1629DSentData(Addr00H);
 			   Tm1629DSentData(0x00); //指向地址00	   
@@ -134,23 +149,14 @@ void LEDDisplay_TurnOff(void)
 			  Tm1629DSentData(Addr04H);
 			  Tm1629DSentData(0x00); //指向地址04
 			  STB_TM1629D=1; 
-				 
+			#endif 	 
 		   
 			 STB_TM1629D=0;   
 			 Tm1629DSentData(Addr06H);
 			  Tm1629DSentData(0x00); //指向地址06
-	   
-			  STB_TM1629D=0;   
-			  //指向地址8 
-			   Tm1629DSentData(Addr08H);
-			   Tm1629DSentData(0x00); //指向地址08
-			  STB_TM1629D=1; 
+	   		STB_TM1629D=1; 
 	   
 	   
-			  STB_TM1629D=0;   
-			  Tm1629DSentData(Addr0AH);
-			   Tm1629DSentData(0x00); //指向地址0A	   
-			   STB_TM1629D=1; 
 			   
 			   STB_TM1629D=0;  
 			  Tm1629DSentData(Addr0CH);
@@ -164,7 +170,7 @@ void LEDDisplay_TurnOff(void)
 
 
 	   STB_TM1629D =0; 
-       Tm1629DSentData(CloseDisTM1629D|Set12_16TM1629D); //关显示，显示，设置脉冲宽带 12/16
+       Tm1629DSentData(CloseDisTM1629D|Set14_16TM1629D); //关显示，显示，设置脉冲宽带 12/16
        STB_TM1629D =1; 	    
 
 

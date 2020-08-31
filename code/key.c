@@ -175,6 +175,7 @@ void KEY_Handing(void)
 
 
 		case	_KEY_CONT_3_TIMER: //长按按键按键值
+		         Telecom.greeflg =1;
 		         BUZZER_Config();
 			    delay_20us(100);
 				  BUZ_DisableBuzzer();
@@ -183,6 +184,7 @@ void KEY_Handing(void)
 		break;
 			
 		case _KEY_CONT_2_WIND :
+			    Telecom.greeflg =1;
 		        BUZZER_Config();
 			  delay_20us(100);
 		        BUZ_DisableBuzzer();
@@ -201,7 +203,8 @@ void KEY_Handing(void)
 		break;
 		#endif 
 	     case _KEY_CONT_4_FILTER :
-		    BUZZER_Config();
+		 	   Telecom.greeflg =1;
+		       BUZZER_Config();
 			  delay_20us(100);
 		    
 			  BUZ_DisableBuzzer();
@@ -210,10 +213,7 @@ void KEY_Handing(void)
 		
 		break;
 		default:
-		      if(Telecom.power_state==1){
-
-				 LEDDisplay_GreenColorRing();
-			  }
+		      
 			break;
     }
 	
