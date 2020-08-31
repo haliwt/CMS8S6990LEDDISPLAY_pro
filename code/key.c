@@ -210,7 +210,10 @@ void KEY_Handing(void)
 		
 		break;
 		default:
-		      
+		      if(Telecom.power_state==1){
+
+				 LEDDisplay_GreenColorRing();
+			  }
 			break;
     }
 	

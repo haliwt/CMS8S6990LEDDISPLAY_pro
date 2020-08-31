@@ -36,14 +36,15 @@
 #define   seg_g  0x40      //seg_g   //seg_b = 0x02 
 #define   seg_h  0x80      //Dot 
 
-#define   seg_i 0x90       //
-#define   seg_j 0xA0
-#define   seg_k 0xB0
-#define   seg_l 0xC0    
+/*************High byte*******************/
+#define   seg_i 0x01       //
+#define   seg_j 0x02
+#define   seg_k 0x04
+#define   seg_l 0x08    
 
+const unsigned char GreeNumber[];
 
-
-const unsigned int superNumber[];
+const unsigned char superNumber[];
 
 
 

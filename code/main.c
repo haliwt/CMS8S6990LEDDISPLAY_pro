@@ -74,7 +74,7 @@ int main(void)
         
         }
 
-	   if(timer0_num > 9000){
+	   if(timer0_num > 9000 && Telecom.power_state == 1){
 	  	       timer0_num =0;
 
 				i++;
@@ -122,7 +122,10 @@ int main(void)
             }
             
 			OutputData(wdl);
-			
+			 if(Telecom.power_state==1){
+
+				 LEDDisplay_GreenColorRing();
+			  }
          }	
        #if 1
 		if(Telecom.power_state == 0){
@@ -131,6 +134,10 @@ int main(void)
 				LEDDisplay_TurnOff();
 			    delay_20us(1000);
         }
+		else{
+
+           LEDDisplay_GreenColorRing();
+		}
 		#endif 
 	    #endif 
 
