@@ -145,7 +145,7 @@ int main(void)
 			   
         }
 		else{
-			LEDDisplay_TurnOff();
+			LEDDisplay_GreenColorRing();
 
 		}
 	  
