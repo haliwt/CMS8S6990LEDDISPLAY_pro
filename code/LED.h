@@ -47,24 +47,16 @@ const unsigned char GreeNumber[];
 const unsigned char superNumber[];
 
 
-
-
-
-
-
-
 extern const unsigned char segNumber[];
         
-
-
-
 void LED_GPIO_Init(void);
 void LEDDisplay_SleepLamp(void);
 void LEDDisplay_TimerTim(uint8_t disdat3,uint8_t disdat2,uint8_t disdat1);
 void LEDDisplay_RedColorRing(void);
 void LEDDisplay_GreenColorRing(void);
 void LEDDisplay_TurnOff(void);
-//void LEDDisplay_BlueColorRing(void);
+void LEDDisplay_BlueColorRing(void);
+
 
 
 

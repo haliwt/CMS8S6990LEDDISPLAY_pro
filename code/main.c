@@ -50,9 +50,7 @@ int main(void)
 	while(1)
 	{	
 	 
-  
-       
-        if(childLock  ==1){
+ 	    if(childLock  ==1){
             if(BuzzerSound==1){
                  BUZZER_Config();
 				delay_20us(1000);
@@ -152,10 +150,7 @@ int main(void)
 
 		}
 	  
-            
-	   
-		
-		#endif 
+       #endif 
 	   
 
 	} 
