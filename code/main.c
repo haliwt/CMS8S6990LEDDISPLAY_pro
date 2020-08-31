@@ -34,6 +34,7 @@ Telec Telecom;
 int main(void)
 {		
 	uint16_t disp =0,pmarr[10];
+    static uint16_t cont=0;
 	uint8_t poweron=0,i=0,j=0,disdat3=0,disdat2=0,disdat1=0;
     static uint8_t wdl=0;
 
@@ -129,10 +130,22 @@ int main(void)
          }	
        #if 1
 		if(Telecom.power_state == 0){
-				LEDDisplay_RedColorRing();
-				delay_20us(1000);
-				LEDDisplay_TurnOff();
-			    delay_20us(1000);
+				
+				cont++;
+		        if(cont >=1000){
+					
+                    LEDDisplay_TurnOff();
+                    if(timer0_num >8000) {
+                        cont=0;
+                        timer0_num=0;
+                    }
+                    
+				}
+                else{
+                     LEDDisplay_RedColorRing();
+                    cont++;
+                }
+			   
         }
 		else{
 
