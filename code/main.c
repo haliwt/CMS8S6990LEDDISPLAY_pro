@@ -40,6 +40,7 @@ int main(void)
     TMR1_Config();
 	TMR0_Config();
     GPIO_Config();
+	GPIO_Interrupt_Init();
     LED_GPIO_Init();
 
 

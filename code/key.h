@@ -105,6 +105,7 @@ uint8_t KEY_Scan(void);
 void KEY_Handing(void);
 uint8_t KEY_HDScan(uint8_t mode);
 void LockKey_Function(void);
+void GPIO_Interrupt_Init(void);
 
 
 #endif /* __DEMO_GPIO_H__ */

@@ -186,7 +186,20 @@ void P0EI_IRQHandler(void)  interrupt P0EI_VECTOR
  ******************************************************************************/
 void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR 
 {
-	;
+	static uint8_t powerkey=0;
+	if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_7))
+	{
+		powerkey= powerkey ^ 0x01;
+        if(powerkey==1)
+          Telecom.power_state = 1;
+	    else  Telecom.power_state = 0;
+	
+	    BUZZER_Config();
+        delay_20us(1000);
+        BUZ_DisableBuzzer();
+		GPIO_ClearIntFlag(GPIO1, GPIO_PIN_7);
+	}
+	
 }
 /******************************************************************************
  ** \brief	 GPIO 2 interrupt service function

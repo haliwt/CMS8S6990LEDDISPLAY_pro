@@ -52,6 +52,14 @@ void delay_20us(uint16_t n)
 		  
      } 
 }  
+/******************************************************************************
+ **
+ ** Function Name:	void delay_10us(uint16_t n) 
+ ** Function : 延时10*n微秒 
+ ** Input Ref:NO
+ ** Return Ref:NO
+ **   
+ ******************************************************************************/
 
 void delay_us(uint16_t n)  
 {  
@@ -60,7 +68,41 @@ void delay_us(uint16_t n)
 		   _nop_();  
 		  
      } 
-}  
+}
+/******************************************************************************
+ **
+ ** Function Name:	void delay_10us(uint16_t n) 
+ ** Function : 延时10*n微秒 
+ ** Input Ref:NO
+ ** Return Ref:NO
+ **   
+ ******************************************************************************/
+
+void GPIO_Interrupt_Init(void)
+{
+	/*
+	(1)设置P17 IO功能
+	*/
+	GPIO_SET_MUX_MODE(P17CFG, GPIO_MUX_GPIO);		//设置P23为GPIO模式
+	GPIO_ENABLE_INPUT(P1TRIS, GPIO_PIN_7);			//设置为输入模式
+	GPIO_ENABLE_RD(P1RD, GPIO_PIN_7);				//开启下拉
+	/*
+	(2)设置中断方式
+	*/
+	GPIO_SET_INT_MODE(P17EICFG, GPIO_INT_FALLING);	//设置为下降沿中断模式
+	GPIO_EnableInt(GPIO1, GPIO_PIN_7_MSK);			//开启P17中断
+	/*
+	(3)设置中断优先级
+	*/
+	IRQ_SET_PRIORITY(IRQ_P1, IRQ_PRIORITY_HIGH);
+	/*
+	(4)开启总中断
+	*/	
+	IRQ_ALL_ENABLE();
+
+	
+}
+
 /******************************************************************************
  ** \brief	 GPIO_Config
  ** \param [in] none
@@ -81,9 +123,9 @@ void GPIO_Config(void)
 	
    
      //key gpio
-	GPIO_SET_MUX_MODE(P17CFG,GPIO_MUX_GPIO);   //开机按键  P17
-	GPIO_ENABLE_INPUT(P1TRIS,GPIO_PIN_7); 
-	GPIO_ENABLE_RD(P1RD,GPIO_PIN_7) ; 
+	//GPIO_SET_MUX_MODE(P17CFG,GPIO_MUX_GPIO);   //开机按键  P17
+	//GPIO_ENABLE_INPUT(P1TRIS,GPIO_PIN_7); 
+	//GPIO_ENABLE_RD(P1RD,GPIO_PIN_7) ; 
 
 	
 	GPIO_SET_MUX_MODE(P16CFG,GPIO_MUX_GPIO);   //风速按键P16
@@ -100,19 +142,7 @@ void GPIO_Config(void)
 	GPIO_ENABLE_INPUT(P1TRIS,GPIO_PIN_4);      //设置为输入模式
 	GPIO_ENABLE_RD(P1RD,GPIO_PIN_4);           //开启下拉
 
-	/*
-	(2)设置中断方式
-	*/
-	//GPIO_SET_INT_MODE(P16EICFG, GPIO_INT_FALLING);	//设置为下降沿中断模式 P16电源按键
-	//GPIO_EnableInt(GPIO1, GPIO_PIN_6_MSK);			//开启P16中断 
-	/*
-	(3)设置中断优先级
-	*/
-//	IRQ_SET_PRIORITY(IRQ_P1, IRQ_PRIORITY_LOW);
-	/*
-	(4)开启总中断
-	*/	
-//	IRQ_ALL_ENABLE();
+	
 }
 /******************************************************************************
  **
@@ -158,7 +188,7 @@ void KEY_Handing(void)
 		        BUZ_DisableBuzzer();
 			   
 		break;
-		
+		#if 0
 		case _KEY_CONT_1_POWER :
 			  BUZZER_Config();
 			  delay_20us(100);
@@ -169,7 +199,7 @@ void KEY_Handing(void)
 			   
 		
 		break;
-		
+		#endif 
 	     case _KEY_CONT_4_FILTER :
 		    BUZZER_Config();
 			  delay_20us(100);
@@ -202,10 +232,10 @@ uint8_t KEY_Scan(void)
 
 
 	
-	if(POWER_KEY == 1)
-	{
-		key.read &= ~0x01; // 0x1E
-	}
+//	if(POWER_KEY == 1)
+//	{
+//		key.read &= ~0x01; // 0x1E
+//	}
 	if(WIND_KEY == 1)
 	{
 		key.read &= ~0x02;   //0x1C
