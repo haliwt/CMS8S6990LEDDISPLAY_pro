@@ -50,9 +50,39 @@ void LEDDisplay_SleepLamp(void)
 	*出口参数：NO
 	*
 *******************************************************************************************************/
-void LEDDisplay_TimerTim(void)
+void LEDDisplay_TimerTim(uint8_t disdat3,uint8_t disdat2,uint8_t disdat1)
 {
-	 
+        STB_TM1629D =0 ;  
+        Tm1629DSentData(ModeDisTM1629D); //写数据到显示寄存器
+	    STB_TM1629D =1; 
+	
+        STB_TM1629D=0;   
+		Tm1629DSentData(AddrFixed);//AddrFixed 写固定地址
+		//写显示，固定定制模式
+		STB_TM1629D=1; 
+		
+        STB_TM1629D=0;   
+		Tm1629DSentData(Addr00H);
+		//指向地址0   
+	    Tm1629DSentData(segNumber[disdat3]); //主显示3 位---百位
+	    STB_TM1629D=1; 
+		
+        STB_TM1629D=0;   
+		Tm1629DSentData(Addr02H);
+		//指向地址2   
+	    Tm1629DSentData(segNumber[disdat2]); //主显示2位---十位
+	    STB_TM1629D=1; 
+		
+        //写第三位
+         STB_TM1629D=0;   
+		Tm1629DSentData(Addr04H);
+		//指向地址4   
+	    Tm1629DSentData(segNumber[disdat1]); //主显示1位----个位
+         STB_TM1629D=1; 
+	
+       STB_TM1629D =0; 
+       Tm1629DSentData(OpenDisTM1629D|Set12_16TM1629D); //开显示，显示，设置脉冲宽带 12/16
+       STB_TM1629D =1; 	 
 }
 /****************************************************************************************************
  * 	*

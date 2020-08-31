@@ -33,7 +33,7 @@ Telec Telecom;
 int main(void)
 {		
 	uint16_t disp =0,pmarr[10];
-	uint8_t poweron=0,i=0,j=0;
+	uint8_t poweron=0,i=0,j=0,disdat3=0,disdat2=0,disdat1=0;
     static uint8_t wdl=0;
 
     TMR1_Config();
@@ -46,9 +46,7 @@ int main(void)
 
 	while(1)
 	{	
-	   
-
-		//Tm1629DDis();
+	   //Tm1629DDis();
 		
         if(childLock  ==1){
             if(BuzzerSound==1){
@@ -74,14 +72,22 @@ int main(void)
         }
 
 	  if(timer0_num > 9000){
-	  			i++;
+	  	       timer0_num =0;
+
+				i++;
             if(vairI==0){
                 disp =rec_num ;
                 vairI=1;
+			    disdat3 = (rec_num /100) %10;   //百位
+				disdat2 = (rec_num /10) %10;  //十位
+				disdat1 = rec_num  %10;        //个位
             }
             else {
                 disp = rec2_num;
                 vairI=0;
+			    disdat3 = (rec2_num /100) %10;   //百位
+				disdat2 = (rec2_num /10) %10;  //十位
+				disdat1 = rec2_num  %10;        //个位
             }
 			if(disp >2){
 				if(i==1)pmarr[i-1]=disp;
@@ -95,7 +101,8 @@ int main(void)
 				else if(i==9)pmarr[i-1]=disp;
 				else if(i==10)pmarr[i-1]=disp;
 			}
-           // Tm1629DDis();
+			
+            LEDDisplay_TimerTim(disdat3,disdat2,disdat1);
         
             timer0_num =0;
 			if(i==1){
