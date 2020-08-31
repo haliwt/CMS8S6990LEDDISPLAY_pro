@@ -75,15 +75,6 @@ void delay_us(uint16_t n)
 void GPIO_Config(void)
 {
 	
-	
-	GPIO_SET_MUX_MODE(P26CFG, GPIO_MUX_GPIO);		//??P13?GPIO??
-	GPIO_ENABLE_OUTPUT(P2TRIS, GPIO_PIN_6);			//???????
-	P26 = 0 ;
-	GPIO_SET_MUX_MODE(P25CFG, GPIO_MUX_GPIO);		//??P13?GPIO??
-	GPIO_ENABLE_OUTPUT(P2TRIS, GPIO_PIN_5);			//???????
-	P25 = 0;
-	
-	
 	/*
 	(1)设置P23 IO功能
 	*/
@@ -159,46 +150,26 @@ void KEY_Handing(void)
 
 
 		case	_KEY_CONT_3_TIMER: //长按按键按键值
-		      //   BUZZER_Config();
+		         BUZZER_Config();
 			  
-		          TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
-						TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
-					    TM1650_Set(0x6A,segNumber[1]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6C,segNumber[1]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6E,segNumber[1]);//初始化为5级灰度，开显示
 				
 			break;
 			
 		case _KEY_CONT_2_WIND :
-		      //  BUZZER_Config();
+		        BUZZER_Config();
 			   
-		          TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
-						TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
-					    TM1650_Set(0x6A,segNumber[2]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6C,segNumber[2]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6E,segNumber[2]);//初始化为5级灰度，开显示
-		
 		break;
 		
 		case _KEY_CONT_1_POWER :
-		      //  BUZZER_Config();
+		        BUZZER_Config();
 			   
-		          TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
-						TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
-					    TM1650_Set(0x6A,segNumber[3]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6C,segNumber[3]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6E,segNumber[3]);//初始化为5级灰度，开显示
 		
 		break;
 		
 	     case _KEY_CONT_4_FILTER :
-		     //   BUZZER_Config();
+		       BUZZER_Config();
 			
-		          TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
-						TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
-					    TM1650_Set(0x6A,segNumber[4]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6C,segNumber[4]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6E,segNumber[4]);//初始化为5级灰度，开显示
+		        
 		
 		break;
 		default:

@@ -7,7 +7,7 @@
 
 typedef struct _WindLevel_
 {
-   uint8_t windlevel ;
+   uint8_t windLevel ;
    
    
 
