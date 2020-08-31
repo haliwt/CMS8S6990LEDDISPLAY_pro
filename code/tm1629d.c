@@ -13,7 +13,7 @@ const unsigned char segNumber[]={
          seg_a+seg_b+seg_c+seg_d+seg_e+seg_f+seg_g+seg_h,  // char "8"  0x08
          seg_a+seg_b+seg_c+seg_d+seg_f+seg_g+seg_h,        // char "9"  0x09
          seg_h,                                             // char "."  0x0A
-         0                                                  // Dont't display 0x0b
+         0                                                  // Dont't display 0x0B
          
 };
 
@@ -241,22 +241,22 @@ void Tm1629DSentData(uint8_t oneByte)
   {   
     
 		 TM1629D_SCL = 0;//CLK_TM1620_CLR; 
-		  _nop_(); 
+		//  _nop_(); 
 		 if(oneByte & (1 << i))  
 		 {
 	       TM1629D_SDA  = 1;//DIO_TM1620_SET;
-	        _nop_(); 
-			 _nop_(); 
+	       // _nop_(); 
+			// _nop_(); 
 	      }   
 		 else 
 		 {
 	          TM1629D_SDA =0;//DIO_TM1620_CLR;
-	           _nop_(); 
-			   _nop_(); 
+	        //   _nop_(); 
+			//   _nop_(); 
        
          }   
-	       _nop_(); 
-		  _nop_(); 
+	     //  _nop_(); 
+		//  _nop_(); 
 		 TM1629D_SCL = 1;//CLK_TM1620_SET; //上升沿操作      
       }   
  

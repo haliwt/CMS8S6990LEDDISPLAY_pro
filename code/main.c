@@ -8,6 +8,7 @@
 #include "tm1629d.h"
 #include "timer2.h"
 #include "output.h"
+#include "buzzer.h"
 
 
 uint32_t Systemclock = 24000000;
@@ -46,13 +47,14 @@ int main(void)
 
 	while(1)
 	{	
-	   //Tm1629DDis();
-		
+	 
+  
+       
         if(childLock  ==1){
             if(BuzzerSound==1){
                  BUZZER_Config();
 				delay_20us(1000);
-	           DisableBUZZER_Config();
+			    BUZ_DisableBuzzer();
                BuzzerSound =0;
                
             }
@@ -63,7 +65,7 @@ int main(void)
             if(BuzzerSound==1){
                    BUZZER_Config();
 				delay_20us(1000);
-	           DisableBUZZER_Config();
+	            BUZ_DisableBuzzer();
                BuzzerSound =0;
             }
            
@@ -71,7 +73,7 @@ int main(void)
         
         }
 
-	  if(timer0_num > 9000){
+	   if(timer0_num > 9000){
 	  	       timer0_num =0;
 
 				i++;
@@ -120,7 +122,16 @@ int main(void)
             
 			OutputData(wdl);
 			
-         }		
+         }	
+       #if 1
+		if(Telecom.power_state == 0){
+				LEDDisplay_RedColorRing();
+				delay_20us(1000);
+				LEDDisplay_TurnOff();
+			    delay_20us(1000);
+        }
+		#endif 
+	    #endif 
 
 	} 
 

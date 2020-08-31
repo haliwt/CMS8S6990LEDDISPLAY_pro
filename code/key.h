@@ -6,6 +6,13 @@
 #include "cms8s6990.h"
 
 #include <stdio.h>
+#include "led.h"
+#include "demo_buzzer.h"
+#include "demo_timer.h"
+#include "myflash.h"
+#include "buzzer.h"
+
+
 
 #define POWER_PRES 	      1
 #define WIND_PRES	      2
@@ -54,7 +61,7 @@ typedef  struct  _state_
  }state;
 }key_types;
 
- extern key_types key;
+extern key_types key;
 
 
 #define  POWER_KEY      P17

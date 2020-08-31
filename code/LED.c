@@ -1,5 +1,18 @@
 #include "LED.h"
 
+
+const unsigned int superNumber[]={
+
+   seg_h ,
+   seg_i ,
+   seg_j ,
+   seg_k 
+         
+         
+};
+
+
+
 static void LEDDisplay_BlueColorRing(void);
 /******************************************************************************
  **
@@ -27,6 +40,128 @@ void LED_GPIO_Init(void)
 	P26=1;
   
     
+}
+/******************************************************************************
+ **
+ ** Function Name:	void LEDDisplay_TurnOff(void)
+ ** Function : receive key input message 
+ ** Input Ref:NO
+ ** Return Ref:NO
+ **   
+ ******************************************************************************/
+void LEDDisplay_TurnOff(void)
+{
+        
+      
+	         STB_TM1629D =0 ;  
+			  Tm1629DSentData(ModeDisTM1629D); //写数据到显示寄存器
+			  STB_TM1629D =1; 
+		  
+			  STB_TM1629D=0;   
+			  Tm1629DSentData(AddrFixed);//AddrFixed 写固定地址
+			  //写显示，固定定制模式
+			  STB_TM1629D=1; 
+			  
+			  STB_TM1629D=0;   
+			  Tm1629DSentData(Addr0DH); //高字节  
+			  Tm1629DSentData(0x00); //COM7
+			  STB_TM1629D=1; 
+			  
+			  STB_TM1629D=0;   
+			  Tm1629DSentData(Addr0FH); //高字节   
+			  Tm1629DSentData(0x00); //COM8
+			  STB_TM1629D=1; 
+			  /****************SEG9~SEG12**********************/
+			   STB_TM1629D=0;	
+			  Tm1629DSentData(Addr01H);  //地址 01 COM1 高段
+			  //指向地址0E	 
+			  Tm1629DSentData(0x00);
+			  STB_TM1629D=1; 
+	   
+			   STB_TM1629D=0;	
+			  Tm1629DSentData(Addr03H);  //地址 03 COM2 高段
+			  //指向地址0E	 
+			  Tm1629DSentData(0x00);
+			  STB_TM1629D=1; 
+	   
+			   STB_TM1629D=0;	
+			  Tm1629DSentData(Addr05H);  //地址 05 COM3 高段
+			  //指向地址0E	 
+			  Tm1629DSentData(0x00);
+			  STB_TM1629D=1; 
+	   
+	   
+			   STB_TM1629D=0;	
+			  Tm1629DSentData(Addr07H);  //地址 07 COM4 高段
+			  //指向地址0E	 
+			  Tm1629DSentData(0x00);
+			  STB_TM1629D=1; 
+	   
+			   STB_TM1629D=0;	
+			  Tm1629DSentData(Addr09H);  //地址 09 COM5 高段
+			  //指向地址0E	 
+			  Tm1629DSentData(0x00);
+			  STB_TM1629D=1; 
+	   
+			   STB_TM1629D=0;	
+			  Tm1629DSentData(Addr0BH);  //地址 0B COM6 高段
+			  //指向地址0E	 
+			  Tm1629DSentData(0x00);
+			  STB_TM1629D=1; 
+	   
+			  
+	   
+			  /***************低段显示SEG1~SEG8********************/
+			  
+			 
+			 STB_TM1629D=0;   
+			  Tm1629DSentData(Addr00H);
+			   Tm1629DSentData(0x00); //指向地址00	   
+			  STB_TM1629D=1; 
+				 
+			 STB_TM1629D=0;   
+			   Tm1629DSentData(Addr02H);
+			   Tm1629DSentData(0x00); //指向地址02	   
+			 STB_TM1629D=1; 
+				 
+			 STB_TM1629D=0;   
+			  Tm1629DSentData(Addr04H);
+			  Tm1629DSentData(0x00); //指向地址04
+			  STB_TM1629D=1; 
+				 
+		   
+			 STB_TM1629D=0;   
+			 Tm1629DSentData(Addr06H);
+			  Tm1629DSentData(0x00); //指向地址06
+	   
+			  STB_TM1629D=0;   
+			  //指向地址8 
+			   Tm1629DSentData(Addr08H);
+			   Tm1629DSentData(0x00); //指向地址08
+			  STB_TM1629D=1; 
+	   
+	   
+			  STB_TM1629D=0;   
+			  Tm1629DSentData(Addr0AH);
+			   Tm1629DSentData(0x00); //指向地址0A	   
+			   STB_TM1629D=1; 
+			   
+			   STB_TM1629D=0;  
+			  Tm1629DSentData(Addr0CH);
+			   Tm1629DSentData(0x00); //指向地址0C	   
+			   STB_TM1629D=1; 
+			   
+			   STB_TM1629D=0;  
+			  Tm1629DSentData(Addr0EH);
+			   Tm1629DSentData(0x00); //指向地址0E	   
+			   STB_TM1629D=1; 
+
+
+	   STB_TM1629D =0; 
+       Tm1629DSentData(CloseDisTM1629D|Set12_16TM1629D); //关显示，显示，设置脉冲宽带 12/16
+       STB_TM1629D =1; 	    
+
+
 }
 
 /******************************************************************************
@@ -105,21 +240,102 @@ void LEDDisplay_RedColorRing(void)
 		STB_TM1629D=1; 
 		
         STB_TM1629D=0;   
-		Tm1629DSentData(Addr0CH);
-		//指向地址0C   
-	    Tm1629DSentData(segNumber[]); //主显示3 位---百位
+		Tm1629DSentData(Addr0DH); //高字节  
+	    Tm1629DSentData(0x0E); //COM7
 	    STB_TM1629D=1; 
 		
         STB_TM1629D=0;   
-		Tm1629DSentData(Addr0EH);
-		//指向地址0E   
-	    Tm1629DSentData(segNumber[]); //主显示2位---十位
+		Tm1629DSentData(Addr0FH); //高字节   
+	    Tm1629DSentData(0x0E); //COM8
 	    STB_TM1629D=1; 
+        /****************SEG9~SEG12**********************/
+		 STB_TM1629D=0;   
+		Tm1629DSentData(Addr01H);  //地址 01 COM1 高段
+		//指向地址0E   
+	    Tm1629DSentData(0x00);
+	    STB_TM1629D=1; 
+
+		 STB_TM1629D=0;   
+		Tm1629DSentData(Addr03H);  //地址 03 COM2 高段
+		//指向地址0E   
+	    Tm1629DSentData(0x00);
+	    STB_TM1629D=1; 
+
+		 STB_TM1629D=0;   
+		Tm1629DSentData(Addr05H);  //地址 05 COM3 高段
+		//指向地址0E   
+	    Tm1629DSentData(0x00);
+	    STB_TM1629D=1; 
+
+
+		 STB_TM1629D=0;   
+		Tm1629DSentData(Addr07H);  //地址 07 COM4 高段
+		//指向地址0E   
+	    Tm1629DSentData(0x00);
+	    STB_TM1629D=1; 
+
+		 STB_TM1629D=0;   
+		Tm1629DSentData(Addr09H);  //地址 09 COM5 高段
+		//指向地址0E   
+	    Tm1629DSentData(0x00);
+	    STB_TM1629D=1; 
+
+		 STB_TM1629D=0;   
+		Tm1629DSentData(Addr0BH);  //地址 0B COM6 高段
+		//指向地址0E   
+	    Tm1629DSentData(0x00);
+	    STB_TM1629D=1; 
+
 		
-       
-	
-       STB_TM1629D =0; 
-       Tm1629DSentData(OpenDisTM1629D|Set12_16TM1629D); //开显示，显示，设置脉冲宽带 12/16
+
+		/***************低段显示SEG1~SEG8********************/
+		
+	   
+	   STB_TM1629D=0;	
+		Tm1629DSentData(Addr00H);
+		 Tm1629DSentData(0x00); //指向地址00	 
+	    STB_TM1629D=1; 
+		   
+	   STB_TM1629D=0;	
+		 Tm1629DSentData(Addr02H);
+		 Tm1629DSentData(0x00); //指向地址02	 
+	   STB_TM1629D=1; 
+		   
+	   STB_TM1629D=0;	
+		Tm1629DSentData(Addr04H);
+		Tm1629DSentData(0x00); //指向地址04
+	    STB_TM1629D=1; 
+		   
+     
+	   STB_TM1629D=0;	
+	   Tm1629DSentData(Addr06H);
+		Tm1629DSentData(0x00); //指向地址06
+
+		STB_TM1629D=0;	 
+		//指向地址8 
+		 Tm1629DSentData(Addr08H);
+		 Tm1629DSentData(0x00); //指向地址08
+	    STB_TM1629D=1; 
+
+
+		STB_TM1629D=0;	 
+	    Tm1629DSentData(Addr0AH);
+		 Tm1629DSentData(0x00); //指向地址0A	 
+	     STB_TM1629D=1; 
+         
+         STB_TM1629D=0;	 
+	    Tm1629DSentData(Addr0CH);
+		 Tm1629DSentData(0xFF); //指向地址0C	 
+	     STB_TM1629D=1; 
+         
+         STB_TM1629D=0;	 
+	    Tm1629DSentData(Addr0EH);
+		 Tm1629DSentData(0xFF); //指向地址0E	 
+	     STB_TM1629D=1; 
+
+		
+	   STB_TM1629D =0; 
+       Tm1629DSentData(OpenDisTM1629D|Set14_16TM1629D); //开显示，显示，设置脉冲宽带 12/16
        STB_TM1629D =1; 	 
    
     

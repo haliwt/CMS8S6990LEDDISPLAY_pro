@@ -1,8 +1,4 @@
 #include "key.h"
-#include "demo_buzzer.h"
-
-#include "demo_timer.h"
-#include "myflash.h"
 
 //static uint8_t KEY_Scan(void);
 key_types   key;
@@ -140,6 +136,7 @@ void GPIO_Config(void)
 void KEY_Handing(void)
 {
 
+	static uint8_t powerOn =0,powerkey=0;
 	uint8_t  temp8;
 	temp8 = KEY_Scan();
 	
@@ -148,29 +145,42 @@ void KEY_Handing(void)
 
 
 		case	_KEY_CONT_3_TIMER: //长按按键按键值
-		        // BUZZER_Config();
+		         BUZZER_Config();
+			    delay_20us(100);
+				  BUZ_DisableBuzzer();
+					
 			  
-				
-			break;
+		break;
 			
 		case _KEY_CONT_2_WIND :
-		       // BUZZER_Config();
+		        BUZZER_Config();
+			  delay_20us(100);
+		        BUZ_DisableBuzzer();
 			   
 		break;
 		
 		case _KEY_CONT_1_POWER :
-		     //   BUZZER_Config();
+			  BUZZER_Config();
+			  delay_20us(100);
+		      BUZ_DisableBuzzer();
+		      powerkey = powerkey ^ 0x01;
+			  if(powerkey ==1)Telecom.power_state = 1;
+			  else powerOn = 0;
 			   
 		
 		break;
 		
 	     case _KEY_CONT_4_FILTER :
-		    //   BUZZER_Config();
+		    BUZZER_Config();
+			  delay_20us(100);
+		    
+			  BUZ_DisableBuzzer();
 			
 		        
 		
 		break;
 		default:
+		      
 			break;
     }
 	

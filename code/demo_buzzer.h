@@ -15,7 +15,7 @@
  ** \return  none
  ** \note  
  ******************************************************************************/
-void DisableBUZZER_Config(void);
+
 
 void BUZZER_Config(void);
 
