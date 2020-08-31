@@ -95,6 +95,32 @@ void LEDDisplay_TimerTim(uint8_t disdat3,uint8_t disdat2,uint8_t disdat1)
 void LEDDisplay_RedColorRing(void)
 {
     
+        STB_TM1629D =0 ;  
+        Tm1629DSentData(ModeDisTM1629D); //写数据到显示寄存器
+	    STB_TM1629D =1; 
+	
+        STB_TM1629D=0;   
+		Tm1629DSentData(AddrFixed);//AddrFixed 写固定地址
+		//写显示，固定定制模式
+		STB_TM1629D=1; 
+		
+        STB_TM1629D=0;   
+		Tm1629DSentData(Addr0CH);
+		//指向地址0C   
+	    Tm1629DSentData(segNumber[]); //主显示3 位---百位
+	    STB_TM1629D=1; 
+		
+        STB_TM1629D=0;   
+		Tm1629DSentData(Addr0EH);
+		//指向地址0E   
+	    Tm1629DSentData(segNumber[]); //主显示2位---十位
+	    STB_TM1629D=1; 
+		
+       
+	
+       STB_TM1629D =0; 
+       Tm1629DSentData(OpenDisTM1629D|Set12_16TM1629D); //开显示，显示，设置脉冲宽带 12/16
+       STB_TM1629D =1; 	 
    
     
 }

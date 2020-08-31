@@ -111,7 +111,7 @@ int main(void)
 				  Telecom.PMaverageValue = Telecom.PMaverageValue + pmarr[i];
 					
 				}
-                Telecom.PMaverageValue = (Telecom.PMaverageValue * 4)/ 10;
+                Telecom.PMaverageValue = Telecom.PMaverageValue / 10;
 				if(Telecom.PMaverageValue < 75) wdl = wind_sleep;
 				else if(Telecom.PMaverageValue > 75 && Telecom.PMaverageValue <150)wdl = wind_middle;
 				else if(Telecom.PMaverageValue > 150 && Telecom.PMaverageValue  < 300)wdl = wind_high;
