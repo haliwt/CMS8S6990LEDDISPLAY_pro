@@ -58,12 +58,12 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
               if(P22==0){
                    if(vairI==0){
                    rec_num++ ; 
-                   rec2_num=0;
+                  // rec2_num=0;
                 }
                 else{
                    
                     rec2_num++;
-                    rec_num=0;
+                    //rec_num=0;
                 }
               }
             
