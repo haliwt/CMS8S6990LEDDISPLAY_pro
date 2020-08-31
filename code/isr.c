@@ -1,7 +1,7 @@
 #include "demo_buzzer.h"
 #include "key.h"
 #include "myflash.h"
-#include "tm1650_i2c.h"
+
 #include "output.h"
 
 uint16_t getMinute;

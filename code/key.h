@@ -4,7 +4,7 @@
 /* Include files */
 /*****************************************************************************/
 #include "cms8s6990.h"
-#include "tm1650_i2c.h"
+
 #include <stdio.h>
 
 #define POWER_PRES 	      1
@@ -57,10 +57,10 @@ typedef  struct  _state_
  extern key_types key;
 
 
-#define  POWER_KEY      P16
-#define  WIND_KEY       P15
-#define  TIMER_KEY      P14
-#define  FILTER_KEY     P13 
+#define  POWER_KEY      P17
+#define  WIND_KEY       P16
+#define  TIMER_KEY      P15
+#define  FILTER_KEY     P14 
 
 //通讯参数
 typedef struct _TELEC_

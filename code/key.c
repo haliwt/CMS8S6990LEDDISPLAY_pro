@@ -83,29 +83,27 @@ void GPIO_Config(void)
 	GPIO_ENABLE_INPUT(P2TRIS, GPIO_PIN_2);
 	GPIO_ENABLE_UP(P2UP,GPIO_PIN_2) ;
 	
-    GPIO_SET_MUX_MODE(P02CFG,GPIO_MUX_GPIO);   //开机按键  P02
-	GPIO_ENABLE_INPUT(P0TRIS,GPIO_PIN_2); 
-	GPIO_ENABLE_RD(P0RD,GPIO_PIN_2) ; 
    
-    
-    
-    
-	GPIO_SET_MUX_MODE(P13CFG,GPIO_MUX_GPIO);   //开机按键  P13
-	GPIO_ENABLE_INPUT(P1TRIS,GPIO_PIN_3); 
-	GPIO_ENABLE_RD(P1RD,GPIO_PIN_3) ; 
+     //key gpio
+	GPIO_SET_MUX_MODE(P17CFG,GPIO_MUX_GPIO);   //开机按键  P17
+	GPIO_ENABLE_INPUT(P1TRIS,GPIO_PIN_7); 
+	GPIO_ENABLE_RD(P1RD,GPIO_PIN_7) ; 
+
+	
+	GPIO_SET_MUX_MODE(P16CFG,GPIO_MUX_GPIO);   //风速按键P16
+	GPIO_ENABLE_INPUT(P1TRIS,GPIO_PIN_6); 
+	GPIO_ENABLE_RD(P1RD,GPIO_PIN_6) ;    
+	
    
-	GPIO_SET_MUX_MODE(P15CFG, GPIO_MUX_GPIO);		//设置P15为GPIO模式--风速按键
+	GPIO_SET_MUX_MODE(P15CFG, GPIO_MUX_GPIO);		//设置P15--定时按键
 	GPIO_ENABLE_INPUT(P1TRIS, GPIO_PIN_5);			//设置为输入模式
 	GPIO_ENABLE_RD(P1RD, GPIO_PIN_5);				//开启下拉
 
 	
-	GPIO_SET_MUX_MODE(P14CFG,GPIO_MUX_GPIO);   //定时按键 P14
+	GPIO_SET_MUX_MODE(P14CFG,GPIO_MUX_GPIO);   //虑网重置按键---P14
 	GPIO_ENABLE_INPUT(P1TRIS,GPIO_PIN_4);      //设置为输入模式
 	GPIO_ENABLE_RD(P1RD,GPIO_PIN_4);           //开启下拉
 
-	GPIO_SET_MUX_MODE(P16CFG,GPIO_MUX_GPIO);   //虑网重置按键  P16
-	GPIO_ENABLE_INPUT(P1TRIS,GPIO_PIN_6); 
-	GPIO_ENABLE_RD(P1RD,GPIO_PIN_6) ;    
 	/*
 	(2)设置中断方式
 	*/
@@ -150,24 +148,24 @@ void KEY_Handing(void)
 
 
 		case	_KEY_CONT_3_TIMER: //长按按键按键值
-		         BUZZER_Config();
+		        // BUZZER_Config();
 			  
 				
 			break;
 			
 		case _KEY_CONT_2_WIND :
-		        BUZZER_Config();
+		       // BUZZER_Config();
 			   
 		break;
 		
 		case _KEY_CONT_1_POWER :
-		        BUZZER_Config();
+		     //   BUZZER_Config();
 			   
 		
 		break;
 		
 	     case _KEY_CONT_4_FILTER :
-		       BUZZER_Config();
+		    //   BUZZER_Config();
 			
 		        
 		
@@ -348,6 +346,7 @@ void LockKey_Function(void)
                  BUZZER_Config();
                  delay_20us(1000);
                  BUZ_DisableBuzzer();
+				 temp=0;
 		
    }
 

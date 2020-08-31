@@ -3,7 +3,7 @@
 #include "cms8s6990.h"
 
 
-#define POSTAL        P17
+//#define POSTAL        P17 //
 
 typedef struct _WindLevel_
 {

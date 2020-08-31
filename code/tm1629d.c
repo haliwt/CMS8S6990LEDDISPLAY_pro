@@ -46,7 +46,7 @@ void Tm1629DDis(void)
 		Tm1629DSentData(Addr00H);
 		//指向地址0   
 	
-		Tm1629DSentData(segNumber[4]); //写数据//Tm1629DSentData(segNumber[keystr.TimeBaseUint]); //写数据
+		Tm1629DSentData(segNumber[4]); //主显示3 位---百位
 	
       //写第二位 
       
@@ -56,7 +56,7 @@ void Tm1629DDis(void)
 		Tm1629DSentData(Addr02H);
 		//指向地址0   
 	
-		Tm1629DSentData(segNumber[3]); //写数据//Tm1629DSentData(segNumber[keystr.TimeMinute]); //写数据
+		Tm1629DSentData(segNumber[3]); //主显示2位---十位
 	
     //写第三位
     
@@ -66,7 +66,7 @@ void Tm1629DDis(void)
 		Tm1629DSentData(Addr04H);
 		//指向地址0   
 	
-	   Tm1629DSentData(segNumber[2]); //写数据
+	   Tm1629DSentData(segNumber[2]); //主显示1位----个位
     
     //写第四位数据
     STB_TM1629D=1; 
@@ -258,6 +258,6 @@ void Tm1629DSentData(uint8_t oneByte)
 	       _nop_(); 
 		  _nop_(); 
 		 TM1629D_SCL = 1;//CLK_TM1620_SET; //上升沿操作      
-  }   
+      }   
  
 }
