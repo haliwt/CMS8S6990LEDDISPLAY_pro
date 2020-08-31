@@ -48,12 +48,13 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
 {
   
     timer0_ten_num++;
-    timer0_num ++ ;
+   
 	timer0_20ms_num++;
 	timer0_duty_num++;
-    if(timer0_num <9000){
-          if(timer0_ten_num==10){
+    
+    if(timer0_ten_num==10){
               timer0_ten_num=0;
+			  timer0_num ++ ;
               if(P22==0){
                    if(vairI==0){
                    rec_num++ ; 
@@ -66,7 +67,7 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
                 }
               }
             
-          }
+          
    }
       
 

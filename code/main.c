@@ -75,7 +75,7 @@ int main(void)
 			
         }
 
-	   if(timer0_num > 9000 && Telecom.power_state == 1){
+	   if((timer0_num >= 1000 && timer0_num <=1100 )&& Telecom.power_state == 1){
 	  	       timer0_num =0;
 
 				i++;
@@ -132,7 +132,7 @@ int main(void)
 		        if(cont >=500){
 					
                     LEDDisplay_TurnOff();
-                    if(timer0_num >8000) {
+                    if(timer0_num >500) {
                         cont=0;
                         timer0_num=0;
                     }
