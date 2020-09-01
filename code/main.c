@@ -48,8 +48,8 @@ int main(void)
 	 
  	    if(childLock  ==1){
             if(BuzzerSound==1){
-                 BUZZER_Config();
-				delay_20us(1000);
+                BUZZER_Config();
+				delay_20us(10000);
 			    BUZ_DisableBuzzer();
                BuzzerSound =0;
                
@@ -60,7 +60,7 @@ int main(void)
         else if(childLock  ==0){
             if(BuzzerSound==1){
                    BUZZER_Config();
-				delay_20us(1000);
+				delay_20us(10000);
 	            BUZ_DisableBuzzer();
                BuzzerSound =0;
                

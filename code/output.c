@@ -49,7 +49,7 @@ if((timer0_num >= 1000 && timer0_num <=1060 )&& Telecom.power_state == 1 && Tele
 			 
 		 }
 		 
-		 LEDDisplay_PMValue(disdat3,disdat2,disdat1);
+		// LEDDisplay_PMValue(disdat3,disdat2,disdat1);
 	 
 		 timer0_num =0;
 		 if(i==1){

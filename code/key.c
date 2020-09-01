@@ -405,14 +405,14 @@ void LockKey_Function(void)
   if(temp !=0)
   {
                 BUZZER_Config();
-			    delay_20us(1000);
+			    delay_20us(10000);
 	           BUZ_DisableBuzzer();	
 				BUZZER_Config();
-			    delay_20us(1000);
+			    delay_20us(10000);
 	            BUZ_DisableBuzzer();
-                delay_20us(1000);
+                delay_20us(10000);
                  BUZZER_Config();
-                 delay_20us(1000);
+                 delay_20us(10000);
                  BUZ_DisableBuzzer();
 				 temp=0;
 		
@@ -433,58 +433,55 @@ void LockKey_Function(void)
  ******************************************************************************/ 
 void TimerOnDisplay(void)
 {
-	 
-	 	if( Telecom.TimeBaseUint== 0){
-							   
-							if( Telecom.TimeHour==0 &&  Telecom.TimeMinute==0 )
-							{             Telecom.TimeBaseUint=0;
-										   Telecom.TimeMinute=0;
-											Telecom.TimeHour=0;
-											
-							}
-						    else{
-								// Telecom.TimeBaseUint=9;//鍊熶竴褰撳崄
+	 if( Telecom.TimeBaseUint <  0){
+
+		 if(Telecom.TimeHour==0 &&  Telecom.TimeMinute==0 )
+			{             Telecom.TimeBaseUint=0;
+						   Telecom.TimeMinute=0;
+							Telecom.TimeHour=0;
 							
-								 if( Telecom.TimeMinute==0){
-										if( Telecom.TimeHour==0 ) {
-											
-											   Telecom.TimeBaseUint=0;
-												Telecom.TimeMinute=0;
-												
-												Telecom.TimeHour=0;
-								
-											
-										}
-										else{
-										    Telecom.TimeBaseUint=9;
-											Telecom.TimeMinute=5;//鍊熶竴褰?  60鍒嗛挓 杩涗綅 鈥滃皬鏃垛€?
-											
-										
-											if(Telecom.TimeHour > 0){
-													Telecom.TimeHour --		;				  
-													Telecom.TimeBaseUint=9;//鍊熶竴褰撳崄
-													
-												}
-												else{
-													 Telecom.TimeBaseUint=0;
-													Telecom.TimeMinute=0;
-							
-													Telecom.TimeHour=0;
-													
-												}
-											
-										
-													
-										}			
-								    }
-							        else if(Telecom.TimeMinute > 0) { //鍊熶綅 鍗佷綅
-										Telecom.TimeMinute --	;					  
-										Telecom.TimeBaseUint=9;//鍊熶竴褰撳崄
-						   }						  
-						} 
-		}	
+			}
+		    else{
+				// Telecom.TimeBaseUint=9;//借一当十
 			
+				 if( Telecom.TimeMinute==0){
+						if(Telecom.TimeHour==0 ){
+							
+						   Telecom.TimeBaseUint=0;
+							Telecom.TimeMinute=0;
+							Telecom.TimeHour=0;
+				
+						}
+						else{
+						    Telecom.TimeBaseUint=9;
+							Telecom.TimeMinute=5;//借一当5  60分钟 进位 “小时”
+							
+							if(Telecom.TimeHour ==0){
+								
+								Telecom.TimeBaseUint=0;
+								Telecom.TimeMinute=0;
+								Telecom.TimeHour=0;
+									
+								
+							}
+							else if(Telecom.TimeHour > 0){
+								
+								Telecom.TimeHour --	;					  
+								Telecom.TimeMinute=5;//借一当5
+								 Telecom.TimeBaseUint=9;
+								
+							}
+									
+						}			
+				    }
+			        else if(Telecom.TimeMinute > 0) { //借位 十位
+						Telecom.TimeMinute --	;					  
+						Telecom.TimeBaseUint=9;//借一当十
+		   }						  
+		} 
+	}
 }
+
 
 
 

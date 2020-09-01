@@ -100,10 +100,11 @@ void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR
 	static uint8_t minute=0;
     Timer1_num ++;
     
-    if(Timer1_num ==10000){ //1s
+    if(Timer1_num ==5000){ //1s
          Timer1_num =0;
+		
 	      minute ++;
-	     if(minute >=3){
+	     if(minute >=2){
 		 	minute =0;
        
         if(KEY_HDScan(1)== WINDTI_PRES && num ==0)
@@ -290,7 +291,7 @@ void Timer3_IRQHandler(void)  interrupt TMR3_VECTOR
 			min60=0;
 		    if(Telecom.TimerOn ==1)
 		    {
-			 if(Telecom.TimeBaseUint == 0) Telecom.TimeBaseUint=1;
+			 //if(Telecom.TimeBaseUint == 0) Telecom.TimeBaseUint=1;
 			  Telecom.TimeBaseUint --;
 			} 
 

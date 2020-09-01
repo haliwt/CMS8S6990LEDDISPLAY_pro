@@ -74,7 +74,7 @@ typedef struct _TELEC_
 {
    uint16_t PMaverageValue;          //PM sensor averageValue 
     uint8_t LockKey ;
-    uint8_t TimeBaseUint;    //
+    int8_t TimeBaseUint;    //
     uint8_t TimeHour ;
     uint8_t TimeMinute;
     uint8_t WindLevelData ;
