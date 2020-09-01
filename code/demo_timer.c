@@ -76,8 +76,8 @@ void TMR1_Config(void)
 	/*
 	(3)设置Timer周期
 	*/	
-	//TMR_ConfigTimerPeriod(TMR1, (65536-200)>>8, 65536-200); 				// 200*0.5us = 100us,递增计数
-	TMR_ConfigTimerPeriod(TMR1, (65536-60000)>>8, 65536-60000); 		
+	TMR_ConfigTimerPeriod(TMR1, (65536-200)>>8, 65536-200); 				// 200*0.5us = 100us,递增计数
+	
 	/*
 	(4)开启中断
 	*/
@@ -93,6 +93,44 @@ void TMR1_Config(void)
 	(6)开启Timer
 	*/
 	TMR_Start(TMR1);
+}
+
+
+
+
+
+
+
+void TMR3_Config(void)
+{
+	/*
+	(1)设置Timer的运行模式
+	*/
+	TMR_ConfigRunMode(TMR3, TMR_MODE_TIMING,TMR_TIM_AUTO_8BIT);	 //
+	/*
+	(2)设置Timer 运行时钟
+	*/
+	TMR_ConfigTimerClk(TMR3, TMR_CLK_DIV_12);						/*Fsys = 24Mhz，Ftimer = 2Mhz,Ttmr=0.5us*/
+	/*
+	(3)设置Timer周期
+	*/	
+	TMR_ConfigTimerPeriod(TMR3, 256-200, 256-200); 				// (256-200)*0.5us = 100us,递增计数
+		
+	/*
+	(4)开启中断
+	*/
+	TMR_EnableOverflowInt(TMR3);
+
+	/*
+	(5)设置Timer中断优先级
+	*/	
+	IRQ_SET_PRIORITY(IRQ_TMR3,IRQ_PRIORITY_LOW);
+	IRQ_ALL_ENABLE();	
+
+	/*
+	(6)开启Timer
+	*/
+	TMR_Start(TMR3);
 }
 
 

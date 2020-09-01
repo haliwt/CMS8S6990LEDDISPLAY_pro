@@ -166,11 +166,16 @@ void KEY_Handing(void)
 
 		case	_KEY_CONT_3_TIMER: //长按按键按键值
 		         Telecom.gDispPM = 0;
+				 Telecom.TimerOn =0;
+		         Telecom.keyEvent =1;
 		         BUZZER_Config();
 			    delay_20us(10000);
 				BUZ_DisableBuzzer();
 				Telecom.TimeBaseUint ++ ;
-				if(Telecom.TimeBaseUint == 10){
+				if(Telecom.TimeHour == 8){
+				    Telecom.TimeBaseUint=0;
+				}
+				else if(Telecom.TimeBaseUint == 10){
 					Telecom.TimeBaseUint=0;
 					Telecom.TimeMinute++;
 					if(Telecom.TimeMinute==6){ 
@@ -195,9 +200,7 @@ void KEY_Handing(void)
 						}
 					}	
 				}
-			  LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
-					
-			   Telecom.gEventKey =0;
+				 Telecom.keyEvent =0;
 		break;
 			
 		case _KEY_CONT_2_WIND : //调速
@@ -420,6 +423,68 @@ void LockKey_Function(void)
   
 
 
+/******************************************************************************
+ **
+ ** Function Name:	void TimerOnDisplay(void);
+ ** Function : display timer time 
+ ** Input Ref:
+ ** Return Ref:
+ **   
+ ******************************************************************************/ 
+void TimerOnDisplay(void)
+{
+	 
+	 	if( Telecom.TimeBaseUint== 0){
+							   
+							if( Telecom.TimeHour==0 &&  Telecom.TimeMinute==0 )
+							{             Telecom.TimeBaseUint=0;
+										   Telecom.TimeMinute=0;
+											Telecom.TimeHour=0;
+											
+							}
+						    else{
+								// Telecom.TimeBaseUint=9;//鍊熶竴褰撳崄
+							
+								 if( Telecom.TimeMinute==0){
+										if( Telecom.TimeHour==0 ) {
+											
+											   Telecom.TimeBaseUint=0;
+												Telecom.TimeMinute=0;
+												
+												Telecom.TimeHour=0;
+								
+											
+										}
+										else{
+										    Telecom.TimeBaseUint=9;
+											Telecom.TimeMinute=5;//鍊熶竴褰?  60鍒嗛挓 杩涗綅 鈥滃皬鏃垛€?
+											
+										
+											if(Telecom.TimeHour > 0){
+													Telecom.TimeHour --		;				  
+													Telecom.TimeBaseUint=9;//鍊熶竴褰撳崄
+													
+												}
+												else{
+													 Telecom.TimeBaseUint=0;
+													Telecom.TimeMinute=0;
+							
+													Telecom.TimeHour=0;
+													
+												}
+											
+										
+													
+										}			
+								    }
+							        else if(Telecom.TimeMinute > 0) { //鍊熶綅 鍗佷綅
+										Telecom.TimeMinute --	;					  
+										Telecom.TimeBaseUint=9;//鍊熶竴褰撳崄
+						   }						  
+						} 
+		}	
+			
+}
 
 
 

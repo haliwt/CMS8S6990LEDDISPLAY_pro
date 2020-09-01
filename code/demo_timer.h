@@ -25,6 +25,8 @@
 void TMR1_Config(void);
 
 
+void TMR3_Config(void);
+
 
 
 #endif /* __DEMO_TIMER_H__ */

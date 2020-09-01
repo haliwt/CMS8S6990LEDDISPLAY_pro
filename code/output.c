@@ -1,8 +1,77 @@
 #include "output.h"
 #include "timer2.h"
 
+/***************************************************
+	*
+	*Function Name:void OutputData(void)
+	*Function: commniucation with main board
+	*Input Ref: NO
+	*Return Ref: NO
+	*
+***************************************************/
+void PM_SendData(void)
+{
+	uint16_t disp =0,pmarr[10];
+    static uint16_t cont=0;
+	uint8_t poweron=0,i=0,j=0,disdat3=0,disdat2=0,disdat1=0;
+    static uint8_t wdl=0;
+if((timer0_num >= 1000 && timer0_num <=1060 )&& Telecom.power_state == 1 && Telecom.gDispPM==1){
+			timer0_num =0;
+			 i++;
+		 if(vairI==0){
+			 disp =rec_num ;
+			 
+			 vairI=1;
+			 disdat3 = (rec_num /100) %10;	 //百位
+			 disdat2 = (rec_num /10) %10;  //十位
+			 disdat1 = rec_num	%10;		//个位
+			 rec2_num=0;
+		 }
+		 else {
+			 disp = rec2_num;
+			 vairI=0;
+			 disdat3 = (rec2_num /100) %10;   //百位
+			 disdat2 = (rec2_num /10) %10;	//十位
+			 disdat1 = rec2_num  %10;		 //个位
+			 rec_num =0;
+		 }
+		 if(disp >2){
+			 if(i==1)pmarr[i-1]=disp;
+			 else if(i==2)pmarr[i-1]=disp;
+			 else if(i==3)pmarr[i-1]=disp;
+			 else if(i==4)pmarr[i-1]=disp;
+			 else if(i==5)pmarr[i-1]=disp;
+			 else if(i==6)pmarr[i-1]=disp;
+			 else if(i==7)pmarr[i-1]=disp;
+			 else if(i==8)pmarr[i-1]=disp;
+			 else if(i==9)pmarr[i-1]=disp;
+			 else if(i==10)pmarr[i-1]=disp;
+			 
+		 }
+		 
+		 LEDDisplay_PMValue(disdat3,disdat2,disdat1);
+	 
+		 timer0_num =0;
+		 if(i==1){
+			 for(j=0;j<10;j++)
+			 {
+			   Telecom.PMaverageValue = Telecom.PMaverageValue + pmarr[i];
+				 
+			 }
+			 Telecom.PMaverageValue = Telecom.PMaverageValue / 10;
+		 
+			 if(Telecom.PMaverageValue < 75) wdl = wind_sleep;
+			 else if(Telecom.PMaverageValue > 75 && Telecom.PMaverageValue <150)wdl = wind_middle;
+			 else if(Telecom.PMaverageValue > 150 && Telecom.PMaverageValue  < 300)wdl = wind_high;
+			 else if(Telecom.PMaverageValue > 300)wdl = wind_high;
+			 
+		 }
+		 
+		 OutputData(wdl);
+		 
+	  }
 
-
+}
 /***************************************************
 	*
 	*Function Name:void OutputData(void)
