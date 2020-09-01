@@ -41,8 +41,7 @@
 #define   seg_k 0x04
 #define   seg_l 0x08 
 
-#define  PM25     segNumber[]|=(1<<7)	
-#define  ugM      0x02
+	
 
 const unsigned char GreeNumber[];
 

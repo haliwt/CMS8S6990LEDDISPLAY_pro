@@ -45,7 +45,10 @@ int main(void)
 
 	while(1)
 	{	
-	 
+
+		// LED_DispPMLogo();
+
+	  #if 1
  	    if(childLock  ==1){
             if(BuzzerSound==1){
                 BUZZER_Config();
@@ -87,7 +90,7 @@ int main(void)
         }
 		else{
 			LEDDisplay_GreenColorRing();
-         
+            
 		}
 			
         }
@@ -113,7 +116,7 @@ int main(void)
 		 }
 	   
     
-	   
+	   #endif 
 
 	} 
 
