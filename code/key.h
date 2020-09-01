@@ -4,8 +4,15 @@
 /* Include files */
 /*****************************************************************************/
 #include "cms8s6990.h"
-#include "tm1650_i2c.h"
+
 #include <stdio.h>
+#include "led.h"
+#include "demo_buzzer.h"
+#include "demo_timer.h"
+#include "myflash.h"
+#include "buzzer.h"
+
+
 
 #define POWER_PRES 	      1
 #define WIND_PRES	      2
@@ -54,29 +61,43 @@ typedef  struct  _state_
  }state;
 }key_types;
 
- extern key_types key;
+extern key_types key;
 
 
-#define  POWER_KEY      P16
-#define  WIND_KEY       P15
-#define  TIMER_KEY      P14
-#define  FILTER_KEY     P13 
+#define  POWER_KEY      P17
+#define  WIND_KEY       P16
+#define  TIMER_KEY      P15
+#define  FILTER_KEY     P14 
 
 //通讯参数
 typedef struct _TELEC_
 {
+    int16_t  showtimes;                 //显示时间，数据，按键输入
+	uint16_t PMaverageValue;          //PM sensor averageValue 
+    uint8_t setTimerValue ;               //设置定时时间的值
+	uint8_t getTimerSecond ;
+	uint8_t getTimerHour;                 //定时器时间小时
+	
     uint8_t LockKey ;
+    uint8_t TimeBaseUint;    //
+    uint8_t TimeHour ;
+    uint8_t TimeMinute;
+
+	uint8_t WindLevelData ;
+  
+
+
+
+	
 	uint8_t TimerEvent :1;                    //定时器通知信号
     uint8_t  TaskCompileFlag : 1;             //任务完成标志位
     
 	uint8_t setWind_levels :3 ;              //设置风扇的级别，共4级 睡眠，中速风，高速风，自动
-	uint8_t runstart:1;					// 风扇开启
+	uint8_t greeflg:1;					// 风扇开启
 	uint8_t power_state :1;               //开启电源
-	uint8_t setTimerValue ;               //设置定时时间的值
-	uint8_t getTimerSecond ;
-	uint8_t getTimerHour;                 //定时器时间小时
-	int16_t  showtimes;                 //显示时间，数据，按键输入
-	uint16_t PMaverageValue;          //PM sensor averageValue 
+	uint8_t gEventKey:1;               //键盘按下事件发生
+	uint8_t gDispPM: 1;               //显示PM值，和时间值切换。
+	
 } Telec;
 
 extern Telec Telecom;
@@ -98,6 +119,7 @@ uint8_t KEY_Scan(void);
 void KEY_Handing(void);
 uint8_t KEY_HDScan(uint8_t mode);
 void LockKey_Function(void);
+void GPIO_Interrupt_Init(void);
 
 
 #endif /* __DEMO_GPIO_H__ */

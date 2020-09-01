@@ -61,7 +61,8 @@ void TMR2_Config(uint8_t windl)
 	(7)设置IO复用
 	*/	
 
-    GPIO_SET_MUX_MODE(P01CFG, GPIO_MUX_CC1); //配置GPIO口复用
+    //GPIO_SET_MUX_MODE(P01CFG, GPIO_MUX_CC1); //配置GPIO口复用,P01
+    GPIO_SET_MUX_MODE(P04CFG, GPIO_MUX_CC1); //配置GPIO口复用,P04 --tm1629d
 
 	/*
 	(8开启Tiemr2

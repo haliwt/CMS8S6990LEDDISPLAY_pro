@@ -1,7 +1,7 @@
 #include "demo_buzzer.h"
 #include "key.h"
 #include "myflash.h"
-#include "tm1650_i2c.h"
+
 #include "output.h"
 
 uint16_t getMinute;
@@ -48,25 +48,30 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
 {
   
     timer0_ten_num++;
-    timer0_num ++ ;
+   
 	timer0_20ms_num++;
 	timer0_duty_num++;
-    if(timer0_num <9000){
-          if(timer0_ten_num==40){
+    
+    if(childLock  ==0) KEY_Handing();
+    if(timer0_ten_num==10){
               timer0_ten_num=0;
+			  timer0_num ++ ;
+            
+             
               if(P22==0){
                    if(vairI==0){
                    rec_num++ ; 
-                   rec2_num=0;
+                  // rec2_num=0;
                 }
                 else{
                    
                     rec2_num++;
-                    rec_num=0;
+                    //rec_num=0;
                 }
               }
-            
-          }
+           
+         
+          
    }
       
 
@@ -85,7 +90,7 @@ void INT1_IRQHandler(void)  interrupt INT1_VECTOR
 /******************************************************************************
  ** \brief	 Timer 1 interrupt service function
  **
- ** \param [in]  none  30ms 100 
+ ** \param [in]  none  30ms timer
  **
  ** \return none
 ******************************************************************************/
@@ -121,7 +126,7 @@ void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR
             }
         }
     }
-	TH1 =(65536-60000)>>8 ;
+	TH1 =(65536-60000)>>8 ; //30ms 
 	TL1 = 65536-60000; 
     
 }
@@ -186,7 +191,20 @@ void P0EI_IRQHandler(void)  interrupt P0EI_VECTOR
  ******************************************************************************/
 void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR 
 {
-	;
+	static uint8_t powerkey=0;
+	if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_7))
+	{
+		powerkey= powerkey ^ 0x01;
+        if(powerkey==1)
+          Telecom.power_state = 1;
+	    else  Telecom.power_state = 0;
+	
+	    BUZZER_Config();
+        delay_20us(1000);
+        BUZ_DisableBuzzer();
+		GPIO_ClearIntFlag(GPIO1, GPIO_PIN_7);
+	}
+	
 }
 /******************************************************************************
  ** \brief	 GPIO 2 interrupt service function

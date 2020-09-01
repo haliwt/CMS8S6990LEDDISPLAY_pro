@@ -5,9 +5,10 @@
 #include "timer0.h"
 #include "key.h"
 #include "led.h"
-#include "tm1650_i2c.h"
+#include "tm1629d.h"
 #include "timer2.h"
 #include "output.h"
+#include "buzzer.h"
 
 
 uint32_t Systemclock = 24000000;
@@ -33,24 +34,27 @@ Telec Telecom;
 int main(void)
 {		
 	uint16_t disp =0,pmarr[10];
-	uint8_t poweron=0,i=0,j=0;
+    static uint16_t cont=0;
+	uint8_t poweron=0,i=0,j=0,disdat3=0,disdat2=0,disdat1=0;
     static uint8_t wdl=0;
 
     TMR1_Config();
 	TMR0_Config();
     GPIO_Config();
+//	GPIO_Interrupt_Init();
     LED_GPIO_Init();
-	IIC_Init_TM1650();
-    Init_Tm1650();
+
+
+
 
 	while(1)
 	{	
 	 
-		if(childLock  ==1){
+ 	    if(childLock  ==1){
             if(BuzzerSound==1){
                  BUZZER_Config();
 				delay_20us(1000);
-	           DisableBUZZER_Config();
+			    BUZ_DisableBuzzer();
                BuzzerSound =0;
                
             }
@@ -59,25 +63,58 @@ int main(void)
         }
         else if(childLock  ==0){
             if(BuzzerSound==1){
-                    BUZZER_Config();
+                   BUZZER_Config();
 				delay_20us(1000);
-	           DisableBUZZER_Config();
+	            BUZ_DisableBuzzer();
                BuzzerSound =0;
+               LEDDisplay_TimerTim(disdat3,disdat2,disdat1);
             }
            
              KEY_Handing();
-        
+			 if(Telecom.power_state == 0){
+				
+				cont++;
+		        if(cont >=500){
+					
+                    LEDDisplay_TurnOff();
+                    if(timer0_num >500) {
+                        cont=0;
+                        timer0_num=0;
+                    }
+                    
+				}
+                else{
+                     LEDDisplay_RedColorRing();
+                    cont++;
+                }
+			   
         }
-
-	  if(timer0_num > 9000){
-	  			i++;
+		else{
+			LEDDisplay_GreenColorRing();
+           //  LEDDisplay_TimerTim(disdat3,disdat2,disdat1);
+		}
+			
+        }
+        
+	   if((timer0_num >= 1000 && timer0_num <=1060 )&& Telecom.power_state == 1 && Telecom.gDispPM==1){
+	  	       timer0_num =0;
+				i++;
             if(vairI==0){
                 disp =rec_num ;
+				
                 vairI=1;
+			    disdat3 = (rec_num /100) %10;   //百位
+				disdat2 = (rec_num /10) %10;  //十位
+				disdat1 = rec_num  %10;        //个位
+				rec2_num=0;
             }
             else {
                 disp = rec2_num;
                 vairI=0;
+			    disdat3 = (rec2_num /100) %10;   //百位
+				disdat2 = (rec2_num /10) %10;  //十位
+				disdat1 = rec2_num  %10;        //个位
+				rec_num =0;
             }
 			if(disp >2){
 				if(i==1)pmarr[i-1]=disp;
@@ -90,12 +127,10 @@ int main(void)
 				else if(i==8)pmarr[i-1]=disp;
 				else if(i==9)pmarr[i-1]=disp;
 				else if(i==10)pmarr[i-1]=disp;
+				
 			}
-            TM1650_Set(0x6A,segNumber[disp %10]);// 个位
-           
-            TM1650_Set(0x6C,segNumber[ (disp /10) %10]);//十位
-          
-             TM1650_Set(0x6E,segNumber[(disp /100) %10 ]);// 百位
+			
+            LEDDisplay_PMValue(disdat3,disdat2,disdat1);
         
             timer0_num =0;
 			if(i==1){
@@ -104,26 +139,32 @@ int main(void)
 				  Telecom.PMaverageValue = Telecom.PMaverageValue + pmarr[i];
 					
 				}
-                Telecom.PMaverageValue = (Telecom.PMaverageValue * 4)/ 10;
+                Telecom.PMaverageValue = Telecom.PMaverageValue / 10;
+			
 				if(Telecom.PMaverageValue < 75) wdl = wind_sleep;
 				else if(Telecom.PMaverageValue > 75 && Telecom.PMaverageValue <150)wdl = wind_middle;
 				else if(Telecom.PMaverageValue > 150 && Telecom.PMaverageValue  < 300)wdl = wind_high;
 				else if(Telecom.PMaverageValue > 300)wdl = wind_high;
+				
             }
             
 			OutputData(wdl);
 			
-                                
-        
-        }
-		
-       
-	}		
+         }
+	     else if( Telecom.power_state == 1){
+
+               LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
+
+
+		 }
+	   
+    
+	   
+
+	} 
+
+
 }
-
-
-
-
 
 
 

@@ -1,8 +1,4 @@
 #include "key.h"
-#include "demo_buzzer.h"
-
-#include "demo_timer.h"
-#include "myflash.h"
 
 //static uint8_t KEY_Scan(void);
 key_types   key;
@@ -56,6 +52,14 @@ void delay_20us(uint16_t n)
 		  
      } 
 }  
+/******************************************************************************
+ **
+ ** Function Name:	void delay_10us(uint16_t n) 
+ ** Function : 延时10*n微秒 
+ ** Input Ref:NO
+ ** Return Ref:NO
+ **   
+ ******************************************************************************/
 
 void delay_us(uint16_t n)  
 {  
@@ -64,7 +68,41 @@ void delay_us(uint16_t n)
 		   _nop_();  
 		  
      } 
-}  
+}
+/******************************************************************************
+ **
+ ** Function Name:	void delay_10us(uint16_t n) 
+ ** Function : 延时10*n微秒 
+ ** Input Ref:NO
+ ** Return Ref:NO
+ **   
+ ******************************************************************************/
+
+void GPIO_Interrupt_Init(void)
+{
+	/*
+	(1)设置P17 IO功能
+	*/
+	GPIO_SET_MUX_MODE(P17CFG, GPIO_MUX_GPIO);		//设置P23为GPIO模式
+	GPIO_ENABLE_INPUT(P1TRIS, GPIO_PIN_7);			//设置为输入模式
+	GPIO_ENABLE_RD(P1RD, GPIO_PIN_7);				//开启下拉
+	/*
+	(2)设置中断方式
+	*/
+	GPIO_SET_INT_MODE(P17EICFG, GPIO_INT_FALLING);	//设置为下降沿中断模式
+	GPIO_EnableInt(GPIO1, GPIO_PIN_7_MSK);			//开启P17中断
+	/*
+	(3)设置中断优先级
+	*/
+	IRQ_SET_PRIORITY(IRQ_P1, IRQ_PRIORITY_HIGH);
+	/*
+	(4)开启总中断
+	*/	
+	IRQ_ALL_ENABLE();
+
+	
+}
+
 /******************************************************************************
  ** \brief	 GPIO_Config
  ** \param [in] none
@@ -75,15 +113,6 @@ void delay_us(uint16_t n)
 void GPIO_Config(void)
 {
 	
-	
-	GPIO_SET_MUX_MODE(P26CFG, GPIO_MUX_GPIO);		//??P13?GPIO??
-	GPIO_ENABLE_OUTPUT(P2TRIS, GPIO_PIN_6);			//???????
-	P26 = 0 ;
-	GPIO_SET_MUX_MODE(P25CFG, GPIO_MUX_GPIO);		//??P13?GPIO??
-	GPIO_ENABLE_OUTPUT(P2TRIS, GPIO_PIN_5);			//???????
-	P25 = 0;
-	
-	
 	/*
 	(1)设置P23 IO功能
 	*/
@@ -92,53 +121,29 @@ void GPIO_Config(void)
 	GPIO_ENABLE_INPUT(P2TRIS, GPIO_PIN_2);
 	GPIO_ENABLE_UP(P2UP,GPIO_PIN_2) ;
 	
-    GPIO_SET_MUX_MODE(P02CFG,GPIO_MUX_GPIO);   //开机按键  P02
-	GPIO_ENABLE_INPUT(P0TRIS,GPIO_PIN_2); 
-	GPIO_ENABLE_RD(P0RD,GPIO_PIN_2) ; 
    
-    
-    
-    
-	GPIO_SET_MUX_MODE(P13CFG,GPIO_MUX_GPIO);   //开机按键  P13
-	GPIO_ENABLE_INPUT(P1TRIS,GPIO_PIN_3); 
-	GPIO_ENABLE_RD(P1RD,GPIO_PIN_3) ; 
+     //key gpio
+	GPIO_SET_MUX_MODE(P17CFG,GPIO_MUX_GPIO);   //开机按键  P17
+	GPIO_ENABLE_INPUT(P1TRIS,GPIO_PIN_7); 
+	GPIO_ENABLE_RD(P1RD,GPIO_PIN_7) ; 
+
+	
+	GPIO_SET_MUX_MODE(P16CFG,GPIO_MUX_GPIO);   //风速按键P16
+	GPIO_ENABLE_INPUT(P1TRIS,GPIO_PIN_6); 
+	GPIO_ENABLE_RD(P1RD,GPIO_PIN_6) ;    
+	
    
-	GPIO_SET_MUX_MODE(P15CFG, GPIO_MUX_GPIO);		//设置P15为GPIO模式--风速按键
+	GPIO_SET_MUX_MODE(P15CFG, GPIO_MUX_GPIO);		//设置P15--定时按键
 	GPIO_ENABLE_INPUT(P1TRIS, GPIO_PIN_5);			//设置为输入模式
 	GPIO_ENABLE_RD(P1RD, GPIO_PIN_5);				//开启下拉
 
 	
-	GPIO_SET_MUX_MODE(P14CFG,GPIO_MUX_GPIO);   //定时按键 P14
+	GPIO_SET_MUX_MODE(P14CFG,GPIO_MUX_GPIO);   //虑网重置按键---P14
 	GPIO_ENABLE_INPUT(P1TRIS,GPIO_PIN_4);      //设置为输入模式
 	GPIO_ENABLE_RD(P1RD,GPIO_PIN_4);           //开启下拉
 
-	GPIO_SET_MUX_MODE(P16CFG,GPIO_MUX_GPIO);   //虑网重置按键  P16
-	GPIO_ENABLE_INPUT(P1TRIS,GPIO_PIN_6); 
-	GPIO_ENABLE_RD(P1RD,GPIO_PIN_6) ;    
-	/*
-	(2)设置中断方式
-	*/
-	//GPIO_SET_INT_MODE(P16EICFG, GPIO_INT_FALLING);	//设置为下降沿中断模式 P16电源按键
-	//GPIO_EnableInt(GPIO1, GPIO_PIN_6_MSK);			//开启P16中断 
-	/*
-	(3)设置中断优先级
-	*/
-//	IRQ_SET_PRIORITY(IRQ_P1, IRQ_PRIORITY_LOW);
-	/*
-	(4)开启总中断
-	*/	
-//	IRQ_ALL_ENABLE();
+	
 }
-/******************************************************************************
- **
- ** Function Name:	void KEY_FUNCTION(void)
- ** Function : receive key input message 
- ** Input Ref:NO
- ** Return Ref:NO
- **   
- ******************************************************************************/
-
-
 
 /******************************************************************************
  **
@@ -151,6 +156,7 @@ void GPIO_Config(void)
 void KEY_Handing(void)
 {
 
+	static uint8_t powerOn =0,powerkey=0;
 	uint8_t  temp8;
 	temp8 = KEY_Scan();
 	
@@ -159,49 +165,78 @@ void KEY_Handing(void)
 
 
 		case	_KEY_CONT_3_TIMER: //长按按键按键值
-		      //   BUZZER_Config();
-			  
-		          TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
-						TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
-					    TM1650_Set(0x6A,segNumber[1]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6C,segNumber[1]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6E,segNumber[1]);//初始化为5级灰度，开显示
+		         Telecom.gDispPM = 0;
+		         BUZZER_Config();
+			    delay_20us(10000);
+				BUZ_DisableBuzzer();
+				Telecom.TimeBaseUint ++ ;
+				if(Telecom.TimeBaseUint == 10){
+					Telecom.TimeBaseUint=0;
+					Telecom.TimeMinute++;
+					if(Telecom.TimeMinute==6){ 
+						Telecom.TimeMinute =0;
+						Telecom.TimeHour ++;
+						{
+						   if(Telecom.TimeHour == 8){
+								
+									Telecom.TimeBaseUint=0;
+									Telecom.TimeMinute=0;
+									
+							}
+						    if(Telecom.TimeHour >8){
+								Telecom.TimeBaseUint=0;
+								Telecom.TimeMinute=0;
+									
+								Telecom.TimeHour=0;
+
+							}
+						   
+						 
+						}
+					}	
+				}
+			  LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
+					
+			   Telecom.gEventKey =0;
+		break;
+			
+		case _KEY_CONT_2_WIND : //调速
+		        BUZZER_Config();
+			    delay_20us(10000);
+		        BUZ_DisableBuzzer();
+
+				if(Telecom.WindLevelData >3)Telecom.WindLevelData =0;
+				Telecom.WindLevelData ++ ;
+				OutputData(Telecom.WindLevelData);
 				
-			break;
-			
-		case _KEY_CONT_2_WIND :
-		      //  BUZZER_Config();
-			   
-		          TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
-						TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
-					    TM1650_Set(0x6A,segNumber[2]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6C,segNumber[2]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6E,segNumber[2]);//初始化为5级灰度，开显示
-		
+				
 		break;
-		
+	
 		case _KEY_CONT_1_POWER :
-		      //  BUZZER_Config();
-			   
-		          TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
-						TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
-					    TM1650_Set(0x6A,segNumber[3]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6C,segNumber[3]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6E,segNumber[3]);//初始化为5级灰度，开显示
+		   Telecom.gEventKey =1;
+			  BUZZER_Config();
+			  delay_20us(10000);
+		      BUZ_DisableBuzzer();
+		      powerkey = powerkey ^ 0x01;
+			    if(powerkey ==1)Telecom.power_state = 1;
+			  else Telecom.power_state = 0;
+			   Telecom.gEventKey =0;
 		
 		break;
-		
+		 
 	     case _KEY_CONT_4_FILTER :
-		     //   BUZZER_Config();
+		 Telecom.gEventKey =1;
+		 	   Telecom.greeflg =1;
+		       BUZZER_Config();
+			  delay_20us(10000);
+		    
+			  BUZ_DisableBuzzer();
 			
-		          TM1650_Set(0x48,0x31);//初始化为5级灰度，开显示
-						TM1650_Set(0x68,segNumber[0]);//初始化为5级灰度，开显示
-					    TM1650_Set(0x6A,segNumber[4]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6C,segNumber[4]);//初始化为5级灰度，开显示
-						TM1650_Set(0x6E,segNumber[4]);//初始化为5级灰度，开显示
+		    Telecom.gEventKey =0;
 		
 		break;
 		default:
+		      
 			break;
     }
 	
@@ -222,7 +257,6 @@ uint8_t KEY_Scan(void)
 	key.read = _KEY_ALL_OFF; //0x1F 
 
 
-	
 	if(POWER_KEY == 1)
 	{
 		key.read &= ~0x01; // 0x1E
@@ -258,7 +292,7 @@ uint8_t KEY_Scan(void)
 		{
 			if(key.read == key.buffer) //继续按下
 			{
-				if(++key.on_time> 100) //消抖  0.5us
+				if(++key.on_time> 10) //消抖  0.5us
 				{
 					key.value = key.buffer^_KEY_ALL_OFF; // key.value = 0x1E ^ 0x1f = 0x01
 					key.on_time = 0;
@@ -307,7 +341,7 @@ uint8_t KEY_Scan(void)
 		{
 			if(key.read == _KEY_ALL_OFF)
 			{
-				if(++key.off_time>100)
+				if(++key.off_time>10)
 				{
 					key.state   = start;
 				}
@@ -377,6 +411,7 @@ void LockKey_Function(void)
                  BUZZER_Config();
                  delay_20us(1000);
                  BUZ_DisableBuzzer();
+				 temp=0;
 		
    }
 

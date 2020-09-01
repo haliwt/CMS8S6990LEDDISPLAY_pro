@@ -3,11 +3,11 @@
 #include "cms8s6990.h"
 
 
-#define POSTAL        P17
+//#define POSTAL        P17 //
 
 typedef struct _WindLevel_
 {
-   uint8_t windlevel ;
+   uint8_t windLevel ;
    
    
 
