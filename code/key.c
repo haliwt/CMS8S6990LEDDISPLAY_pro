@@ -200,6 +200,7 @@ void KEY_Handing(void)
 					}	
 				}
 				 Telecom.keyEvent =0;
+		
 		break;
 			
 		case _KEY_CONT_2_WIND : //调速

@@ -5,7 +5,7 @@
 #include "output.h"
 
 uint16_t getMinute;
-uint16_t TimerCnt;
+uint8_t TimerCnt;
 
 uint8_t  BuzzerSound ;
 
@@ -51,8 +51,11 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
    
 	timer0_20ms_num++;
 	timer0_duty_num++;
-    
-    if(childLock  ==0) KEY_Handing();
+	TimerCnt++;
+	if(TimerCnt >50){ //5ms
+	    TimerCnt =0;
+        if(childLock  ==0) KEY_Handing();
+	}
     if(timer0_ten_num==10){
               timer0_ten_num=0;
 			  timer0_num ++ ;
@@ -282,7 +285,7 @@ void Timer3_IRQHandler(void)  interrupt TMR3_VECTOR
 	static uint16_t seconds=0;
     static uint8_t min60=0;
     seconds ++;
-	if(seconds == 5000)// 1s
+	if(seconds == 5000)// 500ms
 	{ 
    		    seconds=0;
 		Telecom.TimerEvent ++;

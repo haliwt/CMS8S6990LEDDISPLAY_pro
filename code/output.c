@@ -18,7 +18,7 @@ void PM_SendData(void)
 	uint8_t i=0,j=0,disdat3=0,disdat2=0,disdat1=0,wdl=0;
 	uint16_t PMaverageValue;          //PM sensor averageValue 
  
-if((timer0_num >= 1000 && timer0_num <=1060 )&& Telecom.power_state == 1 && Telecom.gDispPM==1){
+if(timer0_num >= 1000 && timer0_num <=1060 ){
 			timer0_num =0;
 			 i++;
 		 if(vairI==0){
@@ -69,7 +69,9 @@ if((timer0_num >= 1000 && timer0_num <=1060 )&& Telecom.power_state == 1 && Tele
 			 else if(PMaverageValue > 300)wdl = wind_high;
 			 
 		 }
-		
+		if(wdl == wind_sleep)OutputData(0x01);
+		else if(wdl == wind_middle)OutputData(0x02);
+		else if(wdl == wind_high)OutputData(0x03);
 
 		 
 	  }
