@@ -11,7 +11,7 @@ const unsigned char segNumber[]={
          seg_a+seg_b+seg_c+seg_f+seg_h,                    // char "7"  0x07
          seg_a+seg_b+seg_c+seg_d+seg_e+seg_f+seg_g+seg_h,  // char "8"  0x08
          seg_a+seg_b+seg_c+seg_d+seg_f+seg_g+seg_h,        // char "9"  0x09
-         seg_h,                                             // char "."  0x0A
+         ~seg_h,                                             // char "."  0x0A
          0                                                  // Dont't display 0x0B
          
 };
@@ -242,48 +242,7 @@ void LEDDisplay_SleepLamp(void)
   
 
 }
-/****************************************************************************************************
- * 	*
-	*函数名称：void LEDDisplay_TimerTim(void)
-	*函数功能：定时时间显示,按键设置定时时间
-	*入口参数：NO
-	*出口参数：NO
-	*
-*******************************************************************************************************/
-void LEDDisplay_PMValue(uint8_t disdat3,uint8_t disdat2,uint8_t disdat1)
-{
-        STB_TM1629D =0 ;  
-        Tm1629DSentData(ModeDisTM1629D); //写数据到显示寄存器
-	    STB_TM1629D =1; 
-	
-        STB_TM1629D=0;   
-		Tm1629DSentData(AddrFixed);//AddrFixed 写固定地址
-		//写显示，固定定制模式
-		STB_TM1629D=1; 
-		
-        STB_TM1629D=0;   
-		Tm1629DSentData(Addr00H);
-		//指向地址0   
-	    Tm1629DSentData(segNumber[disdat3]); //主显示3 位---百位
-	    STB_TM1629D=1; 
-		
-        STB_TM1629D=0;   
-		Tm1629DSentData(Addr02H);
-		//指向地址2   
-	    Tm1629DSentData(segNumber[disdat2]); //主显示2位---十位
-	    STB_TM1629D=1; 
-		
-        //写第三位
-         STB_TM1629D=0;   
-		Tm1629DSentData(Addr04H);
-		//指向地址4   
-	    Tm1629DSentData(segNumber[disdat1]); //主显示1位----个位
-         STB_TM1629D=1; 
-	
-       STB_TM1629D =0; 
-       Tm1629DSentData(OpenDisTM1629D|Set14_16TM1629D); //开显示，显示，设置脉冲宽带 14/16
-       STB_TM1629D =1; 	 
-}
+
 /****************************************************************************************************
  * 	*
 	*函数名称：void LEDDisplay_RedColorRing(void);
@@ -425,25 +384,26 @@ void LEDDisplay_GreenColorRing(void)
 			  //写显示，固定定制模式
 			  STB_TM1629D=1; 
 
-		         /************WORKS DISPLAY**************/
+		        /*********** DISPLAY Green 5i 6i**************/
+			    // 5i ---5g,5h,5i,5j,5k    6i----6a ....6l
 		         STB_TM1629D=0;	
-				 Tm1629DSentData(Addr08H);
-				 Tm1629DSentData(GreeNumber[0]); //指向地址08 ---GRID5
+				 Tm1629DSentData(Addr08H);    //偶数地址段 SEG1~SEG8
+				 Tm1629DSentData(GreeNumber[0]); //指向地址08 ---GRID5  
 			     STB_TM1629D=1; 
 
 		         STB_TM1629D=0;	 
-			     Tm1629DSentData(Addr0AH);
-				 Tm1629DSentData(0xFF); //指向地址0A	 ---GRID6
+			     Tm1629DSentData(Addr0AH); 
+				 Tm1629DSentData(0xEF); //指向地址0A	 ---GRID6
 			     STB_TM1629D=1; 
 		         /*******High bit*************/
-				  STB_TM1629D=0;   
+				 STB_TM1629D=0;   
 				Tm1629DSentData(Addr09H);  //地址 09 COM5 高段 
 			    Tm1629DSentData(0x0E);
 			    STB_TM1629D=1; 
 
 				 STB_TM1629D=0;   
 				Tm1629DSentData(Addr0BH);  //地址 0B COM6 高段
-			    Tm1629DSentData(0xFF);
+			    Tm1629DSentData(0x0E);
 			    STB_TM1629D=1; 
 				/***********END*****************/
 
@@ -454,7 +414,7 @@ void LEDDisplay_GreenColorRing(void)
 			   STB_TM1629D=0;	
 			  Tm1629DSentData(Addr01H);  //地址 01 COM1 高段
 			  //指向地址0E	 
-			  Tm1629DSentData(0x00);
+			  Tm1629DSentData(0x00 );
 			  STB_TM1629D=1; 
 	   
 			   STB_TM1629D=0;	
@@ -464,9 +424,9 @@ void LEDDisplay_GreenColorRing(void)
 			  STB_TM1629D=1; 
 	   
 			   STB_TM1629D=0;	
-			  Tm1629DSentData(Addr05H);  //地址 05 COM3 高段
+			  Tm1629DSentData(Addr05H);  //地址 05 COM3 高段, 显示ug/M^3
 			  //指向地址0E	 
-			  Tm1629DSentData(0x00);
+			  Tm1629DSentData(ugM);
 			  STB_TM1629D=1; 
 	   
 	   
@@ -489,7 +449,7 @@ void LEDDisplay_GreenColorRing(void)
 	   
 			  
 	 
-			  /***************低段显示SEG1~SEG8********************/
+			/***************低段显示SEG1~SEG8********************/
 			  
 			#if 0 
 			 STB_TM1629D=0;   
@@ -507,7 +467,9 @@ void LEDDisplay_GreenColorRing(void)
 			  Tm1629DSentData(0x00); //指向地址04
 			  STB_TM1629D=1; 
 			#endif 	 
-		   
+            
+
+			
 			 STB_TM1629D=0;   
 			 Tm1629DSentData(Addr06H);
 			  Tm1629DSentData(0x00); //指向地址06
@@ -532,17 +494,44 @@ void LEDDisplay_GreenColorRing(void)
    
 
 }
-/****************************************************************************************************
+/******************************************************************************
  * 	*
 	*函数名称：void LEDDisplay_BlueColorRing(void);
 	*函数功能：LED数码管，光圈显示蓝色---睡眠灯
 	*入口参数：NO
 	*出口参数：NO
 	*
-*******************************************************************************************************/
+********************************************************************************/
 void LEDDisplay_BlueColorRing(void)
 {
 
  
  
 }
+/******************************************************************************
+ * 	*
+	*函数名称：void LED_DispPMLogo(void)
+	*函数功能：display PM logo "PM2.5" "ug/m^3"
+	*入口参数：NO
+	*出口参数：NO
+	*
+********************************************************************************/
+void LED_DispPMLogo(void)
+{
+           
+				 
+			  STB_TM1629D=0;   
+			  Tm1629DSentData(Addr04H);
+			  Tm1629DSentData(segNumber[0x0A]); //指向地址04
+			  STB_TM1629D=1; 
+
+			  STB_TM1629D=0;   
+			  Tm1629DSentData(Addr05H);
+			  Tm1629DSentData(segNumber[ugM]); //指向地址05---位选 ug/m^3
+			  STB_TM1629D=1; 
+
+
+
+
+}
+

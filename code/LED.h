@@ -24,10 +24,8 @@
         //           |    d    |
         //            ---------   O <- h
 **************************************************/
-
-
-
-#define   seg_a  0x01       //seg_a   //seg_e = 0x10
+//偶数地址，SEG1~SEG8
+#define   seg_a  0x01       //seg_a   //seg_e = 0x10  
 #define   seg_b  0x02      //seg_b , //seg_f = 0x20
 #define   seg_c  0x04      //seg_c , //seg_g = 0x40
 #define   seg_d  0x08      //seg_d , //seg_d = 0x08
@@ -37,10 +35,14 @@
 #define   seg_h  0x80      //Dot 
 
 /*************High byte*******************/
-#define   seg_i 0x01       //
+//奇数地址，SEG9~SEG12
+#define   seg_i 0x01       //地址不一样 奇数地址
 #define   seg_j 0x02
 #define   seg_k 0x04
-#define   seg_l 0x08    
+#define   seg_l 0x08 
+
+#define  PM25     segNumber[]|=(1<<7)	
+#define  ugM      0x02
 
 const unsigned char GreeNumber[];
 
@@ -59,7 +61,7 @@ void LEDDisplay_BlueColorRing(void);
 
 void LEDDisplay_PMValue(uint8_t disdat3,uint8_t disdat2,uint8_t disdat1);
 
-
+void LED_DispPMLogo(void);
 
 
 
