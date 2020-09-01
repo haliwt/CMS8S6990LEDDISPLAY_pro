@@ -277,23 +277,26 @@ void ACMP_IRQHandler(void)  interrupt ACMP_VECTOR
 ******************************************************************************/
 void Timer3_IRQHandler(void)  interrupt TMR3_VECTOR 
 {
-    static uint16_t seconds=0;
+     #if 1
+	static uint16_t seconds=0;
     static uint8_t min60=0;
     seconds ++;
-	if(seconds == 10000)// 1s
+	if(seconds == 5000)// 1s
 	{ 
-   		     seconds=0;
+   		    seconds=0;
 		Telecom.TimerEvent ++;
 			 min60++;
-		if(min60==60){ //60s = 1 分钟
+		if(min60==41){ //60s = 1 分钟
 			min60=0;
-		     if(Telecom.TimerOn ==1){
+		    if(Telecom.TimerOn ==1)
+		    {
 			 if(Telecom.TimeBaseUint == 0) Telecom.TimeBaseUint=1;
 			  Telecom.TimeBaseUint --;
 			} 
 
 		}
 	}
+	#endif 
 
 }
 /******************************************************************************
