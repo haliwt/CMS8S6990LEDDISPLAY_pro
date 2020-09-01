@@ -156,8 +156,9 @@ void GPIO_Config(void)
 void KEY_Handing(void)
 {
 
-	static uint8_t powerOn =0,powerkey=0;
-	uint8_t  temp8;
+	static uint8_t powerkey=0;
+	uint8_t  temp8,temnum=0;
+	
 	temp8 = KEY_Scan();
 	
 	switch(temp8)
@@ -168,9 +169,7 @@ void KEY_Handing(void)
 		         Telecom.gDispPM = 0;
 				 Telecom.TimerOn =0;
 		         Telecom.keyEvent =1;
-		         BUZZER_Config();
-			    delay_20us(10000);
-				BUZ_DisableBuzzer();
+		        
 				Telecom.TimeBaseUint ++ ;
 				if(Telecom.TimeHour == 8){
 				    Telecom.TimeBaseUint=0;
@@ -205,12 +204,12 @@ void KEY_Handing(void)
 			
 		case _KEY_CONT_2_WIND : //调速
 		        BUZZER_Config();
-			    delay_20us(10000);
+			    delay_20us(100);
 		        BUZ_DisableBuzzer();
 
 				if(Telecom.WindLevelData >3)Telecom.WindLevelData =0;
 				Telecom.WindLevelData ++ ;
-				OutputData(Telecom.WindLevelData);
+			    
 				
 				
 		break;
@@ -218,7 +217,7 @@ void KEY_Handing(void)
 		case _KEY_CONT_1_POWER :
 		   Telecom.gEventKey =1;
 			  BUZZER_Config();
-			  delay_20us(10000);
+			  delay_20us(100);
 		      BUZ_DisableBuzzer();
 		      powerkey = powerkey ^ 0x01;
 			    if(powerkey ==1)Telecom.power_state = 1;
@@ -231,7 +230,7 @@ void KEY_Handing(void)
 		 Telecom.gEventKey =1;
 		 	   Telecom.greeflg =1;
 		       BUZZER_Config();
-			  delay_20us(10000);
+			  delay_20us(100);
 		    
 			  BUZ_DisableBuzzer();
 			

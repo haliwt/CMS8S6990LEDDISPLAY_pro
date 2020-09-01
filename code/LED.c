@@ -26,15 +26,7 @@ const unsigned char GreeNumber[]={
 
 };
 
-const unsigned int superNumber[]={
 
-   seg_h ,
-   seg_i ,
-   seg_j ,
-   seg_k 
-         
-         
-};
 
 
 

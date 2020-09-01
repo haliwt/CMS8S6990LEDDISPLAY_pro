@@ -1,6 +1,9 @@
 #include "output.h"
 #include "timer2.h"
 
+static void OutputData(uint8_t wds);
+
+
 /***************************************************
 	*
 	*Function Name:void OutputData(void)
@@ -11,10 +14,10 @@
 ***************************************************/
 void PM_SendData(void)
 {
-	uint16_t disp =0,pmarr[10];
-    static uint16_t cont=0;
-	uint8_t poweron=0,i=0,j=0,disdat3=0,disdat2=0,disdat1=0;
-    static uint8_t wdl=0;
+	uint8_t disp =0,pmarr[10];
+	uint8_t i=0,j=0,disdat3=0,disdat2=0,disdat1=0,wdl=0;
+	uint16_t PMaverageValue;          //PM sensor averageValue 
+ 
 if((timer0_num >= 1000 && timer0_num <=1060 )&& Telecom.power_state == 1 && Telecom.gDispPM==1){
 			timer0_num =0;
 			 i++;
@@ -55,19 +58,19 @@ if((timer0_num >= 1000 && timer0_num <=1060 )&& Telecom.power_state == 1 && Tele
 		 if(i==1){
 			 for(j=0;j<10;j++)
 			 {
-			   Telecom.PMaverageValue = Telecom.PMaverageValue + pmarr[i];
+			   PMaverageValue = PMaverageValue + pmarr[i];
 				 
 			 }
-			 Telecom.PMaverageValue = Telecom.PMaverageValue / 10;
+			 PMaverageValue = PMaverageValue / 10;
 		 
-			 if(Telecom.PMaverageValue < 75) wdl = wind_sleep;
-			 else if(Telecom.PMaverageValue > 75 && Telecom.PMaverageValue <150)wdl = wind_middle;
-			 else if(Telecom.PMaverageValue > 150 && Telecom.PMaverageValue  < 300)wdl = wind_high;
-			 else if(Telecom.PMaverageValue > 300)wdl = wind_high;
+			 if(PMaverageValue < 75) wdl = wind_sleep;
+			 else if(PMaverageValue > 75 && PMaverageValue <150)wdl = wind_middle;
+			 else if(PMaverageValue > 150 && PMaverageValue  < 300)wdl = wind_high;
+			 else if(PMaverageValue > 300)wdl = wind_high;
 			 
 		 }
-		 
-		 OutputData(wdl);
+		
+
 		 
 	  }
 
@@ -80,7 +83,7 @@ if((timer0_num >= 1000 && timer0_num <=1060 )&& Telecom.power_state == 1 && Tele
 	*Return Ref: NO
 	*
 ***************************************************/
-void OutputData(uint8_t wds)
+static void OutputData(uint8_t wds)
 {
 
 	 

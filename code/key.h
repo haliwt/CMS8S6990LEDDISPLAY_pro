@@ -72,7 +72,7 @@ extern key_types key;
 //通讯参数
 typedef struct _TELEC_
 {
-   uint16_t PMaverageValue;          //PM sensor averageValue 
+ //  uint16_t PMaverageValue;          //PM sensor averageValue 
     uint8_t LockKey ;
     int8_t TimeBaseUint;    //
     uint8_t TimeHour ;

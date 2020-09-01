@@ -28,9 +28,9 @@ extern uint16_t timer0_duty_num;
 
 
 
-void OUTPUT_GPIO_Init(void);
 
-void OutputData(uint8_t wds);
+
+//void OutputData(uint8_t wds);
 void PM_SendData(void);
 
 

@@ -28,8 +28,7 @@ Telec Telecom;
 *******************************************************/
 int main(void)
 {		
-	uint16_t disp =0,pmarr[10];
-    static uint16_t cont=0;
+	uint16_t disp =0,pmarr[10],cont=0;
 	uint8_t poweron=0,i=0,j=0,disdat3=0,disdat2=0,disdat1=0;
     static uint8_t wdl=0;
 
@@ -52,7 +51,8 @@ int main(void)
  	    if(childLock  ==1){
             if(BuzzerSound==1){
                 BUZZER_Config();
-				delay_20us(10000);
+				
+	            delay_20us(20000);
 			    BUZ_DisableBuzzer();
                BuzzerSound =0;
                
@@ -63,8 +63,8 @@ int main(void)
         else if(childLock  ==0){
             if(BuzzerSound==1){
                    BUZZER_Config();
-				delay_20us(10000);
-	            BUZ_DisableBuzzer();
+				  delay_20us(20000);
+	                 BUZ_DisableBuzzer();
                BuzzerSound =0;
                
             }
@@ -73,7 +73,7 @@ int main(void)
 			 if(Telecom.power_state == 0){
 				
 				cont++;
-		        if(cont >=500){
+		        if(cont >=250){
 					
                     LEDDisplay_TurnOff();
                     if(timer0_num >400) {
@@ -96,7 +96,7 @@ int main(void)
         }
         
 	 
-	     if( Telecom.power_state == 1){
+	    if( Telecom.power_state == 1){
 
 			if(Telecom.TimerOn ==0 &&  Telecom.keyEvent ==0){
 				if(Telecom.TimerEvent >= 5)
@@ -111,6 +111,7 @@ int main(void)
 
 			 
 			   LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
+			   PM_SendData();
 
 
 		 }
