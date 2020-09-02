@@ -33,6 +33,7 @@ const unsigned char BlueNumber[]={
 	seg_a+seg_b+seg_c+seg_d+seg_e+seg_f +seg_g+ seg_h,
 	seg_a+seg_b+seg_c+seg_d+seg_e+seg_f ,
 	seg_g + seg_h,
+	seg_i
 
 };
 
@@ -309,13 +310,13 @@ void LEDDisplay_SleepLamp(void)
 				   
 			   STB_TM1629D=0;	
 				Tm1629DSentData(Addr04H);
-				Tm1629DSentData(~BlueNumber[3]); //指向地址04
+				Tm1629DSentData(~BlueNumber[3]); //指向地址03
 			    STB_TM1629D=1; 
 
 					   
 			    STB_TM1629D=0;	
 				Tm1629DSentData(Addr05H);
-				Tm1629DSentData(~BlueNumber[1]); //指向地址04---COM4
+				Tm1629DSentData(~BlueNumber[6]); //指向地址04---COM3
 			    STB_TM1629D=1; 
 
 				STB_TM1629D=0;	
