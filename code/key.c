@@ -181,14 +181,15 @@ void GPIO_Config(void)
  ******************************************************************************/
  void KEY_Handing(void)
 {
-      
+      uint16_t tempWindValue=0,temp=0;
+	  uint8_t keyevent =0;
     
 		if(Telecom.timer_state == 1){
                  Telecom.timer_state=0;
 		         Telecom.gDispPM = 0;
 				 Telecom.TimerOn =0;
 		         Telecom.keyEvent =1;
-				 timer0_ten_num=0; //清除进入PM检测信号的值
+				
 		        
 				Telecom.TimeBaseUint ++ ;
 				if(Telecom.TimeHour == 8){
@@ -223,41 +224,55 @@ void GPIO_Config(void)
 		      LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
 			}
 			
-		if(Telecom.wind_state ==1){
-		       
-				timer0_ten_num=0; //清除进入PM检测信号的值
+		if(Telecom.wind_state ==1 && keyevent ==0){
+		        
+				 keyevent =1;
 				Telecom.wind_state =0;
-				if(Telecom.WindLevelData >4)Telecom.WindLevelData =0;
+		        
+				if(Telecom.WindLevelData ==5)Telecom.WindLevelData =0;
 				Telecom.WindLevelData ++ ;
 				if(Telecom.WindLevelData==wind_sleep){
 				   
                   LEDDisplay_SleepLamp();
-				  Telecom.WindLevelData=1;
+				  Telecom.WindSelectLevel =wind_sleep;
 				  OutputData(0x01);
 				
 					
 				}
 				else if(Telecom.WindLevelData==wind_middle){
 					OutputData(0x02);
-					Telecom.WindLevelData=2;
+					Telecom.WindSelectLevel =wind_middle;
+					
 				}else if(Telecom.WindLevelData==wind_high){
 					OutputData(0x03);
-					Telecom.WindLevelData=3;
+					Telecom.WindSelectLevel =wind_high;
 				}
 				else if(Telecom.WindLevelData==wind_auto){
-					 Telecom.WindLevelData=4;
-				}
+					 Telecom.WindSelectLevel =wind_auto;
+					#if 1
+					 tempWindValue =  PM_SendData();
+				 if(tempWindValue < 75) temp = wind_sleep;
+			 		else if(tempWindValue> 75 && tempWindValue <150)temp= wind_middle;
+			 		else if(tempWindValue> 150 && tempWindValue < 300)temp = wind_high;
+					 else if(tempWindValue > 300)temp = wind_high;
+		
+		 		if(temp == wind_sleep)OutputData(0x01);
+					else if(temp== wind_middle)OutputData(0x02);
+					else if(temp == wind_high)OutputData(0x03);
+			       
+				   #endif   
+			
 				
 			    
 				
 				
+				}
 		}
-	
 		 
 	   if(Telecom.net_state ==1){
 		 Telecom.gEventKey =1;
 		 	   Telecom.greeflg =1;
-		       timer0_ten_num=0; //清除进入PM检测信号的值
+		     
 		       BUZZER_Config();
 			  delay_20us(100);
 		    
@@ -269,7 +284,7 @@ void GPIO_Config(void)
 
 
 
-
+		
 
 }
 

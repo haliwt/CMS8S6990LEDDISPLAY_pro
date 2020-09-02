@@ -28,7 +28,7 @@ Telec Telecom;
 *******************************************************/
 int main(void)
 {		
-	uint16_t cont=0;
+	uint16_t cont=0,tempWindValue=0,temp=0;
 	uint8_t number=0,number2=0,cont1=0,number3=0,number4=0;
 
 
@@ -97,7 +97,7 @@ int main(void)
 			}
 			else{
 				
-				if(Telecom.WindLevelData==wind_sleep){
+				if( Telecom.WindSelectLevel==wind_sleep){
 	                  LEDDisplay_SleepLamp();
 				}
 				else
@@ -129,13 +129,20 @@ int main(void)
 
 				   TimerOnDisplay();
 				   LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
-				   if(Telecom.WindLevelData==wind_auto){
+				   if( Telecom.WindSelectLevel==wind_auto){
 					    cont ++;
 					   if(cont >500)
 					   	{
-					   	 cont =0;
-					  	 PM_SendData();
-					    // goto next;
+							cont =0;
+						tempWindValue =  PM_SendData();
+						 if(tempWindValue < 75) temp= wind_sleep;
+					 		else if(tempWindValue> 75 && tempWindValue <150)temp = wind_middle;
+					 		else if(tempWindValue> 150 && tempWindValue < 300)temp = wind_high;
+							 else if(tempWindValue > 300)Telecom.WindLevelData = wind_high;
+				
+				 		if(temp== wind_sleep)OutputData(0x01);
+							else if(temp == wind_middle)OutputData(0x02);
+							else if(temp == wind_high)OutputData(0x03);
 					   	}
 				   	}
 

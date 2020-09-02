@@ -31,7 +31,7 @@ extern uint16_t timer0_duty_num;
 
 
 void OutputData(uint8_t wds);
-void PM_SendData(void);
+uint16_t PM_SendData(void);
 
 
 #endif 

@@ -82,6 +82,7 @@ typedef struct _TELEC_
   
 
     uint8_t TimerEvent ;                  //定时器通知信号
+    uint8_t WindSelectLevel: 4;
     uint8_t  TaskCompileFlag : 1;             //任务完成标志位
     
 	uint8_t setWind_levels :3 ;              //设置风扇的级别，共4级 睡眠，中速风，高速风，自动
@@ -94,6 +95,7 @@ typedef struct _TELEC_
     uint8_t wind_state: 1;
 	uint8_t timer_state: 1;
 	uint8_t net_state:1;
+	
 	
 } Telec;
 
