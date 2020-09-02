@@ -90,6 +90,9 @@ typedef struct _TELEC_
 	uint8_t gDispPM: 1;               //显示PM值，和时间值切换。
 	uint8_t TimerOn:1;
 	uint8_t keyEvent:1;
+    uint8_t wind_state: 1;
+	uint8_t timer_state: 1;
+	uint8_t net_state:1;
 } Telec;
 
 extern Telec Telecom;

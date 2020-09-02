@@ -28,17 +28,17 @@ Telec Telecom;
 *******************************************************/
 int main(void)
 {		
-	uint16_t disp =0,pmarr[10],cont=0;
+	uint16_t disp =0,cont=0;
 	uint8_t poweron=0,i=0,j=0,disdat3=0,disdat2=0,disdat1=0,cont1;
-    static uint8_t lockflg=0;
+
 
     TMR1_Config();
 	TMR0_Config();
-    GPIO_Config();
+   // GPIO_Config();
     TMR3_Config();
 
     LED_GPIO_Init();
-
+   GPIO_Interrupt_Init();
 
 
 
