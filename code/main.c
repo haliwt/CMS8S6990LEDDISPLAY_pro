@@ -48,7 +48,7 @@ int main(void)
 
 		 #if 1
  	    if(childLock  ==1){
-            if(BuzzerSound==1){
+            if(BuzzerSound==1 && WIND_KEY ==1 && TIMER_KEY ==1){
                 BuzzerSound =0;
 				BUZZER_Config();
 				delay_20us(20000)  ; 
@@ -67,7 +67,7 @@ int main(void)
         
         }
         else if(childLock  ==0){
-			if(BuzzerSound==1){
+			if(BuzzerSound==1 && WIND_KEY ==1 && TIMER_KEY ==1){
 				BuzzerSound =0;
 				BUZZER_Config();
 				delay_20us(20000)  ; 
