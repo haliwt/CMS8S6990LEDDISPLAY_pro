@@ -224,11 +224,9 @@ void P0EI_IRQHandler(void)  interrupt P0EI_VECTOR
  ******************************************************************************/
 void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR 
 {
-	static uint8_t powerkey=0,windkey=0;
-	static uint8_t timerkey =0,netkey=0;
-    
-    uint8_t num =0; 
-    Timer1_num ++;
+	static uint8_t powerkey=0;
+
+  
     
 
        if(childLock == 0){
@@ -239,48 +237,34 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
 	          Telecom.power_state = 1;
 		    else  Telecom.power_state = 0;
 		
-		    BUZZER_Config();
-	        delay_20us(1000);
-	        BUZ_DisableBuzzer();
+		  
 			GPIO_ClearIntFlag(GPIO1, GPIO_PIN_7);
 		}
 		
 		if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_6)) //风速按键
 		{
-			windkey= windkey ^ 0x01;
-	        if(windkey==1)
+			
 	          Telecom.wind_state = 1;
-		    else  Telecom.wind_state = 0;
-		
-		    BUZZER_Config();
-	        delay_20us(1000);
-	        BUZ_DisableBuzzer();
-			GPIO_ClearIntFlag(GPIO1, GPIO_PIN_6);
+		   
+		    GPIO_ClearIntFlag(GPIO1, GPIO_PIN_6);
+		  
 		}
 		
 		if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_5)) //定时按键
 		{
-			timerkey= timerkey ^ 0x01;
-	        if(timerkey==1)
-	          Telecom.timer_state = 1;
-		    else  Telecom.timer_state = 0;
+			Telecom.timer_state = 1;
+		    
 		
-		    BUZZER_Config();
-	        delay_20us(1000);
-	        BUZ_DisableBuzzer();
+		   
 			GPIO_ClearIntFlag(GPIO1, GPIO_PIN_5);
 		}
 
 		if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_4)) //置换虑网按键
 		{
-			netkey= netkey ^ 0x01;
-	        if(netkey==1)
+			
 	         Telecom.net_state =1;
-		    else  Telecom.net_state = 0;
+		   
 		
-		    BUZZER_Config();
-	        delay_20us(1000);
-	        BUZ_DisableBuzzer();
 			GPIO_ClearIntFlag(GPIO1, GPIO_PIN_4);
 		}
 
