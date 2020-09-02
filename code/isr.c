@@ -123,46 +123,48 @@ void INT1_IRQHandler(void)  interrupt INT1_VECTOR
 ******************************************************************************/
 void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR 
 {
-	uint8_t num =0;
+	uint8_t number=0,number1=0;
 	static uint8_t minute=0;
     Timer1_num ++;
-    
-    if(Timer1_num ==1000){ //1s
+
+	TH1 =(65536-200)>>8 ; //100us 
+	TL1 = 65536-200; 
+    if(Timer1_num >=1000){ //1s
          Timer1_num =0;
 		
 	      minute ++;
 	     if(minute >=2){
 		 	minute =0;
        
-        if(KEY_HDScan(1)== WINDTI_PRES && num ==0)
-        {
-            locklg = locklg ^ 0x01;
-			
-			if(locklg==1 && num ==0){
-                childLock=1;
-			    num = 1;
+	        if(KEY_HDScan(1)== WINDTI_PRES)
+	        {
+	            locklg = locklg ^ 0x01;
 				
-                Timer1_num =0;
-				childLock =1;
-			   BuzzerSound = 1;
-	           lockchild =1;
-			
-			}
-            else if(num==0){  
-                locklg =0;
-				num =1;
-                childLock=0;
-	             Timer1_num =0;
-                childLock =0;
-	            BuzzerSound =1;
-				lockchild =0;
+				if(locklg==1 ){
+	                childLock=1;
+				   Timer1_num =0;
+					childLock =1;
+				   BuzzerSound = 1;
+		           lockchild =1;
 				 
-            }
-         }
-       }
-    }
-	TH1 =(65536-200)>>8 ; //100us 
-	TL1 = 65536-200; 
+				
+				}
+	            else{  
+	                locklg =0;
+					
+	                childLock=0;
+		             Timer1_num =0;
+	                childLock =0;
+		            BuzzerSound =1;
+					lockchild =0;
+					
+					}
+					 
+	            }
+	         }
+	       }
+
+	
     
 }
 /******************************************************************************
@@ -228,18 +230,7 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
 {
 	static uint8_t powerkey=0;
 
-  
-//	if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_5) && GPIO_GetIntFlag(GPIO1, GPIO_PIN_6))
-	
-
-
-
-
-
-
-
-
-	if(childLock == 0){
+    if(childLock == 0){
 		if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_7))
 		{
 			powerkey= powerkey ^ 0x01;
@@ -374,12 +365,6 @@ void Timer3_IRQHandler(void)  interrupt TMR3_VECTOR
    
 	timer0_20ms_num++;
 	timer0_duty_num++;
-	//TimerCnt++;
-	//if(TimerCnt >5){ //5ms
-	  //  TimerCnt =0;
-		
-       // if(childLock  ==0) KEY_Handing();
-	//}
 	if(timer0_ten_num==10 && lockchild == 0){ //1ms
               timer0_ten_num=0;
 			  timer0_num ++ ;

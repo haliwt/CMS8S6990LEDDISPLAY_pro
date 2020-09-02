@@ -29,7 +29,7 @@ Telec Telecom;
 int main(void)
 {		
 	uint16_t cont=0;
-	uint8_t number=0,number2=0,cont1=0;
+	uint8_t number=0,number2=0,cont1=0,number3=0,number4=0;
 
 
     TMR1_Config();
@@ -51,15 +51,10 @@ int main(void)
             if(BuzzerSound==1){
                 BuzzerSound =0;
 				BUZZER_Config();
-				    number++;
-					if(number >5){
-					     number2++;
-		                 BUZ_DisableBuzzer();	
-					     if(number2 >5){
-	                       number =0;
-						   number2 = 0;
-						 }
-					}
+				delay_20us(20000)  ; 
+		        BUZ_DisableBuzzer();	
+					     
+					
 				
 	          }
 			BuzzerSound =0;
@@ -72,47 +67,41 @@ int main(void)
         
         }
         else if(childLock  ==0){
-            if(BuzzerSound==1){
+			if(BuzzerSound==1){
 				BuzzerSound =0;
-				  BUZZER_Config();
-				    number++;
-					if(number >10){
-					     number2++;
-		                 BUZ_DisableBuzzer();	
-					     if(number2 >10){
-	                       number =0;
-						   number2 = 0;
-						 }
-					}
-	                BUZ_DisableBuzzer();
-               BuzzerSound =0;
-               
-            }
-           
-             KEY_Handing();
-			
-			 if(Telecom.power_state == 0){
+				BUZZER_Config();
+				delay_20us(20000)  ; 
 				
-				cont++;
-		        if(cont >=50){
-					
-                    LEDDisplay_TurnOff();
-                    cont1++;
-                    if(cont1>=100){
-                        cont1=0;
-                        cont=0;
-                    }
-                   }
-                else{
-                     LEDDisplay_RedColorRing();
-                    
-                }
-			   
-        }
-		else{
-			LEDDisplay_GreenColorRing();
-            
-		}
+				BUZ_DisableBuzzer();
+				
+
+			}
+			
+			KEY_Handing();
+
+			if(Telecom.power_state == 0){
+
+					cont++;
+					if(cont >=50){
+
+						LEDDisplay_TurnOff();
+						cont1++;
+						if(cont1>=100){
+							cont1=0;
+							cont=0;
+						}
+					}
+					else{
+							LEDDisplay_RedColorRing();
+
+					}
+
+			}
+			else{
+				LEDDisplay_GreenColorRing();
+
+
+			}
 			
         }
         

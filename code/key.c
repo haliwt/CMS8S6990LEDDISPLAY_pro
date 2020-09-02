@@ -224,9 +224,7 @@ void GPIO_Config(void)
 			}
 			
 		if(Telecom.wind_state ==1){
-		        BUZZER_Config();
-			    delay_20us(100);
-		        BUZ_DisableBuzzer();
+		       
 				timer0_ten_num=0; //清除进入PM检测信号的值
 
 				if(Telecom.WindLevelData >3)Telecom.WindLevelData =0;
@@ -235,20 +233,7 @@ void GPIO_Config(void)
 				
 				
 		}
-	#if 0
-	   if(Telecom.power_state==1){
-		   Telecom.gEventKey =1;
-		   timer0_ten_num=0; //清除进入PM检测信号的值
-			  BUZZER_Config();
-			  delay_20us(100);
-		      BUZ_DisableBuzzer();
-		      powerkey = powerkey ^ 0x01;
-			    if(powerkey ==1)Telecom.power_state = 1;
-			  else Telecom.power_state = 0;
-			   Telecom.gEventKey =0;
-		
-	   	}
-	  #endif 
+	
 		 
 	   if(Telecom.net_state ==1){
 		 Telecom.gEventKey =1;
@@ -268,104 +253,7 @@ void GPIO_Config(void)
 
 
 }
-#if 0
-void KEY_Handing(void)
-{
 
-	static uint8_t powerkey=0;
-	uint8_t  temp8,temnum=0;
-	
-	temp8 = KEY_Scan();
-	
-	switch(temp8)
-	{
-
-  		
-		case	_KEY_CONT_3_TIMER: //长按按键按键值
-		         Telecom.gDispPM = 0;
-				 Telecom.TimerOn =0;
-		         Telecom.keyEvent =1;
-				 timer0_ten_num=0; //清除进入PM检测信号的值
-		        
-				Telecom.TimeBaseUint ++ ;
-				if(Telecom.TimeHour == 8){
-				    Telecom.TimeBaseUint=0;
-				}
-				else if(Telecom.TimeBaseUint == 10){
-					Telecom.TimeBaseUint=0;
-					Telecom.TimeMinute++;
-					if(Telecom.TimeMinute==6){ 
-						Telecom.TimeMinute =0;
-						Telecom.TimeHour ++;
-						{
-						   if(Telecom.TimeHour == 8){
-								
-									Telecom.TimeBaseUint=0;
-									Telecom.TimeMinute=0;
-									
-							}
-						    if(Telecom.TimeHour >8){
-								Telecom.TimeBaseUint=0;
-								Telecom.TimeMinute=0;
-									
-								Telecom.TimeHour=0;
-
-							}
-						   
-						 
-						}
-					}	
-				}
-				 Telecom.keyEvent =0;
-		
-		break;
-			
-		case _KEY_CONT_2_WIND : //调速
-		        BUZZER_Config();
-			    delay_20us(100);
-		        BUZ_DisableBuzzer();
-				timer0_ten_num=0; //清除进入PM检测信号的值
-
-				if(Telecom.WindLevelData >3)Telecom.WindLevelData =0;
-				Telecom.WindLevelData ++ ;
-			    
-				
-				
-		break;
-	
-		case _KEY_CONT_1_POWER :
-		   Telecom.gEventKey =1;
-		   timer0_ten_num=0; //清除进入PM检测信号的值
-			  BUZZER_Config();
-			  delay_20us(100);
-		      BUZ_DisableBuzzer();
-		      powerkey = powerkey ^ 0x01;
-			    if(powerkey ==1)Telecom.power_state = 1;
-			  else Telecom.power_state = 0;
-			   Telecom.gEventKey =0;
-		
-		break;
-		 
-	     case _KEY_CONT_4_FILTER :
-		 Telecom.gEventKey =1;
-		 	   Telecom.greeflg =1;
-		       timer0_ten_num=0; //清除进入PM检测信号的值
-		       BUZZER_Config();
-			  delay_20us(100);
-		    
-			  BUZ_DisableBuzzer();
-			
-		    Telecom.gEventKey =0;
-		
-		break;
-		default:
-		      
-			break;
-    }
-	
-		
-}
-#endif 
 /******************************************************************************
  **
  ** Function Name:	void KEY_FUNCTION(void)
@@ -526,18 +414,31 @@ void LockKey_Function(void)
   if(temp !=0)
   {
       temp=0;
-                for(i=0;i<2;i++){
+                
 					BUZZER_Config();
 				    number++;
-					if(number >20){
+					if(number >200){
 					     number2++;
 		                 BUZ_DisableBuzzer();	
-					     if(number2 >20){
+					     if(number2 >200){
 	                       number =0;
 						   number2 = 0;
 						 }
 					}
-                }
+					BUZ_DisableBuzzer();	
+					number++;
+
+				
+				   
+					if(number >200){
+					     number2++;
+		                	BUZZER_Config();
+					     if(number2 >200){
+	                       number =0;
+						   number2 = 0;
+						 }
+					}
+                	BUZ_DisableBuzzer();	
 				
 		
    }
