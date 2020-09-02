@@ -188,7 +188,7 @@ void GPIO_Config(void)
                  Telecom.timer_state=0;
 				 Telecom.TimerOn =0;
 		         Telecom.keyEvent =1;
-				
+				  timer0_ten_num=0; //清空PM 检测值
 		        
 				Telecom.TimeBaseUint ++ ;
 				if(Telecom.TimeHour == 8){
@@ -227,6 +227,7 @@ void GPIO_Config(void)
 		        
 				 keyevent =1;
 				Telecom.wind_state =0;
+		          timer0_ten_num=0; //清空PM检查值
 		        
 				if(Telecom.WindLevelData ==5)Telecom.WindLevelData =0;
 				Telecom.WindLevelData ++ ;

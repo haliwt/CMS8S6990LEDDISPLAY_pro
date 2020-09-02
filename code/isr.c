@@ -112,11 +112,9 @@ void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR
 					childLock =1;
 				   BuzzerSound = 1;
 		           lockchild =1;
-				 
-				
 				}
 	            else{  
-	                locklg =0;
+	                
 					
 	                childLock=0;
 		             Timer1_num =0;
