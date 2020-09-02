@@ -46,6 +46,7 @@ void INT0_IRQHandler(void)  interrupt INT0_VECTOR
 ******************************************************************************/
 void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR 
 {
+	#if 0
    static uint8_t interval=0;
     timer0_ten_num++;
    
@@ -79,7 +80,27 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
          
           
    }
-      
+ #endif 
+  #if 1
+	static uint16_t seconds=0;
+    static uint8_t min60=0;
+    seconds ++;
+	if(seconds == 5000)// 500ms
+	{ 
+   		    seconds=0;
+		Telecom.TimerEvent ++;
+			 min60++;
+		if(min60==41){ //60s = 1 分钟
+			min60=0;
+		    if(Telecom.TimerOn ==1)
+		    {
+			 //if(Telecom.TimeBaseUint == 0) Telecom.TimeBaseUint=1;
+			  Telecom.TimeBaseUint --;
+			} 
+
+		}
+	}
+	#endif 
 
 }
 /******************************************************************************
@@ -284,7 +305,7 @@ void ACMP_IRQHandler(void)  interrupt ACMP_VECTOR
 ******************************************************************************/
 void Timer3_IRQHandler(void)  interrupt TMR3_VECTOR 
 {
-     #if 1
+     #if 0
 	static uint16_t seconds=0;
     static uint8_t min60=0;
     seconds ++;
@@ -304,6 +325,36 @@ void Timer3_IRQHandler(void)  interrupt TMR3_VECTOR
 		}
 	}
 	#endif 
+	static uint8_t interval=0;
+    timer0_ten_num++;
+   
+	timer0_20ms_num++;
+	timer0_duty_num++;
+	TimerCnt++;
+	if(TimerCnt >10){ //5ms
+	    TimerCnt =0;
+        if(childLock  ==0) KEY_Handing();
+	}
+    if(timer0_ten_num==10){ //1ms
+              timer0_ten_num=0;
+			  timer0_num ++ ;
+	         if(timer0_num > 1080)timer0_num=0;
+	          
+              if(P22==0){
+                   if(vairI==0){
+                   rec_num++ ; 
+                  // rec2_num=0;
+                }
+                else{
+                   
+                    rec2_num++;
+                    //rec_num=0;
+                }
+              }
+           
+         
+          
+   }
 
 }
 /******************************************************************************

@@ -111,7 +111,7 @@ next:			if(Telecom.TimerOn ==1) TimerOnDisplay();
 			 
 			   LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
 			    cont ++;
-			   if(cont >100)
+			   if(cont >500)
 			   	{
 			   	 cont =0;
 			  	 PM_SendData();
