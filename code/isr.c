@@ -23,7 +23,7 @@ uint16_t rec_num;
 uint16_t rec2_num;
 uint16_t timer0_20ms_num;
 uint16_t timer0_duty_num;
-
+uint8_t lockchild ;
 
 
 /******************************************************************************
@@ -137,6 +137,7 @@ void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR
         if(KEY_HDScan(1)== WINDTI_PRES && num ==0)
         {
             locklg = locklg ^ 0x01;
+			
 			if(locklg==1 && num ==0){
                 childLock=1;
 			    num = 1;
@@ -144,7 +145,7 @@ void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR
                 Timer1_num =0;
 				childLock =1;
 			   BuzzerSound = 1;
-	           
+	           lockchild =1;
 			
 			}
             else if(num==0){  
@@ -154,6 +155,7 @@ void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR
 	             Timer1_num =0;
                 childLock =0;
 	            BuzzerSound =1;
+				lockchild =0;
 				 
             }
          }
@@ -378,7 +380,7 @@ void Timer3_IRQHandler(void)  interrupt TMR3_VECTOR
 		
        // if(childLock  ==0) KEY_Handing();
 	//}
-	if(timer0_ten_num==10){ //1ms
+	if(timer0_ten_num==10 && lockchild == 0){ //1ms
               timer0_ten_num=0;
 			  timer0_num ++ ;
 	         if(timer0_num > 1080)timer0_num=0;

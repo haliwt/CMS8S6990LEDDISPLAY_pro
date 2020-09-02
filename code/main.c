@@ -64,7 +64,11 @@ int main(void)
 	          }
 			BuzzerSound =0;
 			BUZ_DisableBuzzer();	
-           LockKey_Function();					
+           LockKey_Function();	
+		   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_7);
+		   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_6);
+		   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_5);
+		   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_4);
         
         }
         else if(childLock  ==0){
@@ -86,6 +90,7 @@ int main(void)
             }
            
              KEY_Handing();
+			
 			 if(Telecom.power_state == 0){
 				
 				cont++;
@@ -132,7 +137,7 @@ next:			if(Telecom.TimerOn ==1) TimerOnDisplay();
 			   	{
 			   	 cont =0;
 			  	 PM_SendData();
-			     goto next;
+			    // goto next;
 			   	}
 
 
