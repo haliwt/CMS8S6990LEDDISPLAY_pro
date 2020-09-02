@@ -249,7 +249,7 @@ void GPIO_Config(void)
 				}
 				else if(Telecom.WindLevelData==wind_auto){
 					 Telecom.WindSelectLevel =wind_auto;
-					#if 1
+					#if 0
 					 tempWindValue =  PM_SendData();
 				 if(tempWindValue < 75) temp = wind_sleep;
 			 		else if(tempWindValue> 75 && tempWindValue <150)temp= wind_middle;
