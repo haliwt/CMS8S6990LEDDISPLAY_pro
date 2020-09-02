@@ -29,8 +29,8 @@ Telec Telecom;
 int main(void)
 {		
 	uint16_t disp =0,pmarr[10],cont=0;
-	uint8_t poweron=0,i=0,j=0,disdat3=0,disdat2=0,disdat1=0;
-    static uint8_t wdl=0;
+	uint8_t poweron=0,i=0,j=0,disdat3=0,disdat2=0,disdat1=0,cont1;
+    static uint8_t lockflg=0;
 
     TMR1_Config();
 	TMR0_Config();
@@ -44,10 +44,9 @@ int main(void)
 
 	while(1)
 	{	
+           
 
-		// LED_DispPMLogo();
-
-	  #if 1
+		 #if 1
  	    if(childLock  ==1){
             if(BuzzerSound==1){
                 BUZZER_Config();
@@ -73,15 +72,15 @@ int main(void)
 			 if(Telecom.power_state == 0){
 				
 				cont++;
-		        if(cont >=250){
+		        if(cont >=50){
 					
                     LEDDisplay_TurnOff();
-                    if(timer0_num >400) {
+                    cont1++;
+                    if(cont1>=100){
+                        cont1=0;
                         cont=0;
-                        timer0_num=0;
                     }
-                    
-				}
+                   }
                 else{
                      LEDDisplay_RedColorRing();
                     
@@ -107,11 +106,17 @@ int main(void)
 
 				}
 			}
-			if(Telecom.TimerOn ==1) TimerOnDisplay();
+next:			if(Telecom.TimerOn ==1) TimerOnDisplay();
 
 			 
 			   LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
-			   PM_SendData();
+			    cont ++;
+			   if(cont >100)
+			   	{
+			   	 cont =0;
+			  	 PM_SendData();
+			     goto next;
+			   	}
 
 
 		 }

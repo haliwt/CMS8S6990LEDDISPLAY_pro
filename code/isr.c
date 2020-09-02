@@ -46,21 +46,24 @@ void INT0_IRQHandler(void)  interrupt INT0_VECTOR
 ******************************************************************************/
 void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR 
 {
-  
+   static uint8_t interval=0;
     timer0_ten_num++;
    
 	timer0_20ms_num++;
 	timer0_duty_num++;
 	TimerCnt++;
-	if(TimerCnt >50){ //5ms
+	if(TimerCnt >10){ //5ms
 	    TimerCnt =0;
         if(childLock  ==0) KEY_Handing();
 	}
-    if(timer0_ten_num==10){
+    if(timer0_ten_num==10){ //1ms
               timer0_ten_num=0;
-			  timer0_num ++ ;
-            
-             
+			  interval ++;
+	          if(interval==10){//10ms
+	              interval =0;
+				  timer0_num ++ ;
+	              if(timer0_num > 1080)timer0_num=0;
+	          }
               if(P22==0){
                    if(vairI==0){
                    rec_num++ ; 

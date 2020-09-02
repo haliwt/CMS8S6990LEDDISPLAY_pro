@@ -21,6 +21,7 @@ void PM_SendData(void)
 if(timer0_num >= 1000 && timer0_num <=1060 ){
 			timer0_num =0;
 			 i++;
+         
 		 if(vairI==0){
 			 disp =rec_num ;
 			 

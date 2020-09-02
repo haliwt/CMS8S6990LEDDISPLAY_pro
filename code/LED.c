@@ -1,16 +1,16 @@
 #include "LED.h"
 
 const unsigned char segNumber[]={
-         seg_a+seg_b+seg_c+seg_d+seg_e+seg_f,        // char "0"  0x00
+         seg_a+seg_b+seg_c+seg_d+seg_e+seg_f,        		// char "0"  0x00
          seg_b+seg_c,                                      // char "1"  0x01
-         seg_a+seg_b+seg_d+seg_e+seg_g,              // char "2"  0x02
-         seg_a+seg_b+seg_c+seg_d+seg_g,              // char "3"  0x03
-         seg_b+seg_c+seg_f+seg_g,                          // char "4"  0x04
-         seg_a+seg_c+seg_d+seg_f+seg_g,              // char "5"  0x05
-         seg_a+seg_c+seg_d+seg_e+seg_f,        // char "6"  0x06
-         seg_a+seg_b+seg_c+seg_f,                    // char "7"  0x07
-         seg_a+seg_b+seg_c+seg_d+seg_e+seg_f+seg_g,  // char "8"  0x08
-         seg_a+seg_b+seg_c+seg_d+seg_f+seg_g,        // char "9"  0x09
+         seg_a+seg_b+seg_d+seg_e+seg_g,              		// char "2"  0x02
+         seg_a+seg_b+seg_c+seg_d+seg_g,              		// char "3"  0x03
+         seg_b+seg_c+seg_f+seg_g,                   		 // char "4"  0x04
+         seg_a+seg_c+seg_d+seg_f+seg_g,              		// char "5"  0x05
+         seg_a+seg_c+seg_d+seg_e+seg_f+seg_g,              // char "6"  0x06
+         seg_a+seg_b+seg_c+seg_f,                    		// char "7"  0x07
+         seg_a+seg_b+seg_c+seg_d+seg_e+seg_f+seg_g,  		// char "8"  0x08
+         seg_a+seg_b+seg_c+seg_d+seg_f+seg_g,        		// char "9"  0x09
          ~seg_h,                                             // char "."  0x0A
          0                                                  // Dont't display 0x0B
          
