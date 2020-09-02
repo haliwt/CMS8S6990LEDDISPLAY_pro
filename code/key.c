@@ -220,7 +220,7 @@ void GPIO_Config(void)
 					}	
 				}
 				 Telecom.keyEvent =0;
-		
+		      LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
 			}
 			
 		if(Telecom.wind_state ==1){
@@ -229,22 +229,23 @@ void GPIO_Config(void)
 				Telecom.wind_state =0;
 				if(Telecom.WindLevelData >4)Telecom.WindLevelData =0;
 				Telecom.WindLevelData ++ ;
-				if(Telecom.WindLevelData==1){
+				if(Telecom.WindLevelData==wind_sleep){
+				   
                   LEDDisplay_SleepLamp();
-				  Telecom.WindAuto =0;
+				  Telecom.WindLevelData=1;
 				  OutputData(0x01);
 				
 					
 				}
-				else if(Telecom.WindLevelData==2){
+				else if(Telecom.WindLevelData==wind_middle){
 					OutputData(0x02);
-					Telecom.WindAuto =0;
-				}else if(Telecom.WindLevelData==3){
+					Telecom.WindLevelData=2;
+				}else if(Telecom.WindLevelData==wind_high){
 					OutputData(0x03);
-					Telecom.WindAuto =0;
+					Telecom.WindLevelData=3;
 				}
-				else if(Telecom.WindLevelData==4){
-					 Telecom.WindAuto =1;
+				else if(Telecom.WindLevelData==wind_auto){
+					 Telecom.WindLevelData=4;
 				}
 				
 			    

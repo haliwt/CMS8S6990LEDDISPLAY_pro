@@ -96,7 +96,12 @@ int main(void)
 
 			}
 			else{
-				LEDDisplay_GreenColorRing();
+				
+				if(Telecom.WindLevelData==wind_sleep){
+	                  LEDDisplay_SleepLamp();
+				}
+				else
+				     LEDDisplay_GreenColorRing();
 
 
 			}
@@ -115,21 +120,28 @@ int main(void)
 
 				}
 			}
-			if(Telecom.TimerOn ==1) TimerOnDisplay();
+			
+			if(Telecom.TimerOn ==1){
+				if(Telecom.WindLevelData==wind_sleep){
+	                  LEDDisplay_SleepLamp();
+				}
+				else{ 
 
-			 
-			   LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
-			   if(Telecom.WindAuto ==1){
-				    cont ++;
-				   if(cont >500)
-				   	{
-				   	 cont =0;
-				  	 PM_SendData();
-				    // goto next;
+				   TimerOnDisplay();
+				   LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
+				   if(Telecom.WindLevelData==wind_auto){
+					    cont ++;
+					   if(cont >500)
+					   	{
+					   	 cont =0;
+					  	 PM_SendData();
+					    // goto next;
+					   	}
 				   	}
-			   	}
 
-		 }
+					}
+			   }
+	    	}
 	   
     
 	   #endif 
