@@ -286,9 +286,9 @@ uint8_t KEY_Scan(void)
 	key.read = _KEY_ALL_OFF; //0x1F 
 
 
-	if(POWER_KEY == 1)
+//	if(POWER_KEY == 1)
 	{
-		key.read &= ~0x01; // 0x1E
+//		key.read &= ~0x01; // 0x1E
 	}
 	if(WIND_KEY == 1)
 	{

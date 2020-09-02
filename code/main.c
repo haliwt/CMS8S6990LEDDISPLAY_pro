@@ -71,10 +71,9 @@ int main(void)
 				delay_20us(5000)  ; 
 				
 				BUZ_DisableBuzzer();
-				
-
 			}
-			
+			BuzzerSound =0;
+			BUZ_DisableBuzzer();
 			KEY_Handing();
 
 			if(Telecom.power_state == 0){
