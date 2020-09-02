@@ -31,7 +31,8 @@ const unsigned char BlueNumber[]={
     seg_i + seg_j +seg_k ,
 	seg_j +seg_k,
 	seg_a+seg_b+seg_c+seg_d+seg_e+seg_f +seg_g+ seg_h,
-	seg_a+seg_b+seg_c+seg_d+seg_e+seg_f 
+	seg_a+seg_b+seg_c+seg_d+seg_e+seg_f ,
+	seg_g + seg_h,
 
 };
 
@@ -251,7 +252,7 @@ void LEDDisplay_SleepLamp(void)
 			  //写显示，固定定制模式
 			  STB_TM1629D=1; 
 
-		      /*********** DISPLAY Green 1i 2i 3i 4i 5i 低字节 **************/
+		      /*********** DISPLAY Blue 1i 2i 3i 4i 5i 低字节 **************/
 			    // 5i ---5g,5h,5i,5j,5k    6i----6a ....6l
 		         STB_TM1629D=0;	
 				 Tm1629DSentData(Addr00H);    //COM1
@@ -295,6 +296,72 @@ void LEDDisplay_SleepLamp(void)
 
 
 				/***************end*********************/
+				/************don't display*****************/    
+			     STB_TM1629D=0;	
+				Tm1629DSentData(Addr00H);
+				 Tm1629DSentData(~segNumber[8]); //指向地址00	 
+			    STB_TM1629D=1; 
+				   
+			   STB_TM1629D=0;	
+				 Tm1629DSentData(Addr02H);
+				 Tm1629DSentData(~segNumber[8]); //指向地址02	 
+			   STB_TM1629D=1; 
+				   
+			   STB_TM1629D=0;	
+				Tm1629DSentData(Addr04H);
+				Tm1629DSentData(~BlueNumber[3]); //指向地址04
+			    STB_TM1629D=1; 
+
+					   
+			    STB_TM1629D=0;	
+				Tm1629DSentData(Addr05H);
+				Tm1629DSentData(~BlueNumber[1]); //指向地址04---COM4
+			    STB_TM1629D=1; 
+
+				STB_TM1629D=0;	
+				Tm1629DSentData(Addr08H);
+				Tm1629DSentData(~BlueNumber[5]); //指向地址08---COM5
+			    STB_TM1629D=1; 
+				
+				   
+		         STB_TM1629D=0;	
+			   Tm1629DSentData(Addr09H);
+				Tm1629DSentData(~BlueNumber[1]); //指向地址09-----COM5
+				 STB_TM1629D=1; 
+
+
+				STB_TM1629D=0;	 
+				Tm1629DSentData(Addr0AH);
+				 Tm1629DSentData(0x00); //指向地址08
+			    STB_TM1629D=1; 
+
+
+				STB_TM1629D=0;	 
+			    Tm1629DSentData(Addr0BH);
+				 Tm1629DSentData(0x00); //指向地址0A	 
+			     STB_TM1629D=1; 
+		         
+		         STB_TM1629D=0;	 
+			    Tm1629DSentData(Addr0CH);
+				 Tm1629DSentData(0x00); //指向地址0C	 
+			     STB_TM1629D=1; 
+		         
+		         STB_TM1629D=0;	 
+			    Tm1629DSentData(Addr0DH);
+				 Tm1629DSentData(0x00); //指向地址0E	 
+			     STB_TM1629D=1; 
+
+				    STB_TM1629D=0;	 
+			    Tm1629DSentData(Addr0EH);
+				 Tm1629DSentData(0x00); //指向地址0E	 
+			     STB_TM1629D=1; 
+
+				    STB_TM1629D=0;	 
+			    Tm1629DSentData(Addr0FH);
+				 Tm1629DSentData(0x00); //指向地址0E	 
+			     STB_TM1629D=1; 
+
+				
 				
 	   STB_TM1629D =0; 
        Tm1629DSentData(OpenDisTM1629D|Set14_16TM1629D); //开显示，显示，设置脉冲宽带 12/16

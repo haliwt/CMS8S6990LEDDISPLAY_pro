@@ -46,7 +46,8 @@ int main(void)
 	{	
            
 
-		 #if 1
+         LEDDisplay_SleepLamp();
+		 #if 0
  	    if(childLock  ==1){
             if(BuzzerSound==1 && WIND_KEY ==1 && TIMER_KEY ==1){
                 BuzzerSound =0;
