@@ -54,12 +54,15 @@ int main(void)
 				BUZZER_Config();
 				delay_20us(5000)  ; 
 		        BUZ_DisableBuzzer();	
+				
+		   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_7);
+		   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_6);
+		   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_5);
+		   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_4);
 				 Telecom.criticalKey=1;
 			}
 			BuzzerSound =0;
-			
-			
-           LockKey_Function();	
+	
 		   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_7);
 		   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_6);
 		   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_5);

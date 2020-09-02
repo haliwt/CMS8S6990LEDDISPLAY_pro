@@ -102,7 +102,7 @@ void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR
 	     if(minute >=2){
 		 	minute =0;
        
-	        if(KEY_HDScan(1)== WINDTI_PRES)
+	        if(KEY_HDScan(0)== WINDTI_PRES)
 	        {
 	            locklg = locklg ^ 0x01;
 				
@@ -198,11 +198,12 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
 	static uint8_t powerkey=0;
 
 
-    if(childLock ==1 && Telecom.criticalKey ==1 && (WINDTI_PRES ==0 && TIMER_PRES==0)){
+    if(childLock ==1 && Telecom.criticalKey ==1 && (WINDTI_PRES ==1 && TIMER_PRES==1)){
 
 
     }
-	else if(childLock ==1 && Telecom.criticalKey ==0){
+	else if(childLock ==1 && Telecom.criticalKey ==0 &&Telecom.lockSonudKey==0 ){
+		
 		if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_7))
 		{
 			
