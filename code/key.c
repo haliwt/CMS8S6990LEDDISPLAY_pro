@@ -186,7 +186,6 @@ void GPIO_Config(void)
     
 		if(Telecom.timer_state == 1){
                  Telecom.timer_state=0;
-		         Telecom.gDispPM = 0;
 				 Telecom.TimerOn =0;
 		         Telecom.keyEvent =1;
 				
@@ -249,23 +248,6 @@ void GPIO_Config(void)
 				}
 				else if(Telecom.WindLevelData==wind_auto){
 					 Telecom.WindSelectLevel =wind_auto;
-					#if 0
-					 tempWindValue =  PM_SendData();
-				 if(tempWindValue < 75) temp = wind_sleep;
-			 		else if(tempWindValue> 75 && tempWindValue <150)temp= wind_middle;
-			 		else if(tempWindValue> 150 && tempWindValue < 300)temp = wind_high;
-					 else if(tempWindValue > 300)temp = wind_high;
-		
-		 		if(temp == wind_sleep)OutputData(0x01);
-					else if(temp== wind_middle)OutputData(0x02);
-					else if(temp == wind_high)OutputData(0x03);
-			       
-				   #endif   
-			
-				
-			    
-				
-				
 				}
 		}
 		 

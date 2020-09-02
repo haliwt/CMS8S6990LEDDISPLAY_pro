@@ -46,13 +46,13 @@ int main(void)
 	{	
            
 
-        // LEDDisplay_SleepLamp();
-		 #if 1
+       
+		
  	    if(childLock  ==1){
             if(BuzzerSound==1 && WIND_KEY ==1 && TIMER_KEY ==1){
                 BuzzerSound =0;
 				BUZZER_Config();
-				delay_20us(20000)  ; 
+				delay_20us(5000)  ; 
 		        BUZ_DisableBuzzer();	
 			}
 			BuzzerSound =0;
@@ -68,7 +68,7 @@ int main(void)
 			if(BuzzerSound==1 && WIND_KEY ==1 && TIMER_KEY ==1){
 				BuzzerSound =0;
 				BUZZER_Config();
-				delay_20us(20000)  ; 
+				delay_20us(5000)  ; 
 				
 				BUZ_DisableBuzzer();
 				
@@ -93,40 +93,29 @@ int main(void)
 							LEDDisplay_RedColorRing();
 
 					}
-
-			}
-			else{
-				
-				if( Telecom.WindSelectLevel==wind_sleep){
-	                  LEDDisplay_SleepLamp();
-				}
-				else
-				     LEDDisplay_GreenColorRing();
-
-
-			}
+              }
+			
 			
         }
         
-	 
-	    if( Telecom.power_state == 1){
+	  if(Telecom.power_state == 1){
+	           
+				  if(Telecom.TimerOn ==0 &&  Telecom.keyEvent ==0){
+					if(Telecom.TimerEvent >= 5)
+		            {
+						Telecom.TimerEvent = 0;
+						Telecom.TimerOn =1;
+						
 
-			if(Telecom.TimerOn ==0 &&  Telecom.keyEvent ==0){
-				if(Telecom.TimerEvent >= 5)
-	            {
-					Telecom.TimerEvent = 0;
-					Telecom.TimerOn =1;
-					
+					}
+			   }
 
-				}
-			}
-			
-			if(Telecom.TimerOn ==1){
-				if(Telecom.WindLevelData==wind_sleep){
+			   if( Telecom.WindSelectLevel==wind_sleep){
 	                  LEDDisplay_SleepLamp();
-				}
-				else{ 
-
+			
+			   	}   
+			    else{ 
+                   LEDDisplay_GreenColorRing();
 				   TimerOnDisplay();
 				   LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
 				   if( Telecom.WindSelectLevel==wind_auto){
@@ -146,17 +135,17 @@ int main(void)
 					   	}
 				   	}
 
-					}
+				  }
 			   }
 	    	}
-	   
+	}
     
-	   #endif 
-
-	} 
+	    
 
 
-}
+
+
+
 
 
 
