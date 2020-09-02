@@ -529,10 +529,10 @@ void LockKey_Function(void)
                 for(i=0;i<2;i++){
 					BUZZER_Config();
 				    number++;
-					if(number >100){
+					if(number >20){
 					     number2++;
 		                 BUZ_DisableBuzzer();	
-					     if(number2 >100){
+					     if(number2 >20){
 	                       number =0;
 						   number2 = 0;
 						 }

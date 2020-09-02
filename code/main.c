@@ -49,39 +49,38 @@ int main(void)
 		 #if 1
  	    if(childLock  ==1){
             if(BuzzerSound==1){
-                BUZZER_Config();
+                BuzzerSound =0;
 				BUZZER_Config();
 				    number++;
-					if(number >100){
+					if(number >5){
 					     number2++;
 		                 BUZ_DisableBuzzer();	
-					     if(number2 >100){
+					     if(number2 >5){
 	                       number =0;
 						   number2 = 0;
 						 }
 					}
-	           
-			   
-               BuzzerSound =0;
-               
-            }
+				
+	          }
+			BuzzerSound =0;
+			BUZ_DisableBuzzer();	
            LockKey_Function();					
         
         }
         else if(childLock  ==0){
             if(BuzzerSound==1){
-                   BUZZER_Config();
+				BuzzerSound =0;
 				  BUZZER_Config();
 				    number++;
-					if(number >100){
+					if(number >10){
 					     number2++;
 		                 BUZ_DisableBuzzer();	
-					     if(number2 >100){
+					     if(number2 >10){
 	                       number =0;
 						   number2 = 0;
 						 }
 					}
-	                 BUZ_DisableBuzzer();
+	                BUZ_DisableBuzzer();
                BuzzerSound =0;
                
             }
