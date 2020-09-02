@@ -46,8 +46,8 @@ int main(void)
 	{	
            
 
-         LEDDisplay_SleepLamp();
-		 #if 0
+        // LEDDisplay_SleepLamp();
+		 #if 1
  	    if(childLock  ==1){
             if(BuzzerSound==1 && WIND_KEY ==1 && TIMER_KEY ==1){
                 BuzzerSound =0;
@@ -119,14 +119,15 @@ int main(void)
 
 			 
 			   LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
-			    cont ++;
-			   if(cont >500)
-			   	{
-			   	 cont =0;
-			  	 PM_SendData();
-			    // goto next;
+			   if(Telecom.WindAuto ==1){
+				    cont ++;
+				   if(cont >500)
+				   	{
+				   	 cont =0;
+				  	 PM_SendData();
+				    // goto next;
+				   	}
 			   	}
-
 
 		 }
 	   

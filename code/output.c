@@ -1,7 +1,7 @@
 #include "output.h"
 #include "timer2.h"
 
-static void OutputData(uint8_t wds);
+ void OutputData(uint8_t wds);
 
 
 /***************************************************
@@ -86,7 +86,7 @@ if(timer0_num >= 1000 && timer0_num <=1060 ){
 	*Return Ref: NO
 	*
 ***************************************************/
-static void OutputData(uint8_t wds)
+ void OutputData(uint8_t wds)
 {
 
 	 

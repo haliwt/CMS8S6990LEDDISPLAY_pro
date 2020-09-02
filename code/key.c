@@ -226,9 +226,27 @@ void GPIO_Config(void)
 		if(Telecom.wind_state ==1){
 		       
 				timer0_ten_num=0; //清除进入PM检测信号的值
-
-				if(Telecom.WindLevelData >3)Telecom.WindLevelData =0;
+				Telecom.wind_state =0;
+				if(Telecom.WindLevelData >4)Telecom.WindLevelData =0;
 				Telecom.WindLevelData ++ ;
+				if(Telecom.WindLevelData==1){
+                  LEDDisplay_SleepLamp();
+				  Telecom.WindAuto =0;
+				  OutputData(0x01);
+				
+					
+				}
+				else if(Telecom.WindLevelData==2){
+					OutputData(0x02);
+					Telecom.WindAuto =0;
+				}else if(Telecom.WindLevelData==3){
+					OutputData(0x03);
+					Telecom.WindAuto =0;
+				}
+				else if(Telecom.WindLevelData==4){
+					 Telecom.WindAuto =1;
+				}
+				
 			    
 				
 				

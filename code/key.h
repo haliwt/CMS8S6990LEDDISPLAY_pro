@@ -11,6 +11,7 @@
 #include "demo_timer.h"
 #include "myflash.h"
 #include "buzzer.h"
+#include "output.h"
 
 
 
@@ -93,6 +94,7 @@ typedef struct _TELEC_
     uint8_t wind_state: 1;
 	uint8_t timer_state: 1;
 	uint8_t net_state:1;
+	uint8_t WindAuto:1;
 } Telec;
 
 extern Telec Telecom;
