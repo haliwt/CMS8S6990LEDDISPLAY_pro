@@ -117,7 +117,7 @@ int main(void)
 
 				}
 			}
-next:			if(Telecom.TimerOn ==1) TimerOnDisplay();
+			if(Telecom.TimerOn ==1) TimerOnDisplay();
 
 			 
 			   LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
