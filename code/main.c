@@ -53,10 +53,7 @@ int main(void)
 				BUZZER_Config();
 				delay_20us(20000)  ; 
 		        BUZ_DisableBuzzer();	
-					     
-					
-				
-	          }
+			}
 			BuzzerSound =0;
 			BUZ_DisableBuzzer();	
            LockKey_Function();	
