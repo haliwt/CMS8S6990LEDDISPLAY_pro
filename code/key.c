@@ -521,21 +521,24 @@ uint8_t KEY_HDScan(uint8_t mode)
  ******************************************************************************/
 void LockKey_Function(void)
 {
-   uint8_t  temp=0;
+   uint8_t  temp=0,number=0,number2,i=0;
   temp = KEY_Scan();
   if(temp !=0)
   {
-                BUZZER_Config();
-			    delay_20us(10000);
-	           BUZ_DisableBuzzer();	
-				BUZZER_Config();
-			    delay_20us(10000);
-	            BUZ_DisableBuzzer();
-                delay_20us(10000);
-                 BUZZER_Config();
-                 delay_20us(10000);
-                 BUZ_DisableBuzzer();
-				 temp=0;
+      temp=0;
+                for(i=0;i<2;i++){
+					BUZZER_Config();
+				    number++;
+					if(number >100){
+					     number2++;
+		                 BUZ_DisableBuzzer();	
+					     if(number2 >100){
+	                       number =0;
+						   number2 = 0;
+						 }
+					}
+                }
+				
 		
    }
 

@@ -127,7 +127,7 @@ void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR
 	static uint8_t minute=0;
     Timer1_num ++;
     
-    if(Timer1_num ==5000){ //1s
+    if(Timer1_num ==500){ //1s
          Timer1_num =0;
 		
 	      minute ++;
@@ -227,9 +227,7 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
 	static uint8_t powerkey=0;
 
   
-    
-
-       if(childLock == 0){
+    if(childLock == 0){
 		if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_7))
 		{
 			powerkey= powerkey ^ 0x01;

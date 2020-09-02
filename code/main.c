@@ -28,8 +28,8 @@ Telec Telecom;
 *******************************************************/
 int main(void)
 {		
-	uint16_t disp =0,cont=0;
-	uint8_t poweron=0,i=0,j=0,disdat3=0,disdat2=0,disdat1=0,cont1;
+	uint16_t cont=0;
+	uint8_t number=0,number2=0,cont1=0;
 
 
     TMR1_Config();
@@ -50,9 +50,18 @@ int main(void)
  	    if(childLock  ==1){
             if(BuzzerSound==1){
                 BUZZER_Config();
-				
-	            delay_20us(20000);
-			    BUZ_DisableBuzzer();
+				BUZZER_Config();
+				    number++;
+					if(number >100){
+					     number2++;
+		                 BUZ_DisableBuzzer();	
+					     if(number2 >100){
+	                       number =0;
+						   number2 = 0;
+						 }
+					}
+	           
+			   
                BuzzerSound =0;
                
             }
@@ -62,7 +71,16 @@ int main(void)
         else if(childLock  ==0){
             if(BuzzerSound==1){
                    BUZZER_Config();
-				  delay_20us(20000);
+				  BUZZER_Config();
+				    number++;
+					if(number >100){
+					     number2++;
+		                 BUZ_DisableBuzzer();	
+					     if(number2 >100){
+	                       number =0;
+						   number2 = 0;
+						 }
+					}
 	                 BUZ_DisableBuzzer();
                BuzzerSound =0;
                
