@@ -183,7 +183,8 @@ void GPIO_Config(void)
 {
       uint16_t tempWindValue=0,temp=0;
 	  uint8_t keyevent =0;
-    
+
+	  if(Telecom.criticalKey==0){
 		if(Telecom.timer_state == 1){
                  Telecom.timer_state=0;
 				 Telecom.TimerOn =0;
@@ -266,7 +267,7 @@ void GPIO_Config(void)
 	   	}
 
 
-
+	  	}
 		
 
 }
@@ -428,17 +429,16 @@ void LockKey_Function(void)
 {
    uint8_t  temp=0;
   temp = KEY_Scan();
-  if(WIND_KEY ==1 && TIMER_KEY ==1) BUZ_DisableBuzzer();	
-  else if(temp !=0) {
+  if(temp !=0) {
       temp=0;
 	
 
     BUZZER_Config();
-	delay_20us(20000)  ; 
+	delay_20us(5000)  ; 
     BUZ_DisableBuzzer();
 
 	BUZZER_Config();
-	delay_20us(20000)  ; 
+	delay_20us(5000)  ; 
     BUZ_DisableBuzzer();	
 				
   }

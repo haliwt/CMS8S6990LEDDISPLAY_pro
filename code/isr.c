@@ -112,6 +112,8 @@ void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR
 					childLock =1;
 				   BuzzerSound = 1;
 		           lockchild =1;
+				   Telecom.criticalKey=1;
+				   
 				}
 	            else{  
 	                
@@ -121,6 +123,7 @@ void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR
 	                childLock =0;
 		            BuzzerSound =1;
 					lockchild =0;
+					Telecom.criticalKey=1;
 					
 					}
 					 
@@ -194,7 +197,63 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
 {
 	static uint8_t powerkey=0;
 
-    if(childLock == 0){
+
+    if(childLock ==1 && Telecom.criticalKey ==1 && (WINDTI_PRES ==0 && TIMER_PRES==0)){
+
+
+    }
+	else if(childLock ==1 && Telecom.criticalKey ==0){
+		if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_7))
+		{
+			
+				Telecom.lockSonudKey=1;
+		   
+		  
+			GPIO_ClearIntFlag(GPIO1, GPIO_PIN_7);
+		}
+		if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_6)) //风速按键
+		{
+			
+	         Telecom.lockSonudKey=1;
+		   
+		   
+		    GPIO_ClearIntFlag(GPIO1, GPIO_PIN_6);
+		 }
+		if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_5)) //风速按键
+		{
+			
+	        Telecom.lockSonudKey=1;
+		   
+		   
+		    GPIO_ClearIntFlag(GPIO1, GPIO_PIN_5);
+		  
+		}
+		if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_4)) //置换虑网按键
+		{
+			
+	         Telecom.lockSonudKey=1;
+		   
+		
+			GPIO_ClearIntFlag(GPIO1, GPIO_PIN_4);
+		}
+		if(Telecom.lockSonudKey==1){
+
+           Telecom.lockSonudKey=0;
+			    BUZZER_Config();
+				delay_20us(10000)  ; 
+			    BUZ_DisableBuzzer();
+
+				BUZZER_Config();
+				delay_20us(10000)  ; 
+			    BUZ_DisableBuzzer();	
+
+
+		}
+
+    }
+
+
+	if(childLock == 0){
 		if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_7))
 		{
 			powerkey= powerkey ^ 0x01;

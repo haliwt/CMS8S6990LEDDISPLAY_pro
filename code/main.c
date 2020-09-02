@@ -54,14 +54,17 @@ int main(void)
 				BUZZER_Config();
 				delay_20us(5000)  ; 
 		        BUZ_DisableBuzzer();	
+				 Telecom.criticalKey=1;
 			}
 			BuzzerSound =0;
-			BUZ_DisableBuzzer();	
+			
+			
            LockKey_Function();	
 		   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_7);
 		   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_6);
 		   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_5);
 		   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_4);
+		   Telecom.criticalKey=0;
         
         }
         else if(childLock  ==0){
@@ -69,11 +72,16 @@ int main(void)
 				BuzzerSound =0;
 				BUZZER_Config();
 				delay_20us(5000)  ; 
-				
+				Telecom.criticalKey=1;
 				BUZ_DisableBuzzer();
+			   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_7);
+			   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_6);
+			   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_5);
+			   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_4);
 			}
 			BuzzerSound =0;
 			BUZ_DisableBuzzer();
+			Telecom.criticalKey=0;
 			KEY_Handing();
 
 			if(Telecom.power_state == 0){
