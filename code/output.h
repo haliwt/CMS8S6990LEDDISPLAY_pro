@@ -31,7 +31,7 @@ enum WindSpeed{wind_stop,wind_sleep,wind_middle,wind_high,wind_auto};
 
 
 void OutputData(uint8_t wds);
-uint16_t PM_SendData(void);
+void PM_SendData(void);
 
 
 #endif 

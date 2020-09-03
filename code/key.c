@@ -181,7 +181,7 @@ void GPIO_Config(void)
  ******************************************************************************/
  void KEY_Handing(void)
 {
-      uint16_t tempWindValue=0,temp=0;
+     
 	  uint8_t keyevent =0;
 
 	  if(Telecom.criticalKey==0){
@@ -255,13 +255,8 @@ void GPIO_Config(void)
 		 
 	   if(Telecom.net_state ==1){
 		
-		 	 
-		     
-		       BUZZER_Config();
-			  delay_20us(100);
-		    
-			  BUZ_DisableBuzzer();
-			
+		 	 Telecom.net_state =0;
+		   
 		 
 		
 	   	}
@@ -407,6 +402,7 @@ uint8_t KEY_HDScan(uint8_t mode)
     {
        
         key_up =0 ;
+		delay_20us(1000);
 		if(WIND_KEY==1 &&TIMER_KEY==1 )		return WINDTI_PRES;
 	//	else if(POWER_KEY==1)       return POWER_PRES;
      //   else if(WIND_KEY==1)    return WIND_PRES;

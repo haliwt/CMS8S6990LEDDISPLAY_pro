@@ -12,16 +12,14 @@
 	*Return Ref: NO
 	*
 ***************************************************/
-uint16_t PM_SendData(void)
-{
-	uint8_t disp =0,pmarr[10];
+void PM_SendData(void)
+{  
+   uint16_t disp =0,pmarr[10],PMaverageValue;
 	uint8_t i=0,j=0,disdat3=0,disdat2=0,disdat1=0;
-	uint16_t PMaverageValue;          //PM sensor averageValue 
- 
+    uint8_t wdl=0;
 if(timer0_num >= 1000 && timer0_num <=1060 ){
 			timer0_num =0;
 			 i++;
-         
 		 if(vairI==0){
 			 disp =rec_num ;
 			 
@@ -53,7 +51,7 @@ if(timer0_num >= 1000 && timer0_num <=1060 ){
 			 
 		 }
 		 
-		// LEDDisplay_PMValue(disdat3,disdat2,disdat1);
+	//	 LEDDisplay_TimerTim(disdat3,disdat2,disdat1);
 	 
 		 timer0_num =0;
 		 if(i==1){
@@ -63,23 +61,22 @@ if(timer0_num >= 1000 && timer0_num <=1060 ){
 				 
 			 }
 			 PMaverageValue = PMaverageValue / 10;
-		     #if 0
-			 if(PMaverageValue < 75) Telecom.WindLevelData = wind_sleep;
-			 else if(PMaverageValue > 75 && PMaverageValue <150)Telecom.WindLevelData = wind_middle;
-			 else if(PMaverageValue > 150 && PMaverageValue  < 300)Telecom.WindLevelData = wind_high;
-			 else if(PMaverageValue > 300)Telecom.WindLevelData = wind_high;
-			#endif  
+		     
+			 if(PMaverageValue < 75) wdl = wind_sleep;
+			 else if(PMaverageValue > 75 && PMaverageValue <150)wdl = wind_middle;  //Telecom.PMaverageValue
+			 else if(PMaverageValue > 150 && PMaverageValue  < 300)wdl = wind_high;
+			 else if(PMaverageValue > 300)wdl = wind_high;
+			 
 		 }
-         
-         
-        #if 0
-		if(Telecom.WindLevelData == wind_sleep)OutputData(0x01);
-		else if(Telecom.WindLevelData == wind_middle)OutputData(0x02);
-		else if(Telecom.WindLevelData == wind_high)OutputData(0x03);
-        #endif 
+		 
+		 if(wdl == wind_sleep)OutputData(0x01);
+		else if(wdl == wind_middle)OutputData(0x02);
+		else if(wdl == wind_high)OutputData(0x03);
 		 
 	  }
-      return PMaverageValue;
+
+     
+   
 }
 /***************************************************
 	*
@@ -111,9 +108,7 @@ if(timer0_num >= 1000 && timer0_num <=1060 ){
 			 TMR2_Config(wds);
 	  break;
       
-      case wind_stop:
-          TMR2_Config(wds);
-      break;
+    
 	  
       }
 

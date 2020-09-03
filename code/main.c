@@ -18,12 +18,7 @@ uint32_t Systemclock = 24000000;
 struct _WindLevel_ wdl;
 
 Telec Telecom;
-volatile uint8_t temp=0;
-volatile uint8_t temp2=0;
-volatile uint8_t temp3=0;
-volatile uint8_t temp4=0;
-volatile uint16_t addr=0;
-volatile uint16_t Dtemp=0;
+
 
 
 /*******************************************************
@@ -35,10 +30,7 @@ volatile uint16_t Dtemp=0;
 *******************************************************/
 int main(void)
 {		
-	uint16_t cont=0,tempWindValue=0,temp=0;
-	uint8_t cont1=0;
-    
-
+    uint8_t cont=0,cont1=0;
     TMR1_Config();
 	TMR0_Config();
    // GPIO_Config();
@@ -47,17 +39,17 @@ int main(void)
     LED_GPIO_Init();
    GPIO_Interrupt_Init();
 
-   addr=0x1000;
-
+  
 	while(1)
 	{	
 
        //Flash_ToWriteData();
 	  // Flash_ToReadData();
-	  TestFlash_ToWriteAndReadData();
+	//  TestFlash_ToWriteAndReadData();
+	//PM_SendData();
 
 /***************************************************************************/
-	 #if 0
+	 #if 1
 
      if(childLock  ==1){
             if(BuzzerSound==1){
@@ -113,12 +105,13 @@ int main(void)
 					else{
 						LEDDisplay_RedColorRing();
 					}
-				  if(Telecom.PowerOnFrequency % 2==0 && Telecom.PowerOnFrequency !=0){
+					if(Telecom.power_state==0 && Telecom.PowerOnFrequency % 2==0 && Telecom.PowerOnFrequency !=0){
 
-
+						
                         Flash_ToWriteData();
 
 				  }
+				 
               }
 		}
         
@@ -142,20 +135,12 @@ int main(void)
 				   LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
 				   if( Telecom.WindSelectLevel==wind_auto){
 					    cont ++;
-					   if(cont >500)
+					   if(cont >200)
 					   	{
 							cont =0;
-						tempWindValue =  PM_SendData();
-						 if(tempWindValue < 75) temp= wind_sleep;
-					 		else if(tempWindValue> 75 && tempWindValue <150)temp = wind_middle;
-					 		else if(tempWindValue> 150 && tempWindValue < 300)temp = wind_high;
-							 else if(tempWindValue > 300)Telecom.WindLevelData = wind_high;
-				
-				 		if(temp== wind_sleep)OutputData(0x01);
-							else if(temp == wind_middle)OutputData(0x02);
-							else if(temp == wind_high)OutputData(0x03);
-					   	}
-				   	}
+						   PM_SendData();
+						
+				     	}
 
 				  }
 			   }
@@ -164,7 +149,7 @@ int main(void)
 	}
     
 
-
+}
 
 
 
