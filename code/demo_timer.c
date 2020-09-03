@@ -114,8 +114,8 @@ void TMR3_Config(void)
 	/*
 	(3)设置Timer周期
 	*/	
-	TMR_ConfigTimerPeriod(TMR3, 256-200, 256-200); 				// (256-200)*0.5us = 100us,递增计数
-		
+	//TMR_ConfigTimerPeriod(TMR3, 256-200, 256-200); 				// (256-200)*0.5us = 100us,递增计数
+	TMR_ConfigTimerPeriod(TMR3, 256-180, 256-180);                  //  180 *0.5 = 90us
 	/*
 	(4)开启中断
 	*/

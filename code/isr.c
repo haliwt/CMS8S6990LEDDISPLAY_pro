@@ -427,6 +427,33 @@ void ACMP_IRQHandler(void)  interrupt ACMP_VECTOR
 void Timer3_IRQHandler(void)  interrupt TMR3_VECTOR 
 {
     // static uint8_t recMinute =0;
+
+#if 0
+timer0_ten_num++;
+   
+    if(timer0_ten_num==10){
+              timer0_ten_num=0;
+			  timer0_num ++ ;
+             if(timer0_num > 1080)timer0_num=0;
+             
+              if(P22==0){
+                   if(vairI==0){
+                   rec_num++ ; 
+                  // rec2_num=0;
+                }
+                else{
+                   
+                    rec2_num++;
+                    //rec_num=0;
+                }
+              }
+           
+         
+          
+   }
+
+
+#endif 	
  #if 0
 static uint16_t seconds=0;
     static uint8_t min60=0;
