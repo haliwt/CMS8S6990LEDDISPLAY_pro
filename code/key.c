@@ -183,87 +183,88 @@ void GPIO_Config(void)
 {
      
 	  uint8_t keyevent =0;
+	  if(Telecom.power_state ==1){
 
-	  if(Telecom.criticalKey==0){
-		if(Telecom.timer_state == 1){
-                 Telecom.timer_state=0;
-				 Telecom.TimerOn =0;
-		         Telecom.keyEvent =1;
-				  timer0_ten_num=0; //清空PM 检测值
-		        
-				Telecom.TimeBaseUint ++ ;
-				if(Telecom.TimeHour == 8){
-				    Telecom.TimeBaseUint=0;
-				}
-				else if(Telecom.TimeBaseUint == 10){
-					Telecom.TimeBaseUint=0;
-					Telecom.TimeMinute++;
-					if(Telecom.TimeMinute==6){ 
-						Telecom.TimeMinute =0;
-						Telecom.TimeHour ++;
-						{
-						   if(Telecom.TimeHour == 8){
-								
+		  if(Telecom.criticalKey==0){
+			if(Telecom.timer_state == 1){
+	                 Telecom.timer_state=0;
+					 Telecom.TimerOn =0;
+			         Telecom.keyEvent =1;
+					  timer0_ten_num=0; //清空PM 检测值
+			        
+					Telecom.TimeBaseUint ++ ;
+					if(Telecom.TimeHour == 8){
+					    Telecom.TimeBaseUint=0;
+					}
+					else if(Telecom.TimeBaseUint == 10){
+						Telecom.TimeBaseUint=0;
+						Telecom.TimeMinute++;
+						if(Telecom.TimeMinute==6){ 
+							Telecom.TimeMinute =0;
+							Telecom.TimeHour ++;
+							{
+							   if(Telecom.TimeHour == 8){
+									
+										Telecom.TimeBaseUint=0;
+										Telecom.TimeMinute=0;
+										
+								}
+							    if(Telecom.TimeHour >8){
 									Telecom.TimeBaseUint=0;
 									Telecom.TimeMinute=0;
-									
-							}
-						    if(Telecom.TimeHour >8){
-								Telecom.TimeBaseUint=0;
-								Telecom.TimeMinute=0;
-									
-								Telecom.TimeHour=0;
+										
+									Telecom.TimeHour=0;
 
+								}
+							   
+							 
 							}
-						   
-						 
-						}
-					}	
+						}	
+					}
+					 Telecom.keyEvent =0;
+			      LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
 				}
-				 Telecom.keyEvent =0;
-		      LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
-			}
-			
-		if(Telecom.wind_state ==1 && keyevent ==0){
-		        
-				 keyevent =1;
-				Telecom.wind_state =0;
-		          timer0_ten_num=0; //清空PM检查值
-		        
-				if(Telecom.WindLevelData ==5)Telecom.WindLevelData =0;
-				Telecom.WindLevelData ++ ;
-				if(Telecom.WindLevelData==wind_sleep){
-				   
-                  LEDDisplay_SleepLamp();
-				  Telecom.WindSelectLevel =wind_sleep;
-				  OutputData(0x01);
 				
+			if(Telecom.wind_state ==1 && keyevent ==0){
+			        
+					 keyevent =1;
+					Telecom.wind_state =0;
+			          timer0_ten_num=0; //清空PM检查值
+			        
+					if(Telecom.WindLevelData ==5)Telecom.WindLevelData =0;
+					Telecom.WindLevelData ++ ;
+					if(Telecom.WindLevelData==wind_sleep){
+					   
+	                  LEDDisplay_SleepLamp();
+					  Telecom.WindSelectLevel =wind_sleep;
+					  OutputData(0x01);
 					
-				}
-				else if(Telecom.WindLevelData==wind_middle){
-					OutputData(0x02);
-					Telecom.WindSelectLevel =wind_middle;
-					
-				}else if(Telecom.WindLevelData==wind_high){
-					OutputData(0x03);
-					Telecom.WindSelectLevel =wind_high;
-				}
-				else if(Telecom.WindLevelData==wind_auto){
-					 Telecom.WindSelectLevel =wind_auto;
-				}
-		}
-		 
-	   if(Telecom.net_state ==1){
-		
-		 	 Telecom.net_state =0;
-		   
-		 
-		
-	   	}
+						
+					}
+					else if(Telecom.WindLevelData==wind_middle){
+						OutputData(0x02);
+						Telecom.WindSelectLevel =wind_middle;
+						
+					}else if(Telecom.WindLevelData==wind_high){
+						OutputData(0x03);
+						Telecom.WindSelectLevel =wind_high;
+					}
+					else if(Telecom.WindLevelData==wind_auto){
+						 Telecom.WindSelectLevel =wind_auto;
+					}
+			}
+			 
+		   if(Telecom.net_state ==1){
+			
+			 	 Telecom.net_state =0;
+			   
+			 
+			
+		   	}
 
 
-	  	}
-		
+		  	}
+	  }	
 
 }
 

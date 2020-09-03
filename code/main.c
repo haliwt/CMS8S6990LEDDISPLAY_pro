@@ -135,7 +135,7 @@ int main(void)
 				   LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
 				   if( Telecom.WindSelectLevel==wind_auto){
 					    cont ++;
-					   if(cont >100)
+					   if(cont >20)
 					   	{
 							cont =0;
 						   PM_SendData();
