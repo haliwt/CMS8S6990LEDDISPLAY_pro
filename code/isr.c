@@ -252,6 +252,7 @@ void P0EI_IRQHandler(void)  interrupt P0EI_VECTOR
 void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR 
 {
 	static uint8_t powerkey=0;
+	uint8_t keyflg=0;
 
 
     if(childLock ==1 && Telecom.criticalKey ==1 && (WINDTI_PRES ==1 && TIMER_PRES==1)){
@@ -262,16 +263,21 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
 		
 		if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_7))
 		{
-			
-				Telecom.lockSonudKey=1;
-		   
+			     if(keyflg ==0){
+					   keyflg =1;
+				      Telecom.lockSonudKey=1;
+			     }
 		  
 			GPIO_ClearIntFlag(GPIO1, GPIO_PIN_7);
 		}
 		if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_6)) //风速按键
 		{
 			
-	         Telecom.lockSonudKey=1;
+	         
+			     if(keyflg ==0){
+					   keyflg =1;
+				      Telecom.lockSonudKey=1;
+			     }
 		   
 		   
 		    GPIO_ClearIntFlag(GPIO1, GPIO_PIN_6);
@@ -279,16 +285,23 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
 		if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_5)) //风速按键
 		{
 			
-	        Telecom.lockSonudKey=1;
-		   
-		   
+	       
+			     if(keyflg ==0){
+					   keyflg =1;
+				      Telecom.lockSonudKey=1;
+			     }
+		  
 		    GPIO_ClearIntFlag(GPIO1, GPIO_PIN_5);
 		  
 		}
 		if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_4)) //置换虑网按键
 		{
 			
-	         Telecom.lockSonudKey=1;
+	       
+			     if(keyflg ==0){
+					   keyflg =1;
+				      Telecom.lockSonudKey=1;
+			     }
 		   
 		
 			GPIO_ClearIntFlag(GPIO1, GPIO_PIN_4);
@@ -328,31 +341,41 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
 			GPIO_ClearIntFlag(GPIO1, GPIO_PIN_7);
 		}
 		
-		if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_6)) //风速按键
-		{
-			
-	          Telecom.wind_state = 1;
-		   
-		    GPIO_ClearIntFlag(GPIO1, GPIO_PIN_6);
-		  
-		}
-		
-		if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_5)) //定时按键
-		{
-			Telecom.timer_state = 1;
-		    
-		
-		   
-			GPIO_ClearIntFlag(GPIO1, GPIO_PIN_5);
-		}
+		if(Telecom.power_state ==1){
+				if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_6)) //风速按键
+				{
+					 if(keyflg ==0){
+					   keyflg =1;
+			          Telecom.wind_state = 1;
+					  
+					 }
+				   
+				    GPIO_ClearIntFlag(GPIO1, GPIO_PIN_6);
+				  
+				}
+				
+				if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_5)) //定时按键
+				{
 
-		if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_4)) //置换虑网按键
-		{
-			
-	         Telecom.net_state =1;
-		   
-		
-			GPIO_ClearIntFlag(GPIO1, GPIO_PIN_4);
+					 if(keyflg ==0){
+					   keyflg =1;
+					Telecom.timer_state = 1;
+					 	}
+				
+				   
+					GPIO_ClearIntFlag(GPIO1, GPIO_PIN_5);
+				}
+
+				if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_4)) //置换虑网按键
+				{
+					  if(keyflg ==0){
+					   keyflg =1;
+			         	Telecom.net_state =1;
+					  	}
+				
+					GPIO_ClearIntFlag(GPIO1, GPIO_PIN_4);
+				}
+
 		}
 
 	}

@@ -10,6 +10,7 @@ extern uint16_t timer0_ten_num;
 extern uint16_t timer0_num;
 extern uint16_t rec_num;
 extern uint16_t rec2_num;
+extern uint8_t windLevelHighest ;
 
 typedef struct _WindLevel_
 {
@@ -21,7 +22,7 @@ typedef struct _WindLevel_
 
 extern struct _WindLevel_ wdl;
 
-enum WindSpeed{wind_stop,wind_sleep,wind_middle,wind_high,wind_auto};
+enum WindSpeed{wind_stop,wind_sleep,wind_middle,wind_high,wind_highest,wind_auto};
 
 
 

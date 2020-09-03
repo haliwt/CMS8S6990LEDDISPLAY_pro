@@ -379,7 +379,43 @@ uint8_t Flash_To3000Hour_Vertict(void)
 
 
 }
+/*****************************************************************
+	*
+	*Function Name :uint8_t Flash_ToReadDiffData(void)
+	*Function:read flash data
+	*Input Ref:NO
+	*Return Ref: 1--2250小时 ，2----1500小时 0---时间没到
+	*
+******************************************************************/
+uint8_t Flash_ToReadDiffData(void)
+{
 
+	    uint8_t temp;
+
+	
+	     FLASH_UnLock();
+	  
+         
+		temp = FLASH_Read(FLASH_DATA,0x02); 
+		
+		
+		if(temp==0x0B)//11
+		 {
+			return 1; //2200小时
+
+		 }
+		if(temp == 0x07)
+		{
+			return 2; //1400小时
+
+		}	
+
+	   return 0;
+
+
+}
+
+#if TESTCODES 
 
 /*****************************************************************
 	*
@@ -518,4 +554,4 @@ void TestFlash_ToWriteAndReadData(void)
 
 }
 
-
+#endif 

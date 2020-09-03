@@ -65,13 +65,14 @@ if(timer0_num >= 1000 && timer0_num <=1060 ){
 			 if(PMaverageValue < 75) wdl = wind_sleep;
 			 else if(PMaverageValue > 75 && PMaverageValue <150)wdl = wind_middle;  //Telecom.PMaverageValue
 			 else if(PMaverageValue > 150 && PMaverageValue  < 300)wdl = wind_high;
-			 else if(PMaverageValue > 300)wdl = wind_high;
+			 else if(PMaverageValue > 300)wdl = wind_highest;
 			 
 		 }
 		 
 		 if(wdl == wind_sleep)OutputData(0x01);
-		else if(wdl == wind_middle)OutputData(0x02);
-		else if(wdl == wind_high)OutputData(0x03);
+		 else if(wdl == wind_middle)OutputData(0x02);
+		 else if(wdl == wind_high)OutputData(0x03);
+		 else if(wdl== wind_highest)OutputData(0x04);
 		 
 	  }
 
@@ -94,18 +95,27 @@ if(timer0_num >= 1000 && timer0_num <=1060 ){
 
 	  case wind_sleep :   //2%
 	       TMR2_Config(wds);
+	        windLevelHighest =0;
 
 	  break;
 
 	  case wind_middle: //4%
 	        
 	      TMR2_Config(wds);
+		  windLevelHighest =0;
 
 	  break;
 
 	  case wind_high:  //7%
 	  		
 			 TMR2_Config(wds);
+			 windLevelHighest =0;
+	  break;
+
+	  case wind_highest :
+	     TMR2_Config(wds);
+		 windLevelHighest =1;
+
 	  break;
       
     

@@ -19,6 +19,7 @@ struct _WindLevel_ wdl;
 
 Telec Telecom;
 
+uint8_t windLevelHighest ;
 
 
 /*******************************************************
@@ -47,7 +48,9 @@ int main(void)
 	  // Flash_ToReadData();
 	//  TestFlash_ToWriteAndReadData();
 	//PM_SendData();
-
+	//LED_DispThreeRadin() ;//显示三个弧度
+    //LED_DispTwoRadin();
+	//   LED_DispOneRadin();
 /***************************************************************************/
 	 #if 1
 
@@ -105,7 +108,7 @@ int main(void)
 					else{
 						LEDDisplay_RedColorRing();
 					}
-					if(Telecom.power_state==0 && Telecom.PowerOnFrequency % 2==0 && Telecom.PowerOnFrequency !=0){
+					if(Telecom.PowerOnFrequency % 2==0 && Telecom.PowerOnFrequency !=0){
 
 						
                         Flash_ToWriteData();
@@ -116,23 +119,38 @@ int main(void)
 		}
         
 	  if(Telecom.power_state == 1){
+
 	           
-				if(Telecom.TimerOn ==0 &&  Telecom.keyEvent ==0){
+	           
+			  if(Telecom.TimerOn ==0 &&  Telecom.keyEvent ==0){
 					if(Telecom.TimerEvent >= 5) //5s 后，自动跳转到定时功能
 		            {
 						Telecom.TimerEvent = 0;
 						Telecom.TimerOn =1;
 					}
 			   }
+			
 
-			   if( Telecom.WindSelectLevel==wind_sleep){
+			  
+			  if( Telecom.WindSelectLevel==wind_sleep){
 	                  LEDDisplay_SleepLamp();
 			
-			   	}   
-			    else{ 
-                   LEDDisplay_GreenColorRing();
-				   TimerOnDisplay();
-				   LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
+			  }
+			  else {
+			   
+                     TimerOnDisplay();
+
+				  if(Flash_ToReadDiffData()==0) LEDDisplay_GreenColorRing();
+				  else if(Flash_ToReadDiffData()==1)LED_DispThreeRadin();
+                  else if(Flash_ToReadDiffData()==2)LED_DispTwoRadin();
+				  else if(Flash_To750Hour_Vertict()==1)LED_DispOneRadin();
+
+				  	 if(windLevelHighest ==1){ //检查到PM值大于300 ，显示 “H”
+	 					LED_DispHlogo();
+	 				  }
+			   	     else 
+                       LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
+
 				   if( Telecom.WindSelectLevel==wind_auto){
 					    cont ++;
 					   if(cont >20)
@@ -143,13 +161,17 @@ int main(void)
 				     	}
 
 				  }
+				   
 			   }
-	 			#endif 
-	    	}
-	}
+	  	}
+	  	     
+	 	#endif 
+		}	
+}
+
     
 
-}
+
 
 
 

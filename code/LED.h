@@ -41,7 +41,7 @@
 #define   seg_k 0x04
 #define   seg_l 0x08 
 
-	
+#define char_H seg_b+seg_c+seg_e + seg_f+seg_g      //char "H"	
 
 const unsigned char GreeNumber[];
 
@@ -62,7 +62,12 @@ void LEDDisplay_PMValue(uint8_t disdat3,uint8_t disdat2,uint8_t disdat1);
 
 void LED_DispPMLogo(void);
 
+void LED_DispHlogo(void);
 
+void LED_DispThreeRadin(void); //显示三个弧度
+void LED_DispTwoRadin(void);
+void LED_DispOneRadin(void);
+void LED_DispZeroRadin(void); 
 
 
 
