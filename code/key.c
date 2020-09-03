@@ -254,15 +254,15 @@ void GPIO_Config(void)
 		}
 		 
 	   if(Telecom.net_state ==1){
-		 Telecom.gEventKey =1;
-		 	   Telecom.greeflg =1;
+		
+		 	 
 		     
 		       BUZZER_Config();
 			  delay_20us(100);
 		    
 			  BUZ_DisableBuzzer();
 			
-		    Telecom.gEventKey =0;
+		 
 		
 	   	}
 

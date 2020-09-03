@@ -18,6 +18,13 @@ uint32_t Systemclock = 24000000;
 struct _WindLevel_ wdl;
 
 Telec Telecom;
+volatile uint8_t temp=0;
+volatile uint8_t temp2=0;
+volatile uint8_t temp3=0;
+volatile uint8_t temp4=0;
+volatile uint16_t addr=0;
+volatile uint16_t Dtemp=0;
+
 
 /*******************************************************
 	*
@@ -29,8 +36,8 @@ Telec Telecom;
 int main(void)
 {		
 	uint16_t cont=0,tempWindValue=0,temp=0;
-	uint8_t number=0,number2=0,cont1=0,number3=0,number4=0;
-
+	uint8_t cont1=0;
+    
 
     TMR1_Config();
 	TMR0_Config();
@@ -40,15 +47,19 @@ int main(void)
     LED_GPIO_Init();
    GPIO_Interrupt_Init();
 
-
+   addr=0x1000;
 
 	while(1)
 	{	
-           
 
-       
-		
- 	    if(childLock  ==1){
+       //Flash_ToWriteData();
+	  // Flash_ToReadData();
+	  TestFlash_ToWriteAndReadData();
+
+/***************************************************************************/
+	 #if 0
+
+     if(childLock  ==1){
             if(BuzzerSound==1){
                 BuzzerSound =0;
 				BUZZER_Config();
@@ -100,23 +111,24 @@ int main(void)
 						}
 					}
 					else{
-							LEDDisplay_RedColorRing();
-
+						LEDDisplay_RedColorRing();
 					}
+				  if(Telecom.PowerOnFrequency % 2==0 && Telecom.PowerOnFrequency !=0){
+
+
+                        Flash_ToWriteData();
+
+				  }
               }
-			
-			
-        }
+		}
         
 	  if(Telecom.power_state == 1){
 	           
-				  if(Telecom.TimerOn ==0 &&  Telecom.keyEvent ==0){
-					if(Telecom.TimerEvent >= 5)
+				if(Telecom.TimerOn ==0 &&  Telecom.keyEvent ==0){
+					if(Telecom.TimerEvent >= 5) //5s 后，自动跳转到定时功能
 		            {
 						Telecom.TimerEvent = 0;
 						Telecom.TimerOn =1;
-						
-
 					}
 			   }
 
@@ -147,10 +159,10 @@ int main(void)
 
 				  }
 			   }
+	 			#endif 
 	    	}
 	}
     
-	    
 
 
 

@@ -73,29 +73,23 @@ extern key_types key;
 //通讯参数
 typedef struct _TELEC_
 {
- //  uint16_t PMaverageValue;          //PM sensor averageValue 
-    uint8_t LockKey ;
     int8_t TimeBaseUint;    //
+    
     uint8_t TimeHour ;
     uint8_t TimeMinute;
     uint8_t WindLevelData ;
-  
-
     uint8_t TimerEvent ;                  //定时器通知信号
+    uint8_t PowerOnFrequency;          //开关机的次数
     uint8_t WindSelectLevel: 4;
-    uint8_t  TaskCompileFlag : 1;             //任务完成标志位
+ 
     
-	uint8_t setWind_levels :3 ;              //设置风扇的级别，共4级 睡眠，中速风，高速风，自动
-	uint8_t greeflg:1;					// 风扇开启
 	uint8_t power_state :1;               //开启电源
-	uint8_t gEventKey:1;               //键盘按下事件发生
-	uint8_t gDispPM: 1;               //显示PM值，和时间值切换。
-	uint8_t TimerOn:1;
+    uint8_t TimerOn:1;
 	uint8_t keyEvent:1;
     uint8_t wind_state: 1;
 	uint8_t timer_state: 1;
 	uint8_t net_state:1;
-	uint8_t criticalKey:1;      //组合按琐住标志瞬间''
+	uint8_t criticalKey:1;           //组合按琐住标志瞬间''
 	uint8_t lockSonudKey :1;
 	
 	

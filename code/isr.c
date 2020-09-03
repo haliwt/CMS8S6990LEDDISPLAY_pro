@@ -21,10 +21,17 @@ uint16_t timer0_ten_num;
 uint8_t  vairI;
 uint16_t rec_num;
 uint16_t rec2_num;
-uint16_t timer0_20ms_num;
-uint16_t timer0_duty_num;
+
 uint8_t lockchild ;
 
+uint16_t NetSetTimer;          //PM sensor averageValue 
+  
+    uint8_t  NetRecMinute;      //记录虑网运行分钟时间
+	uint8_t  NetRecHour;          //记录滤网的小时--运行“小时时间”
+	uint8_t  NetRecMoreHour;
+	uint8_t  NetChangeFlag ;
+    uint8_t  NetRec750Hour ;
+    uint8_t  NetRec1500Hour ;
 
 /******************************************************************************
  ** \brief	 INT0 interrupt service function
@@ -237,6 +244,8 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
 		
 			GPIO_ClearIntFlag(GPIO1, GPIO_PIN_4);
 		}
+
+		
 		if(Telecom.lockSonudKey==1){
 
            Telecom.lockSonudKey=0;
@@ -247,8 +256,6 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
 				BUZZER_Config();
 				delay_20us(10000)  ; 
 			    BUZ_DisableBuzzer();	
-
-
 		}
 
     }
@@ -258,9 +265,15 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
 		if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_7))
 		{
 			powerkey= powerkey ^ 0x01;
-	        if(powerkey==1)
+	        if(powerkey==1){
 	          Telecom.power_state = 1;
-		    else  Telecom.power_state = 0;
+			  Telecom.PowerOnFrequency ++ ;
+	        }
+		    else
+				{ 
+				 Telecom.power_state = 0;
+				 Telecom.PowerOnFrequency ++ ;
+		    }
 		
 		  
 			GPIO_ClearIntFlag(GPIO1, GPIO_PIN_7);
@@ -364,11 +377,11 @@ void ACMP_IRQHandler(void)  interrupt ACMP_VECTOR
 ******************************************************************************/
 void Timer3_IRQHandler(void)  interrupt TMR3_VECTOR 
 {
-    
+    static uint8_t recMinute=0;
+
 	timer0_ten_num++;
-   
-	timer0_20ms_num++;
-	timer0_duty_num++;
+ 
+	NetSetTimer ++ ; 
 	if(timer0_ten_num==10 && lockchild == 0){ //1ms
               timer0_ten_num=0;
 			  timer0_num ++ ;
@@ -389,6 +402,29 @@ void Timer3_IRQHandler(void)  interrupt TMR3_VECTOR
          
           
    }
+	
+   if(NetSetTimer ==60000){  // 滤网定时器6.0s
+        NetSetTimer =0;
+		recMinute ++ ;
+		if(recMinute ==10)//1分钟时间=60秒
+		{
+	            recMinute =0;
+				NetRecMinute ++ ;    //存储分钟
+				if(NetRecMinute ==60){ //1小时=60分钟
+					NetRecMinute =0;
+					 NetRecHour ++; //存储小时
+					     if(NetRecHour ==200)//200个小时
+					     {
+							NetRecHour =0;
+							NetRecMoreHour ++;  //存储小时 的倍数
+
+							 if(NetRecMoreHour ==15){//3000 小时
+								NetChangeFlag=1; //更换虑网时间到
+							    }
+						 }
+				}
+	    }
+	}
 
 }
 /******************************************************************************

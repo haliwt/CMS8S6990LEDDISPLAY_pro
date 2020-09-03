@@ -23,8 +23,8 @@ extern struct _WindLevel_ wdl;
 
 enum WindSpeed{wind_stop,wind_sleep,wind_middle,wind_high,wind_auto};
 
-extern uint16_t timer0_20ms_num;
-extern uint16_t timer0_duty_num;
+
+
 
 
 
