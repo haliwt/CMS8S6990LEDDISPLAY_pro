@@ -83,10 +83,10 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
 #endif     
  
     #if 1
-    if(NetSetTimer ==60000){  // 滤网定时器6.0s
+    if(NetSetTimer ==5000){  // 滤网定时器6.0s
         NetSetTimer =0;
 		recMinute ++ ;
-		if(recMinute ==10)//1分钟时间=60秒
+		if(recMinute ==41)//1分钟时间=60秒 rec =10 2分30秒
 		{
 	            recMinute =0;
 				NetRecMinute ++ ;    //存储分钟
@@ -111,7 +111,7 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
 	
 	if(seconds == 5000)// 500ms
 	{ 
-   		    seconds=0;
+   		 seconds=0;
 		Telecom.TimerEvent ++;
 			 min60++;
 		if(min60==41){ //60s = 1 分钟

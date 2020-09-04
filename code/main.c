@@ -27,7 +27,8 @@ uint8_t flashflg=0;
 *******************************************************/
 int main(void)
 {		
-    uint8_t cont=0,cont1=0;
+    uint8_t cont=0,cont1=0,ONone=0;
+
     TMR1_Config();
 	TMR0_Config();
    // GPIO_Config();
@@ -40,13 +41,9 @@ int main(void)
 	while(1)
 	{	
 
-       //Flash_ToWriteData();
-	  // Flash_ToReadData();
-	//  TestFlash_ToWriteAndReadData();
-	//PM_SendData();
-	//LED_DispThreeRadin() ;//显示三个弧度
-    //LED_DispTwoRadin();
-	//   LED_DispOneRadin();
+
+	 
+	
 /***************************************************************************/
 	 #if 1
 
@@ -119,6 +116,7 @@ int main(void)
 	  if(Telecom.power_state == 1){
 
 	       if(Telecom.TimerOn ==0 &&  Telecom.keyEvent ==0){
+
 				if(Telecom.TimerEvent >= 5) //5s 后，自动跳转到定时功能
 	            {
 					Telecom.TimerEvent = 0;
@@ -128,6 +126,7 @@ int main(void)
 			   
 
 			if( Telecom.WindSelectLevel==wind_sleep){
+
 	                  LEDDisplay_SleepLamp();
 			
 			  }
@@ -142,7 +141,12 @@ int main(void)
 
 				  if(NetRecMinute % 5 == 0 && NetRecMinute !=0){
 				  	  
-				       Flash_ToWriteData();
+
+					   if(ONone ==0){
+					   	ONone ++;
+					   	FLASH_Init();
+					   	}
+					   Flash_ToWriteData();
 					   #if TESTCODES 
 					     flashflg =1;
 					     TestFlash_ToWriteAndReadData();   

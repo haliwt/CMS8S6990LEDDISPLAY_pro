@@ -122,9 +122,9 @@ uint8_t Flash_ToReadMinuteData(void)
 
    FLASH_UnLock();
    
-	 temp  = FLASH_Read(FLASH_DATA,0);
+	temp  = FLASH_Read(FLASH_DATA,0);
 	
-	 
+	#if 0 
 	   
 	 dispnum = temp;
 	 d1= dispnum % 10;
@@ -140,6 +140,7 @@ uint8_t Flash_ToReadMinuteData(void)
 	 delay_20us(20000);
 	 delay_20us(20000);
 	 delay_20us(20000);
+	#endif 
 
 	 return temp;
 
@@ -165,7 +166,7 @@ uint8_t Flash_ToReadHourData(void)
    
 	 temp  = FLASH_Read(FLASH_DATA,0x01);
 	
-	 
+	#if 0 
 	   
 	 dispnum = temp;
 	 d1= dispnum % 10;
@@ -181,6 +182,7 @@ uint8_t Flash_ToReadHourData(void)
 	 delay_20us(20000);
 	 delay_20us(20000);
 	 delay_20us(20000);
+	 #endif 
 
 	 return temp;
 
@@ -206,7 +208,7 @@ uint8_t Flash_ToReadMoreHourData(void)
    
 	 temp  = FLASH_Read(FLASH_DATA,0x02);
 	
-	 
+	 #if 0
 	   
 	 dispnum = temp;
 	 d1= dispnum % 10;
@@ -222,6 +224,7 @@ uint8_t Flash_ToReadMoreHourData(void)
 	 delay_20us(20000);
 	 delay_20us(20000);
 	 delay_20us(20000);
+	 #endif 
 
 	 return temp;
 
@@ -252,7 +255,7 @@ void Flash_ToReadData(void)
 	 temp2 = FLASH_Read(FLASH_DATA,0x02); 
 	 temp3 = FLASH_Read(FLASH_DATA,0x03); 
 	 temp4 = FLASH_Read(FLASH_DATA,0x04); 
-	 
+	#if 0
 	   
 	 dispnum = temp;
 	 d1= dispnum % 10;
@@ -268,6 +271,7 @@ void Flash_ToReadData(void)
 	 delay_20us(20000);
 	 delay_20us(20000);
 	 delay_20us(20000);
+	 #endif 
 
 }
 /*****************************************************************
@@ -452,6 +456,8 @@ void FLASH_Init(void)
 	}
    FLASH_Lock();
 }
+
+
 #if TESTCODES 
 
 /*****************************************************************
