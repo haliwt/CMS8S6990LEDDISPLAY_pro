@@ -252,7 +252,7 @@ void P0EI_IRQHandler(void)  interrupt P0EI_VECTOR
 void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR 
 {
 	static uint8_t powerkey=0;
-	uint8_t keyflg=0;
+	uint8_t keyflg=0 ,keycont=0;
 
 
     if(childLock ==1 && Telecom.criticalKey ==1 && (WINDTI_PRES ==1 && TIMER_PRES==1)){
@@ -308,7 +308,7 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
 		}
 
 		
-		if(Telecom.lockSonudKey==1){
+	if(Telecom.lockSonudKey==1){
 
            Telecom.lockSonudKey=0;
 			    BUZZER_Config();
@@ -327,14 +327,16 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
 		if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_7))
 		{
 			powerkey= powerkey ^ 0x01;
-	        if(powerkey==1){
+	        if(powerkey==1 && keyflg ==0){
 	          Telecom.power_state = 1;
-			  Telecom.PowerOnFrequency ++ ;
+			  keyflg =1;
+			  
 	        }
-		    else
+		    else if(keyflg==0)
 				{ 
 				 Telecom.power_state = 0;
-				 Telecom.PowerOnFrequency ++ ;
+				 Telecom.PowerOnFrequency =1 ;
+				 keyflg =1;
 		    }
 		
 		  
@@ -368,12 +370,17 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
 
 				if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_4)) //置换虑网按键
 				{
-					  if(keyflg ==0){
-					   keyflg =1;
-			         	Telecom.net_state =1;
-					  	}
+					     GPIO_ClearIntFlag(GPIO1, GPIO_PIN_4);
+                        
+                         
+                            keyflg =1;
+                            keycont =0;
+                            NetKeyNum ++;
+			         	    Telecom.net_state =1;
+                         
+					  	
 				
-					GPIO_ClearIntFlag(GPIO1, GPIO_PIN_4);
+					
 				}
 
 		}

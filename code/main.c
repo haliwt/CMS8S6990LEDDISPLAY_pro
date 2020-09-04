@@ -13,10 +13,6 @@
 
 uint32_t Systemclock = 24000000;
 
-
-
-struct _WindLevel_ wdl;
-
 Telec Telecom;
 
 uint8_t windLevelHighest ;
@@ -108,9 +104,9 @@ int main(void)
 					else{
 						LEDDisplay_RedColorRing();
 					}
-					if(Telecom.PowerOnFrequency % 2==0 && Telecom.PowerOnFrequency !=0){
+					if(Telecom.PowerOnFrequency ==1){
 
-						
+						Telecom.PowerOnFrequency=0;
                         Flash_ToWriteData();
 
 				  }
@@ -129,7 +125,7 @@ int main(void)
 						Telecom.TimerOn =1;
 					}
 			   }
-			
+			   
 
 			  
 			  if( Telecom.WindSelectLevel==wind_sleep){

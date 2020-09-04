@@ -31,7 +31,10 @@ uint8_t  Flash_To3000Hour_Vertict(void);
 void Flash_ToRepeat_WriteData(uint8_t dat3,uint8_t dat4);
 uint8_t Flash_ToReadDiffData(void);
 
+void FLASH_Init(void); //初始化清零
+
 void TestFlash_ToWriteAndReadData(void);
+
 
 
 

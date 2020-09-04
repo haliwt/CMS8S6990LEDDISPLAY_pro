@@ -414,7 +414,37 @@ uint8_t Flash_ToReadDiffData(void)
 
 
 }
-
+/*****************************************************************
+	*
+	*Function Name :void FLASH_Init(void)
+	*Function: intial zero
+	*Input Ref:NO
+	*Return Ref: NO 
+	*
+******************************************************************/
+void FLASH_Init(void)
+{
+	 uint16_t addr=0;
+	 
+	 FLASH_UnLock();
+   
+   FLASH_Erase(FLASH_DATA,addr);
+   for(addr = 0 ;addr< 0x10 ;addr++)
+   {		   
+   
+	   if(addr ==0)		
+		 FLASH_Write(FLASH_DATA,addr, 0x00);  
+	   else if(addr == 0x01) 
+		 FLASH_Write(FLASH_DATA,addr, 0x00);
+	   else if(addr == 0x02) 
+		 FLASH_Write(FLASH_DATA,addr, 0x00);
+	   else if(addr == 0x03)
+	     FLASH_Write(FLASH_DATA,addr, 0x00);
+	   else if(addr == 0x04)
+	     FLASH_Write(FLASH_DATA,addr, 0x00);
+	}
+   FLASH_Lock();
+}
 #if TESTCODES 
 
 /*****************************************************************

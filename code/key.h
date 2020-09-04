@@ -79,10 +79,10 @@ typedef struct _TELEC_
     uint8_t TimeMinute;
     uint8_t WindLevelData ;
     uint8_t TimerEvent ;                  //定时器通知信号
-    uint8_t PowerOnFrequency;          //开关机的次数
+   
     uint8_t WindSelectLevel: 4;
  
-    
+     uint8_t PowerOnFrequency:1 ;          //开关机的次数
 	uint8_t power_state :1;               //开启电源
     uint8_t TimerOn:1;
 	uint8_t keyEvent:1;
@@ -97,7 +97,7 @@ typedef struct _TELEC_
 
 extern Telec Telecom;
 
-
+extern uint8_t NetKeyNum;
 /******************************************************************************
  ** \brief	 GPIO_Config
  ** \param [in] 

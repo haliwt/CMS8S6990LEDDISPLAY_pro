@@ -5,7 +5,7 @@ key_types   key;
 
 static uint8_t Lockflag =0;
 
-
+uint8_t NetKeyNum ;
 
 /******************************************************************************
  **
@@ -186,7 +186,7 @@ void GPIO_Config(void)
 	  if(Telecom.power_state ==1){
 
 		  if(Telecom.criticalKey==0){
-			if(Telecom.timer_state == 1){
+			if(Telecom.timer_state == 1&& keyevent ==0){
 	                 Telecom.timer_state=0;
 					 Telecom.TimerOn =0;
 			         Telecom.keyEvent =1;
@@ -254,15 +254,19 @@ void GPIO_Config(void)
 					}
 			}
 			 
-		   if(Telecom.net_state ==1){
-			
-			 	 Telecom.net_state =0;
-			   
-			 
-			
+		   if(Telecom.net_state ==1 && keyevent ==0){
+			    keyevent=1;
+			   Telecom.net_state =0;
+				if(NetKeyNum >=3){
+                   NetKeyNum =0;
+                     BUZZER_Config();
+                  delay_20us(5000)  ; 
+                    BUZ_DisableBuzzer();
+			    
+			    FLASH_Init();
+               }
+
 		   	}
-
-
 		  	}
 	  }	
 
