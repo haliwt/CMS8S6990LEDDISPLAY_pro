@@ -16,7 +16,7 @@ uint32_t Systemclock = 24000000;
 Telec Telecom;
 
 uint8_t windLevelHighest ;
-
+uint8_t flashflg=0;
 
 /*******************************************************
 	*
@@ -118,37 +118,54 @@ int main(void)
         
 	  if(Telecom.power_state == 1){
 
-	           
-	           
-			  if(Telecom.TimerOn ==0 &&  Telecom.keyEvent ==0){
-					if(Telecom.TimerEvent >= 5) //5s 后，自动跳转到定时功能
-		            {
-						Telecom.TimerEvent = 0;
-						Telecom.TimerOn =1;
-					}
-			   }
+	       if(Telecom.TimerOn ==0 &&  Telecom.keyEvent ==0){
+				if(Telecom.TimerEvent >= 5) //5s 后，自动跳转到定时功能
+	            {
+					Telecom.TimerEvent = 0;
+					Telecom.TimerOn =1;
+				}
+			}
 			   
 
-			  
-			  if( Telecom.WindSelectLevel==wind_sleep){
+			if( Telecom.WindSelectLevel==wind_sleep){
 	                  LEDDisplay_SleepLamp();
 			
 			  }
 			  else {
 			   
-                     TimerOnDisplay();
+                    TimerOnDisplay();
 
 				  if(Flash_ToReadDiffData()==0) LEDDisplay_GreenColorRing();
 				  else if(Flash_ToReadDiffData()==1)LED_DispThreeRadin();
                   else if(Flash_ToReadDiffData()==2)LED_DispTwoRadin();
 				  else if(Flash_To750Hour_Vertict()==1)LED_DispOneRadin();
 
-				  	 if(windLevelHighest ==1){ //检查到PM值大于300 ，显示 “H”
-	 					LED_DispHlogo();
-	 				  }
-			   	     else 
-                       LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
+				  if(NetRecMinute % 5 == 0 && NetRecMinute !=0){
+				  	  
+				       Flash_ToWriteData();
+					   #if TESTCODES 
+					     flashflg =1;
+					     TestFlash_ToWriteAndReadData();   
+					   #endif 
+				  	}
 
+                    if(flashflg ==0){
+						if(windLevelHighest ==1){ //检查到PM值大于300 ，显示 “H”
+		 					LED_DispHlogo();
+		 				  }
+				   	     else 
+	                       LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
+                    }
+					else {
+ 
+							#if TESTCODES 
+					   
+					          TestFlash_ToWriteAndReadData();   
+					   #endif 
+					}
+
+
+					
 				   if( Telecom.WindSelectLevel==wind_auto){
 					    cont ++;
 					   if(cont >20)

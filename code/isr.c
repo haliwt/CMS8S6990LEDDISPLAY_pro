@@ -58,7 +58,8 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
     static uint8_t min60=0;
    #if 1
     timer0_ten_num++;
-   
+    NetSetTimer++;
+	 seconds ++;
     if(timer0_ten_num==10){
               timer0_ten_num=0;
 			  timer0_num ++ ;
@@ -80,25 +81,7 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
           
    }
 #endif     
-  #if 1
-	
-    seconds ++;
-	if(seconds == 5000)// 500ms
-	{ 
-   		    seconds=0;
-		Telecom.TimerEvent ++;
-			 min60++;
-		if(min60==41){ //60s = 1 分钟
-			min60=0;
-		    if(Telecom.TimerOn ==1)
-		    {
-			 //if(Telecom.TimeBaseUint == 0) Telecom.TimeBaseUint=1;
-			  Telecom.TimeBaseUint --;
-			} 
-
-		}
-	}
-	#endif 
+ 
     #if 1
     if(NetSetTimer ==60000){  // 滤网定时器6.0s
         NetSetTimer =0;
@@ -123,6 +106,25 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
 	    }
 	}
    #endif 
+
+    #if 1
+	
+	if(seconds == 5000)// 500ms
+	{ 
+   		    seconds=0;
+		Telecom.TimerEvent ++;
+			 min60++;
+		if(min60==41){ //60s = 1 分钟
+			min60=0;
+		    if(Telecom.TimerOn ==1)
+		    {
+			 //if(Telecom.TimeBaseUint == 0) Telecom.TimeBaseUint=1;
+			  Telecom.TimeBaseUint --;
+			} 
+
+		}
+	}
+	#endif 
 
 }
 /******************************************************************************

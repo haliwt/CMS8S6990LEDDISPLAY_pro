@@ -11,20 +11,24 @@
 
 void Flash_ToWriteData(void)
 {
-    uint8_t temparr[5];
+   uint8_t temparr[5],onlyone=0;
    uint16_t addr;
-   //保存以前的数据
-   temparr[0]=Flash_ToReadMinuteData();
-   if(NetRecMinute > temparr[0]) temparr[0]=NetRecMinute;
-   
-   temparr[1]=Flash_ToReadHourData();
-   if(NetRecHour > temparr[1])temparr[1]=NetRecHour;
-   
-   temparr[2]=Flash_ToReadMoreHourData();
-   if(NetRecMoreHour > temparr[2]) temparr[2]= NetRecMoreHour ;
-   
-   temparr[3] = Flash_To750Hour_Vertict();
-   temparr[4] = Flash_To1500Hour_Vertict();
+
+   if(onlyone ==0){
+   	   onlyone ++ ;
+	   //保存以前的数据
+	   temparr[0]=Flash_ToReadMinuteData();
+	   if(NetRecMinute > temparr[0]) temparr[0]=NetRecMinute;
+	   
+	   temparr[1]=Flash_ToReadHourData();
+	   if(NetRecHour > temparr[1])temparr[1]=NetRecHour;
+	   
+	   temparr[2]=Flash_ToReadMoreHourData();
+	   if(NetRecMoreHour > temparr[2]) temparr[2]= NetRecMoreHour ;
+	   
+	   temparr[3] = Flash_To750Hour_Vertict();
+	   temparr[4] = Flash_To1500Hour_Vertict();
+   }
 
    addr =0;
    
@@ -60,21 +64,24 @@ void Flash_ToWriteData(void)
 void Flash_ToRepeat_WriteData(uint8_t dat1,uint8_t dat2)
 {
 
-	  uint8_t temparr[3];
+	  uint8_t temparr[3],onlyone=0;
 	   uint16_t addr;
 	
 	   addr =0;
 
-	   temparr[0]=Flash_ToReadMinuteData();
-	   if(NetRecMinute > temparr[0]) temparr[0]=NetRecMinute;
-	   
-	   temparr[1]=Flash_ToReadHourData();
-	   if(NetRecHour > temparr[1])temparr[1]=NetRecHour;
-	   
-	   temparr[2]=Flash_ToReadMoreHourData();
-	   if(NetRecMoreHour > temparr[2]) temparr[2]= NetRecMoreHour ;
+	   if(onlyone ==0){
+	   	   onlyone ++ ;
+
+		   temparr[0]=Flash_ToReadMinuteData();
+		   if(NetRecMinute > temparr[0]) temparr[0]=NetRecMinute;
+		   
+		   temparr[1]=Flash_ToReadHourData();
+		   if(NetRecHour > temparr[1])temparr[1]=NetRecHour;
+		   
+		   temparr[2]=Flash_ToReadMoreHourData();
+		   if(NetRecMoreHour > temparr[2]) temparr[2]= NetRecMoreHour ;
    
-	   
+	   	}
 		FLASH_UnLock();
 	   
 	   FLASH_Erase(FLASH_DATA,addr);
@@ -463,7 +470,7 @@ void TestFlash_ToWriteAndReadData(void)
    uint8_t dispnum=0,d1=0,d2=0,d3=0;
    
     addr =0;
-   
+   #if 0
     FLASH_UnLock();
    
    FLASH_Erase(FLASH_DATA,addr);
@@ -471,10 +478,10 @@ void TestFlash_ToWriteAndReadData(void)
    {		   
    
 	   if(addr ==0)		
-		 //FLASH_Write(FLASH_DATA,addr, NetRecMinute);  
+		
 		 FLASH_Write(FLASH_DATA,addr, 0x01);  
 	   else if(addr == 0x01) 
-		 // FLASH_Write(FLASH_DATA,addr, NetRecHour);
+		
 		  FLASH_Write(FLASH_DATA,addr, 0x02);  
 	   else if(addr == 0x02) 
 		 // FLASH_Write(FLASH_DATA,addr, NetRecMoreHour);
@@ -486,7 +493,7 @@ void TestFlash_ToWriteAndReadData(void)
 	     // FLASH_Write(FLASH_DATA,addr, NetRec1500Hour);
 	      FLASH_Write(FLASH_DATA,addr, 0x09);  
 
-
+   #endif 
    
 
 
@@ -582,6 +589,6 @@ void TestFlash_ToWriteAndReadData(void)
    	}
 
 
-}
+
 
 #endif 

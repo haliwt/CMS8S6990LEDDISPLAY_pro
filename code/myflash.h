@@ -3,7 +3,7 @@
 #include "cms8s6990.h"
 #include "led.h"
 
-#define TESTCODES 0
+#define TESTCODES   1
 
 
 extern    uint8_t  NetRecMinute;      //记录虑网运行分钟时间
