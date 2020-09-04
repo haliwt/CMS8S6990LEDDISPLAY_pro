@@ -190,6 +190,7 @@ void GPIO_Config(void)
 	                 Telecom.timer_state=0;
 					 Telecom.TimerOn =0;
 			         Telecom.keyEvent =1;
+                      NetKeyNum =0;
 					  timer0_ten_num=0; //清空PM 检测值
 			        
 					Telecom.TimeBaseUint ++ ;
@@ -226,7 +227,7 @@ void GPIO_Config(void)
 				}
 				
 			if(Telecom.wind_state ==1 && keyevent ==0){
-			        
+			         NetKeyNum =0;
 					 keyevent =1;
 					Telecom.wind_state =0;
 			          timer0_ten_num=0; //清空PM检查值
@@ -254,10 +255,9 @@ void GPIO_Config(void)
 					}
 			}
 			 
-		   if(Telecom.net_state ==1 && keyevent ==0){
-			    keyevent=1;
-			   Telecom.net_state =0;
-				if(NetKeyNum >=3){
+		   if(Telecom.net_state ==1 ){
+			      
+				if(NetKeyNum ==2){
                    NetKeyNum =0;
                      BUZZER_Config();
                   delay_20us(5000)  ; 

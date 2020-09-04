@@ -309,7 +309,7 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
 
 		
 	if(Telecom.lockSonudKey==1){
-
+           NetKeyNum =0;
            Telecom.lockSonudKey=0;
 			    BUZZER_Config();
 				delay_20us(10000)  ; 
@@ -326,7 +326,8 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
 	if(childLock == 0){
 		if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_7))
 		{
-			powerkey= powerkey ^ 0x01;
+			 NetKeyNum =0;
+            powerkey= powerkey ^ 0x01;
 	        if(powerkey==1 && keyflg ==0){
 	          Telecom.power_state = 1;
 			  keyflg =1;

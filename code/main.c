@@ -102,14 +102,16 @@ int main(void)
 						}
 					}
 					else{
+						
 						LEDDisplay_RedColorRing();
-					}
-					if(Telecom.PowerOnFrequency ==1){
+						if(Telecom.PowerOnFrequency ==1){
 
 						Telecom.PowerOnFrequency=0;
                         Flash_ToWriteData();
 
-				  }
+				      }
+					}
+					
 				 
               }
 		}
