@@ -11,7 +11,7 @@
 
 void Flash_ToWriteData(void)
 {
-   uint8_t temparr[5],onlyone=0;
+   uint8_t temparr[3],onlyone=0;
    uint16_t addr;
 
    if(onlyone ==0){
@@ -32,6 +32,13 @@ void Flash_ToWriteData(void)
 	  Telecom.ISR_NetRecMinuteAdj=0;
 	  NetRecMinute =0 ;
        temparr[0] =NetRecMinute ;
+
+	  }
+	  if(Telecom.ISR_NetRecHourAdj ==1){
+		
+	  Telecom.ISR_NetRecHourAdj=0;
+		   NetRecHour =0 ;
+			temparr[1] =NetRecHour ;
 
 	  }
 
@@ -474,7 +481,7 @@ void TestFlash_ToWriteAndReadData(void)
 {
 		
    uint16_t addr ;
-   uint8_t temp,temp1,temp2,temp3,temp4;
+   uint8_t temp,temp1,temp2;
    uint8_t dispnum=0,d1=0,d2=0,d3=0;
    
     addr =0;

@@ -100,6 +100,7 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
 					     {
 							NetRecHour =0;
 							NetRecMoreHour ++;  //存储小时 的倍数
+							Telecom.ISR_NetRecHourAdj =1;
 
 							 if(NetRecMoreHour ==15){//3000 小时
 								NetChangeFlag=1; //更换虑网时间到

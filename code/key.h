@@ -92,6 +92,7 @@ typedef struct _TELEC_
 	uint8_t criticalKey:1;           //组合按琐住标志瞬间''
 	uint8_t lockSonudKey :1;
 	uint8_t ISR_NetRecMinuteAdj:1;
+	uint8_t ISR_NetRecHourAdj:1;
 	
 	
 } Telec;
