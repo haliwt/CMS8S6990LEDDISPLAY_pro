@@ -18,8 +18,6 @@ Telec Telecom;
 uint8_t windLevelHighest ;
 uint8_t flashflg=0;
 
-
-
 /*******************************************************
 	*
 	*Function Name: int main(void)
@@ -42,10 +40,11 @@ int main(void)
   
 	while(1)
 	{	
-           FLASH_Init();
-			 Flash_ToWriteData();
-			 TestFlash_ToWriteAndReadData();   
-	 
+//	FLASH_Init();
+
+	    Flash_ToWriteData();
+					 
+		TestFlash_ToWriteAndReadData();   
 	
 /***************************************************************************/
 	 #if 0
@@ -87,6 +86,8 @@ int main(void)
 			BuzzerSound =0;
 			BUZ_DisableBuzzer();
 			Telecom.criticalKey=0;
+			KEY_Handing();
+
 			if(Telecom.power_state == 0){
 
 					cont++;
@@ -111,13 +112,11 @@ int main(void)
 					}
 					
 				 
-                }
-			    else  KEY_Handing();
+              }
 		}
         
 	  if(Telecom.power_state == 1){
-	  		
-			#if 0
+
 	       if(Telecom.TimerOn ==0 &&  Telecom.keyEvent ==0){
 
 				if(Telecom.TimerEvent >= 5) //5s 后，自动跳转到定时功能
@@ -126,7 +125,7 @@ int main(void)
 					Telecom.TimerOn =1;
 				}
 			}
-		    #endif 
+			   
 
 			if( Telecom.WindSelectLevel==wind_sleep){
 
@@ -135,20 +134,24 @@ int main(void)
 			  }
 			  else {
 			   
-                  //  TimerOnDisplay();
+                    TimerOnDisplay();
 
 				  if(Flash_ToReadDiffData()==0) LEDDisplay_GreenColorRing();
 				  else if(Flash_ToReadDiffData()==1)LED_DispThreeRadin();
                   else if(Flash_ToReadDiffData()==2)LED_DispTwoRadin();
-				  else if(Flash_ADJ750AND1500_Vertict()==0x01)LED_DispOneRadin();
-                // FLASH_Init();
+				  else if(Flash_To750Hour_Vertict()==1)LED_DispOneRadin();
 
-				// if(NetRecMinute % 2 == 0  )
-                 {
+				  if(NetRecMinute % 5 == 0 && NetRecMinute !=0){
+				  	  
+
+					   if(ONone ==0){
+					   	ONone ++;
+					   	FLASH_Init();
+					   	}
 					   Flash_ToWriteData();
 					   #if TESTCODES 
 					     flashflg =1;
-					    // TestFlash_ToWriteAndReadData();   
+					     TestFlash_ToWriteAndReadData();   
 					   #endif 
 				  	}
 
@@ -162,8 +165,8 @@ int main(void)
 					else {
  
 							#if TESTCODES 
-					         
-					          TestFlash_ToWriteAndReadData();   //显示
+					   
+					          TestFlash_ToWriteAndReadData();   
 					   #endif 
 					}
 

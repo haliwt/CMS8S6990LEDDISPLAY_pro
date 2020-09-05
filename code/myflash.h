@@ -14,7 +14,6 @@ extern     uint8_t  NetChangeFlag ;
 extern   uint8_t  NetRec750Hour ;
 extern   uint8_t  NetRec1500Hour ;
 
-extern uint8_t ISR_NetHourAdj;	
 
 uint8_t Flash_ToReadMinuteData(void);
 
@@ -26,13 +25,10 @@ void Flash_ToWriteData(void);
 
 void Flash_ToReadData(void);
 
-void Flash_T01500Write(uint8_t dat1);
-uint8_t Flash_ADJ750AND1500_Vertict(void);
-
-uint8_t Flash_ToRead1500And750Data(void);
-
+uint8_t Flash_To750Hour_Vertict(void);
+uint8_t  Flash_To1500Hour_Vertict(void);
 uint8_t  Flash_To3000Hour_Vertict(void);
-void Flash_ToRepeat_WriteData(void);
+void Flash_ToRepeat_WriteData(uint8_t dat3,uint8_t dat4);
 uint8_t Flash_ToReadDiffData(void);
 
 void FLASH_Init(void); //初始化清零
