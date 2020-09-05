@@ -106,16 +106,16 @@ void GPIO_Interrupt_Init(void)
     /*
 	(2)设置中断方式
 	*/
-	GPIO_SET_INT_MODE(P17EICFG, GPIO_INT_FALLING);	//设置为下降沿中断模式
+	GPIO_SET_INT_MODE(P17EICFG,  GPIO_INT_RISING);	//设置为下降沿中断模式
 	GPIO_EnableInt(GPIO1, GPIO_PIN_7_MSK);			//开启P17中断
 
-	GPIO_SET_INT_MODE(P16EICFG, GPIO_INT_FALLING);	//设置为下降沿中断模式
+	GPIO_SET_INT_MODE(P16EICFG,  GPIO_INT_RISING);	//设置为下降沿中断模式
 	GPIO_EnableInt(GPIO1, GPIO_PIN_6_MSK);			//开启P16中断
 
-	GPIO_SET_INT_MODE(P15EICFG, GPIO_INT_FALLING);	//设置为下降沿中断模式
+	GPIO_SET_INT_MODE(P15EICFG,  GPIO_INT_RISING);	//设置为下降沿中断模式
 	GPIO_EnableInt(GPIO1, GPIO_PIN_5_MSK);			//开启P15中断
 
-	GPIO_SET_INT_MODE(P14EICFG, GPIO_INT_FALLING);	//设置为下降沿中断模式
+	GPIO_SET_INT_MODE(P14EICFG,  GPIO_INT_RISING);	//设置为下降沿中断模式
 	GPIO_EnableInt(GPIO1, GPIO_PIN_4_MSK);			//开启P14中断
 	/*
 	(3)设置中断优先级
@@ -188,10 +188,13 @@ void GPIO_Config(void)
 		  if(Telecom.criticalKey==0){
 			if(Telecom.timer_state == 1&& keyevent ==0){
 	                 Telecom.timer_state=0;
+					 Telecom.wind_state =0;
+			         Telecom.net_state =0;
 					 Telecom.TimerOn =0;
 			         Telecom.keyEvent =1;
                       NetKeyNum =0;
 					  timer0_ten_num=0; //清空PM 检测值
+			
 			        
 					Telecom.TimeBaseUint ++ ;
 					if(Telecom.TimeHour == 8){
@@ -230,7 +233,10 @@ void GPIO_Config(void)
 			         NetKeyNum =0;
 					 keyevent =1;
 					Telecom.wind_state =0;
+					 Telecom.timer_state=0;
+					   Telecom.net_state =0;
 			          timer0_ten_num=0; //清空PM检查值
+			    delay_20us(100);
 			        
 					if(Telecom.WindLevelData ==5)Telecom.WindLevelData =0;
 					Telecom.WindLevelData ++ ;
@@ -256,18 +262,24 @@ void GPIO_Config(void)
 			}
 			 
 		   if(Telecom.net_state ==1 ){
-			      
+		   	    Telecom.net_state =0;
 				if(NetKeyNum ==2){
                    NetKeyNum =0;
                      BUZZER_Config();
-                  delay_20us(5000)  ; 
+                     delay_20us(5000)  ; 
                     BUZ_DisableBuzzer();
-			    
-			    FLASH_Init();
+			     FLASH_Init();
                }
-
-		   	}
-		  	}
+            if(NetKeyNum !=2){
+                #if TESTCODES 
+                        
+                Flash_DisplayNumber();
+                   
+                 #endif 
+            }
+                
+            }
+		  }
 	  }	
 
 }

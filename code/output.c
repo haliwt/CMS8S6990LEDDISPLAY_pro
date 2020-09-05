@@ -24,17 +24,17 @@ if(timer0_num >= 1000 && timer0_num <=1060 ){
 			 disp =rec_num ;
 			 
 			 vairI=1;
-			 disdat3 = (rec_num /100) %10;	 //百位
-			 disdat2 = (rec_num /10) %10;  //十位
-			 disdat1 = rec_num	%10;		//个位
+			// disdat3 = (rec_num /100) %10;	 //百位
+			// disdat2 = (rec_num /10) %10;  //十位
+			// disdat1 = rec_num	%10;		//个位
 			 rec2_num=0;
 		 }
 		 else {
 			 disp = rec2_num;
 			 vairI=0;
-			 disdat3 = (rec2_num /100) %10;   //百位
-			 disdat2 = (rec2_num /10) %10;	//十位
-			 disdat1 = rec2_num  %10;		 //个位
+			// disdat3 = (rec2_num /100) %10;   //百位
+			// disdat2 = (rec2_num /10) %10;	//十位
+			// disdat1 = rec2_num  %10;		 //个位
 			 rec_num =0;
 		 }
 		 if(disp >2){
@@ -113,7 +113,7 @@ if(timer0_num >= 1000 && timer0_num <=1060 ){
 	  break;
 
 	  case wind_highest :
-	     TMR2_Config(wds);
+	     TMR2_Config(0x03);
 		 windLevelHighest =1;
 
 	  break;

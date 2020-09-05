@@ -90,9 +90,9 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
 		{
 	            recMinute =0;
 				NetRecMinute ++ ;    //存储分钟
-			//	if(NetRecMinute ==60){ //1小时=60分钟
-			    if(NetRecMinute ==3)//test
-			    {
+				if(NetRecMinute ==60){ //1小时=60分钟
+			   // if(NetRecMinute ==3){//test
+			   
 					NetRecMinute =0;
 					 NetRecHour ++; //存储小时
 					 Telecom.ISR_NetRecMinuteAdj=1;
@@ -332,8 +332,12 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
 	if(childLock == 0){
 		if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_7))
 		{
+
+           
+
 			 NetKeyNum =0;
             powerkey= powerkey ^ 0x01;
+			
 	        if(powerkey==1 && keyflg ==0){
 	          Telecom.power_state = 1;
 			  keyflg =1;
@@ -346,48 +350,53 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
 				 keyflg =1;
 		    }
 		
-		  
-			GPIO_ClearIntFlag(GPIO1, GPIO_PIN_7);
+		    GPIO_ClearIntFlag(GPIO1, GPIO_PIN_7);
+			 GPIO_ClearIntFlag(GPIO1, GPIO_PIN_6);
+			  GPIO_ClearIntFlag(GPIO1, GPIO_PIN_5);
+			   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_4);
+			
 		}
 		
 		if(Telecom.power_state ==1){
 				if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_6)) //风速按键
 				{
+
+					
+				 
+				
 					 if(keyflg ==0){
 					   keyflg =1;
 			          Telecom.wind_state = 1;
 					  
 					 }
-				   
-				    GPIO_ClearIntFlag(GPIO1, GPIO_PIN_6);
+				      GPIO_ClearIntFlag(GPIO1, GPIO_PIN_6);
 				  
 				}
 				
 				if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_5)) //定时按键
 				{
 
+						
+					
 					 if(keyflg ==0){
-					   keyflg =1;
-					Telecom.timer_state = 1;
+					      keyflg =1;
+					     Telecom.timer_state = 1;
 					 	}
 				
-				   
-					GPIO_ClearIntFlag(GPIO1, GPIO_PIN_5);
+				GPIO_ClearIntFlag(GPIO1, GPIO_PIN_5);   
+					
 				}
 
 				if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_4)) //置换虑网按键
 				{
-					     GPIO_ClearIntFlag(GPIO1, GPIO_PIN_4);
-                        
+					     
+                       
                          
                             keyflg =1;
                             keycont =0;
                             NetKeyNum ++;
 			         	    Telecom.net_state =1;
-                         
-					  	
-				
-					
+                         GPIO_ClearIntFlag(GPIO1, GPIO_PIN_4);
 				}
 
 		}

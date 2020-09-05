@@ -40,14 +40,15 @@ int main(void)
   
 	while(1)
 	{	
-//	FLASH_Init();
+	//FLASH_Init();
 
-	    Flash_ToWriteData();
+	 //   Flash_ToWriteData();
 					 
-		TestFlash_ToWriteAndReadData();   
+	//	TestFlash_ToWriteAndReadData();   
+	//LED_DispHlogo();
 	
 /***************************************************************************/
-	 #if 0
+	 #if 1
 
      if(childLock  ==1){
             if(BuzzerSound==1){
@@ -86,22 +87,23 @@ int main(void)
 			BuzzerSound =0;
 			BUZ_DisableBuzzer();
 			Telecom.criticalKey=0;
-			KEY_Handing();
-
-			if(Telecom.power_state == 0){
+			
+		if(Telecom.power_state == 0){
+				   Telecom.timer_state=0;
+				   Telecom.wind_state =0;
+			       Telecom.net_state =0;
 
 					cont++;
 					if(cont >=50){
 
 						LEDDisplay_TurnOff();
 						cont1++;
-						if(cont1>=100){
+						if(cont1>=50){
 							cont1=0;
 							cont=0;
 						}
 					}
 					else{
-						
 						LEDDisplay_RedColorRing();
 						if(Telecom.PowerOnFrequency ==1){
 
@@ -113,6 +115,7 @@ int main(void)
 					
 				 
               }
+			  else KEY_Handing();
 		}
         
 	  if(Telecom.power_state == 1){
@@ -141,40 +144,26 @@ int main(void)
                   else if(Flash_ToReadDiffData()==2)LED_DispTwoRadin();
 				  else if(Flash_To750Hour_Vertict()==1)LED_DispOneRadin();
 
-				  if(NetRecMinute % 5 == 0 && NetRecMinute !=0){
-				  	  
-
-					   if(ONone ==0){
-					   	ONone ++;
-					   	FLASH_Init();
-					   	}
-					   Flash_ToWriteData();
-					   #if TESTCODES 
-					     flashflg =1;
-					     TestFlash_ToWriteAndReadData();   
-					   #endif 
-				  	}
-
-                    if(flashflg ==0){
-						if(windLevelHighest ==1){ //检查到PM值大于300 ，显示 “H”
-		 					LED_DispHlogo();
-		 				  }
-				   	     else 
-	                       LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
-                    }
-					else {
- 
-							#if TESTCODES 
-					   
-					          TestFlash_ToWriteAndReadData();   
-					   #endif 
+				    if(NetRecMinute %  5  == 0 )
+				  	{
+				  	  Flash_ToWriteData();
+					 
 					}
+
+                   if(windLevelHighest ==1){ //检查到PM值大于300 ，显示 “H”
+                   
+		 					LED_DispHlogo();
+		 			}
+				   	else 
+	                      LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
+                   
+					
 
 
 					
 				   if( Telecom.WindSelectLevel==wind_auto){
 					    cont ++;
-					   if(cont >20)
+					   if(cont >200)
 					   	{
 							cont =0;
 						   PM_SendData();
@@ -187,10 +176,10 @@ int main(void)
 	  	}
 	  	     
 	 	#endif 
-		}	
-}
+	}	
 
-    
+
+}   
 
 
 

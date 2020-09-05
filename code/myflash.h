@@ -36,7 +36,7 @@ void FLASH_Init(void); //初始化清零
 void TestFlash_ToWriteAndReadData(void);
 
 
-
+void Flash_DisplayNumber(void);
 
 
 #endif 

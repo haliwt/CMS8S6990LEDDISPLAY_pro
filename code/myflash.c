@@ -11,23 +11,26 @@
 
 void Flash_ToWriteData(void)
 {
-   uint8_t temparr[3],onlyone=0;
+   uint8_t temparr[3];
    uint16_t addr;
 
-   if(onlyone ==0){
-   	   onlyone ++ ;
-	   //保存以前的数据
+ 
 	   temparr[0]=Flash_ToReadMinuteData();
 	   if(NetRecMinute > temparr[0]) temparr[0]=NetRecMinute;
+	   else NetRecMinute= temparr[0];
 	   
 	   temparr[1]=Flash_ToReadHourData();
 	   if(NetRecHour > temparr[1])temparr[1]=NetRecHour;
+	   else NetRecHour =temparr[1];
 	   
 	   temparr[2]=Flash_ToReadMoreHourData();
-	   if(NetRecMoreHour > temparr[2]) temparr[2]= NetRecMoreHour ;
-	   
+	   if(NetRecMoreHour >= temparr[2]) temparr[2]= NetRecMoreHour ;
+	   else NetRecMoreHour  =temparr[2];
 	  
-   }
+   
+
+   
+  #if 1
       if(Telecom.ISR_NetRecMinuteAdj ==1){
 	  Telecom.ISR_NetRecMinuteAdj=0;
 	  NetRecMinute =0 ;
@@ -41,7 +44,7 @@ void Flash_ToWriteData(void)
 			temparr[1] =NetRecHour ;
 
 	  }
-
+#endif 
    addr =0;
    
     FLASH_UnLock();
@@ -465,6 +468,62 @@ void FLASH_Init(void)
 	}
    FLASH_Lock();
 }
+/*****************************************************************
+	*
+	*Function Name :void Flash_DisplayNumber(void)
+	*Function:read flash data
+	*Input Ref:NO
+	*Return Ref:NO
+	*
+******************************************************************/
+void Flash_DisplayNumber(void)
+{
+		
+ 
+   uint8_t temp,temp1,temp2;
+   uint8_t dispnum=0,d1=0,d2=0,d3=0;
+   
+  
+    FLASH_UnLock();
+   
+	 temp = FLASH_Read(FLASH_DATA,0); 	 
+	   
+	 dispnum = temp;
+	 d1= dispnum % 10;
+	 d2= (dispnum/10) %10;
+	 d3= (dispnum/100) %10;
+	 
+	 LEDDisplay_TimerTim(d3,d2,d1);
+	 delay_20us(20000);
+	 delay_20us(20000);
+	
+
+	 temp1 = FLASH_Read(FLASH_DATA,0x01); 	 
+	   
+	 dispnum = temp1;
+	 d1= dispnum % 10;
+	 d2= (dispnum/10) %10;
+	 d3= (dispnum/100) %10;
+	 
+	 LEDDisplay_TimerTim(d3,d2,d1);
+	 delay_20us(20000);
+	 delay_20us(20000);
+	
+
+	  temp2 = FLASH_Read(FLASH_DATA,0x02); 	 
+	   
+	 dispnum = temp2;
+	 d1= dispnum % 10;
+	 d2= (dispnum/10) %10;
+	 d3= (dispnum/100) %10;
+	 
+	 LEDDisplay_TimerTim(d3,d2,d1);
+	 delay_20us(20000);
+	 delay_20us(20000);
+	
+
+}
+
 
 
 #if TESTCODES 

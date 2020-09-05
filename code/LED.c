@@ -189,7 +189,8 @@ void LEDDisplay_TurnOff(void)
 	
 	
 		 STB_TM1629D =0; 
-		 Tm1629DSentData(CloseDisTM1629D|Set12_16TM1629D); //关显示，显示，设置脉冲宽带 12/16
+		// Tm1629DSentData(CloseDisTM1629D|Set12_16TM1629D); //关显示，显示，设置脉冲宽带 12/16
+		  Tm1629DSentData(OpenDisTM1629D|Set14_16TM1629D); //开显示，显示，设置脉冲宽带 14/16
 		 STB_TM1629D =1;	  
 
 
