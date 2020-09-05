@@ -112,7 +112,7 @@ if(timer0_num >= 1000 && timer0_num <=1060 ){
 			 windLevelHighest =0;
 	  break;
 
-	  case wind_highest :
+	  case wind_highest :   //7%
 	     TMR2_Config(0x03);
 		 windLevelHighest =1;
 

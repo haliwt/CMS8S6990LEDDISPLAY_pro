@@ -236,28 +236,33 @@ void GPIO_Config(void)
 					 Telecom.timer_state=0;
 					   Telecom.net_state =0;
 			          timer0_ten_num=0; //清空PM检查值
-			    delay_20us(100);
+			           delay_20us(1000);
 			        
 					if(Telecom.WindLevelData ==5)Telecom.WindLevelData =0;
-					Telecom.WindLevelData ++ ;
-					if(Telecom.WindLevelData==wind_sleep){
-					   
-	                  LEDDisplay_SleepLamp();
-					  Telecom.WindSelectLevel =wind_sleep;
-					  OutputData(0x01);
-					
+					 	Telecom.WindLevelData ++ ;
+					switch (Telecom.WindLevelData ){
+
+					    case  wind_sleep :
+						  LEDDisplay_SleepLamp();
+						  Telecom.WindSelectLevel =wind_sleep;
+						  OutputData(0x01);
+						break;
 						
-					}
-					else if(Telecom.WindLevelData==wind_middle){
-						OutputData(0x02);
-						Telecom.WindSelectLevel =wind_middle;
+						case wind_middle:
 						
-					}else if(Telecom.WindLevelData==wind_high){
-						OutputData(0x03);
-						Telecom.WindSelectLevel =wind_high;
-					}
-					else if(Telecom.WindLevelData==wind_auto){
-						 Telecom.WindSelectLevel =wind_auto;
+							OutputData(0x02);
+							Telecom.WindSelectLevel =wind_middle;
+						break;
+							
+						case wind_high:
+							OutputData(0x03);
+							Telecom.WindSelectLevel =wind_high;
+					   break ;
+
+					   case wind_auto:
+						
+							 Telecom.WindSelectLevel =wind_auto;
+						break;
 					}
 			}
 			 

@@ -89,26 +89,27 @@ int main(void)
 			Telecom.criticalKey=0;
 			
 		if(Telecom.power_state == 0){
-				   Telecom.timer_state=0;
-				   Telecom.wind_state =0;
-			       Telecom.net_state =0;
+			   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_7);
+			   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_6);
+			   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_5);
+			   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_4);
 
 					cont++;
 					if(cont >=50){
 
 						LEDDisplay_TurnOff();
 						cont1++;
-						if(cont1>=50){
+						if(cont1>=25){
 							cont1=0;
 							cont=0;
 						}
 					}
 					else{
+
 						LEDDisplay_RedColorRing();
 						if(Telecom.PowerOnFrequency ==1){
-
-						Telecom.PowerOnFrequency=0;
-                        Flash_ToWriteData();
+						  Telecom.PowerOnFrequency ++ ;
+                          Flash_ToWriteData();
 
 				      }
 					}
@@ -119,6 +120,8 @@ int main(void)
 		}
         
 	  if(Telecom.power_state == 1){
+
+	      
 
 	       if(Telecom.TimerOn ==0 &&  Telecom.keyEvent ==0){
 
@@ -137,7 +140,8 @@ int main(void)
 			  }
 			  else {
 			   
-                    TimerOnDisplay();
+					LEDDisplay_GreenColorRing();
+					TimerOnDisplay();
 
 				  if(Flash_ToReadDiffData()==0) LEDDisplay_GreenColorRing();
 				  else if(Flash_ToReadDiffData()==1)LED_DispThreeRadin();
@@ -153,17 +157,16 @@ int main(void)
                    if(windLevelHighest ==1){ //检查到PM值大于300 ，显示 “H”
                    
 		 					LED_DispHlogo();
+						    
 		 			}
 				   	else 
 	                      LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
-                   
-					
-
 
 					
-				   if( Telecom.WindSelectLevel==wind_auto){
+
+					if( Telecom.WindSelectLevel==wind_auto){
 					    cont ++;
-					   if(cont >200)
+					   if(cont >20)
 					   	{
 							cont =0;
 						   PM_SendData();
