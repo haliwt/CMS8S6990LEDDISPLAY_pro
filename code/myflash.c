@@ -1,5 +1,8 @@
 #include "myflash.h"
 
+
+
+
 /*****************************************************************
 	*
 	*Function Name :void Flash_ToWriteData(void)
@@ -11,24 +14,44 @@
 
 void Flash_ToWriteData(void)
 {
-   uint8_t temparr[5],onlyone=0;
+   uint8_t temparr[3],onlyone=0;
    uint16_t addr;
 
-   if(onlyone ==0){
+      temparr[0] =  NetRecMinute;
+	  if(Telecom.ISR_NetHourAdj ==1){
+	  	  Telecom.ISR_NetHourAdj =0;
+		  NetRecMinute=0;
+	     temparr[0] =  NetRecMinute;
+
+	  }
+	  temparr[1] = NetRecHour;
+	  if(Telecom.ISR_NetMoreHourAdj==1){
+          Telecom.ISR_NetMoreHourAdj=0;
+		  NetRecHour =0;
+	      temparr[1]= NetRecHour ;
+
+	  }
+	  temparr[2] =NetRecMoreHour;
+      
+
+
+	  if(onlyone ==0){
    	   onlyone ++ ;
 	   //保存以前的数据
 	   temparr[0]=Flash_ToReadMinuteData();
-	   if(NetRecMinute > temparr[0]) temparr[0]=NetRecMinute;
-	   
+	     if(temparr[0] < NetRecMinute)temparr[0] = NetRecMinute;
+
 	   temparr[1]=Flash_ToReadHourData();
-	   if(NetRecHour > temparr[1])temparr[1]=NetRecHour;
-	   
-	   temparr[2]=Flash_ToReadMoreHourData();
-	   if(NetRecMoreHour > temparr[2]) temparr[2]= NetRecMoreHour ;
-	   
-	   temparr[3] = Flash_To750Hour_Vertict();
-	   temparr[4] = Flash_To1500Hour_Vertict();
-   }
+	   if(temparr[1]< NetRecHour )temparr[1]=NetRecHour ;
+		  
+	   	temparr[2]=Flash_ToReadMoreHourData();
+	    if(temparr[2]< NetRecMoreHour) temparr[2]=	NetRecMoreHour;
+
+	  
+      }
+  
+			
+   
 
    addr =0;
    
@@ -39,68 +62,15 @@ void Flash_ToWriteData(void)
    {		   
    
 	   if(addr ==0)		
-		 FLASH_Write(FLASH_DATA,addr, temparr[0]);  
+		 FLASH_Write(FLASH_DATA,addr,temparr[0]);  
 	   else if(addr == 0x01) 
 		 FLASH_Write(FLASH_DATA,addr, temparr[1]);
 	   else if(addr == 0x02) 
 		 FLASH_Write(FLASH_DATA,addr, temparr[2]);
-	   else if(addr == 0x03)
-	     FLASH_Write(FLASH_DATA,addr, temparr[3]);
-	   else if(addr == 0x04)
-	     FLASH_Write(FLASH_DATA,addr, temparr[4]);
-}
+	  }
    FLASH_Lock();
 	  
 	 
-}
-/*****************************************************************
-	*
-	*Function Name :void Flash_ToRepeat_WriteData(void)
-	*Function:read flash data,删除是整片删除，512字节一起删除
-	*Input Ref: be write data
-	*Return Ref:NO
-	*
-******************************************************************/
-void Flash_ToRepeat_WriteData(uint8_t dat1,uint8_t dat2)
-{
-
-	  uint8_t temparr[3],onlyone=0;
-	   uint16_t addr;
-	
-	   addr =0;
-
-	   if(onlyone ==0){
-	   	   onlyone ++ ;
-
-		   temparr[0]=Flash_ToReadMinuteData();
-		   if(NetRecMinute > temparr[0]) temparr[0]=NetRecMinute;
-		   
-		   temparr[1]=Flash_ToReadHourData();
-		   if(NetRecHour > temparr[1])temparr[1]=NetRecHour;
-		   
-		   temparr[2]=Flash_ToReadMoreHourData();
-		   if(NetRecMoreHour > temparr[2]) temparr[2]= NetRecMoreHour ;
-   
-	   	}
-		FLASH_UnLock();
-	   
-	   FLASH_Erase(FLASH_DATA,addr);
-	   for(addr = 0 ;addr< 0x1010 ;addr++)
-	   {		   
-	   
-		   if(addr ==0)		
-			 FLASH_Write(FLASH_DATA,addr, temparr[0]);  
-		   else if(addr == 0x01) 
-			 FLASH_Write(FLASH_DATA,addr, temparr[1]);
-		   else if(addr == 0x02) 
-			 FLASH_Write(FLASH_DATA,addr, temparr[2]);
-		   else if(addr == 0x03)
-			 FLASH_Write(FLASH_DATA,addr, dat1);
-		   else if(addr == 0x04)
-			 FLASH_Write(FLASH_DATA,addr, dat2);
-	}
-	   FLASH_Lock();
-
 }
 
 /*****************************************************************
@@ -124,23 +94,7 @@ uint8_t Flash_ToReadMinuteData(void)
    
 	temp  = FLASH_Read(FLASH_DATA,0);
 	
-	#if 0 
-	   
-	 dispnum = temp;
-	 d1= dispnum % 10;
-	 d2= (dispnum/10) %10;
-	 d3= (dispnum/100) %10;
-	 
-	 LEDDisplay_TimerTim(d3,d2,d1);
-	 delay_20us(20000);
-	 delay_20us(20000);
-	 delay_20us(20000);
-	 delay_20us(20000);
-     delay_20us(20000);
-	 delay_20us(20000);
-	 delay_20us(20000);
-	 delay_20us(20000);
-	#endif 
+	
 
 	 return temp;
 
@@ -166,24 +120,7 @@ uint8_t Flash_ToReadHourData(void)
    
 	 temp  = FLASH_Read(FLASH_DATA,0x01);
 	
-	#if 0 
-	   
-	 dispnum = temp;
-	 d1= dispnum % 10;
-	 d2= (dispnum/10) %10;
-	 d3= (dispnum/100) %10;
-	 
-	 LEDDisplay_TimerTim(d3,d2,d1);
-	 delay_20us(20000);
-	 delay_20us(20000);
-	 delay_20us(20000);
-	 delay_20us(20000);
-     delay_20us(20000);
-	 delay_20us(20000);
-	 delay_20us(20000);
-	 delay_20us(20000);
-	 #endif 
-
+	
 	 return temp;
 
 }
@@ -208,23 +145,7 @@ uint8_t Flash_ToReadMoreHourData(void)
    
 	 temp  = FLASH_Read(FLASH_DATA,0x02);
 	
-	 #if 0
-	   
-	 dispnum = temp;
-	 d1= dispnum % 10;
-	 d2= (dispnum/10) %10;
-	 d3= (dispnum/100) %10;
-	 
-	 LEDDisplay_TimerTim(d3,d2,d1);
-	 delay_20us(20000);
-	 delay_20us(20000);
-	 delay_20us(20000);
-	 delay_20us(20000);
-     delay_20us(20000);
-	 delay_20us(20000);
-	 delay_20us(20000);
-	 delay_20us(20000);
-	 #endif 
+	
 
 	 return temp;
 
@@ -233,87 +154,93 @@ uint8_t Flash_ToReadMoreHourData(void)
 
 /*****************************************************************
 	*
-	*Function Name :void FLASH_ToReadData(void)
+	*Function Name :uint8_t Flash_ToRead1500And750Data(void)
 	*Function:read flash data
 	*Input Ref:NO
 	*Return Ref:NO
 	*
 ******************************************************************/
-void Flash_ToReadData(void)
+uint8_t Flash_ToRead1500And750Data(void)
 {
 	
-   uint16_t addr ;
-   uint8_t temp,temp1,temp2,temp3,temp4;
-   uint8_t dispnum=0,d1=0,d2=0,d3=0;
-   addr = 0;
+  
+   uint8_t temp;
+ 
+ 
 
 
    FLASH_UnLock();
    
-	 temp  = FLASH_Read(FLASH_DATA,0);
-	 temp1 = FLASH_Read(FLASH_DATA,0x01); 
-	 temp2 = FLASH_Read(FLASH_DATA,0x02); 
-	 temp3 = FLASH_Read(FLASH_DATA,0x03); 
-	 temp4 = FLASH_Read(FLASH_DATA,0x04); 
-	#if 0
-	   
-	 dispnum = temp;
-	 d1= dispnum % 10;
-	 d2= (dispnum/10) %10;
-	 d3= (dispnum/100) %10;
-	 
-	 LEDDisplay_TimerTim(d3,d2,d1);
-	 delay_20us(20000);
-	 delay_20us(20000);
-	 delay_20us(20000);
-	 delay_20us(20000);
-     delay_20us(20000);
-	 delay_20us(20000);
-	 delay_20us(20000);
-	 delay_20us(20000);
-	 #endif 
+	 temp  = FLASH_Read(FLASH_DATA,0x03);
+	return temp ;
+	
 
 }
 /*****************************************************************
 	*
-	*Function Name :Flash_To750Hour_WriteData(void)
+	*Function Name :uint8_t Flash_ADJ750AND1500_Vertict(void)
 	*Function:read flash data
 	*Input Ref:NO
 	*Return Ref: 1--750小时 0 ---没有到
 	*
 ******************************************************************/
-uint8_t Flash_To750Hour_Vertict(void)
+uint8_t Flash_ADJ750AND1500_Vertict(void)
 {
 
-	uint8_t temp1,temp2,temp3;
+	uint8_t temp1,temp2,temp3,onetime=0;
 
-	NetRec1500Hour =Flash_To1500Hour_Vertict();
+	#if 1
 
-		
-	FLASH_UnLock();
-	  
-        temp1 = FLASH_Read(FLASH_DATA,0x01); 
-		temp2 = FLASH_Read(FLASH_DATA,0x02); 
-		temp3 = FLASH_Read(FLASH_DATA,0x03); 
+        temp1 = NetRecMinute ;
+	    temp2 = NetRecHour;
+		temp3= NetRecMoreHour ;
 
-		if(temp3==0x01) {
+
+	   if(onetime ==0){
+		   	onetime ++ ;
+	       FLASH_UnLock();
+		  
+	        temp1 = FLASH_Read(FLASH_DATA,0x01); 
+			temp2 = FLASH_Read(FLASH_DATA,0x02); 
+			temp3 = FLASH_Read(FLASH_DATA,0x03); 
+	   }
+
+		if(temp3==0x02) {
+
+            NetRec1500Hour =0x02;
+			return 0x02;
+		}
+		if(temp3==0x01){
 
             NetRec750Hour =1;
 			return 1;
 		}
 		
-		if(temp2==3)// 600小时
-		 {
-			if(temp1 ==150){
-                   NetRec750Hour = 0x01;
-				
-                 Flash_ToRepeat_WriteData(0x01,NetRec1500Hour);
+		
 
+		if(temp2==7)//1400
+		 {
+			if(temp1 ==100){ //1500小时
+			    NetRec1500Hour =0x02;
+               Flash_T01500Write(0x02);
 
 			}
-				return 1; //750小时
+				
+				return 0x02; //1500小时
+         }
+		
+		if(temp2==3)//600
+		 {
+			if(temp1 ==150){ //150小时
+			    NetRec750Hour =0x01;
+              Flash_T01500Write(0x01);
 
-		 }
+			}
+				
+				return 0x01; //1500小时
+		}
+		
+		#endif 
 
 	   return 0;
 
@@ -322,43 +249,53 @@ uint8_t Flash_To750Hour_Vertict(void)
 }
 /*****************************************************************
 	*
-	*Function Name :Flash_To1500Hour_WriteData(void)
+	*Function Name :uint8_t Flash_T01500Write(uint8_t dat1)
 	*Function:read flash data
 	*Input Ref:NO
-	*Return Ref: 1--1500小时 0 ---没有到
+	*Return Ref: 1--750小时 0 ---没有到
 	*
 ******************************************************************/
-uint8_t Flash_To1500Hour_Vertict(void)
+
+void Flash_T01500Write(uint8_t dat1)
 {
+	
+	uint8_t temparr[3];
+		 uint16_t addr;
 	   
-  
-	uint8_t temp1,temp2,temp4;
-
-	 FLASH_UnLock();
-	    temp1 = FLASH_Read(FLASH_DATA,0x01); 
-		temp2 = FLASH_Read(FLASH_DATA,0x02); 
-		temp4 = FLASH_Read(FLASH_DATA,0x04); 
-		
-		if(temp4==0x01)    return 1;
-		
-		if(temp2==7)//1400
-		 {
-			if(temp1 ==100){ //1500小时
-			    NetRec1500Hour =1;
-                Flash_ToRepeat_WriteData(0x01,0x01);
-
-
-			}
-				
-				return 1; //1500小时
-
-		 }
-
-	   return 0;
-
-
-
+		  addr =0;
+	
+		 temparr[0]=Flash_ToReadMinuteData();
+			  if(NetRecMinute > temparr[0]) temparr[0]=NetRecMinute;
+			  
+			  temparr[1]=Flash_ToReadHourData();
+			  if(NetRecHour > temparr[1])temparr[1]=NetRecHour;
+			  
+			  temparr[2]=Flash_ToReadMoreHourData();
+			  if(NetRecMoreHour > temparr[2]) temparr[2]= NetRecMoreHour ;
+	  
+		   
+		 
+		      FLASH_UnLock();
+	
+	
+			  FLASH_Erase(FLASH_DATA,addr);
+			  for(addr = 0 ;addr< 0x10 ;addr++)
+			 {		  
+	  
+				  if(addr ==0)	   
+				   FLASH_Write(FLASH_DATA,addr, temparr[0]);	
+				  else if(addr == 0x01) 
+					FLASH_Write(FLASH_DATA,addr, temparr[1]);
+				  else if(addr == 0x02) 
+					FLASH_Write(FLASH_DATA,addr, temparr[2]);
+				  else if(addr == 0x03)
+					FLASH_Write(FLASH_DATA,addr, dat1);
+				 
+			 }
+			FLASH_Lock();
+	
 }
+
 /*****************************************************************
 	*
 	*Function Name :Flash_To13000Hour_WriteData(void)
@@ -472,7 +409,7 @@ void TestFlash_ToWriteAndReadData(void)
 {
 		
    uint16_t addr ;
-   uint8_t temp,temp1,temp2,temp3,temp4;
+   uint8_t temp,temp1,temp2;
    uint8_t dispnum=0,d1=0,d2=0,d3=0;
    
     addr =0;
@@ -505,7 +442,7 @@ void TestFlash_ToWriteAndReadData(void)
 
    FLASH_UnLock();
    
-	 temp = FLASH_Read(FLASH_DATA,0); 	 
+	 temp = FLASH_Read(FLASH_DATA,0x0); 	 
 	   
 	 dispnum = temp;
 	 d1= dispnum % 10;
@@ -516,12 +453,17 @@ void TestFlash_ToWriteAndReadData(void)
 	 delay_20us(20000);
 	 delay_20us(20000);
 	 delay_20us(20000);
-	 delay_20us(20000);
      delay_20us(20000);
 	 delay_20us(20000);
 	 delay_20us(20000);
 	 delay_20us(20000);
+	
+     
+	
 #if 1
+	 FLASH_UnLock();
+	   
+
 	 temp1 = FLASH_Read(FLASH_DATA,0x01); 	 
 	   
 	 dispnum = temp1;
@@ -533,11 +475,14 @@ void TestFlash_ToWriteAndReadData(void)
 	 delay_20us(20000);
 	 delay_20us(20000);
 	 delay_20us(20000);
-	 delay_20us(20000);
      delay_20us(20000);
 	 delay_20us(20000);
 	 delay_20us(20000);
 	 delay_20us(20000);
+	
+
+	  FLASH_UnLock();
+   
 
 	  temp2 = FLASH_Read(FLASH_DATA,0x02); 	 
 	   
@@ -550,12 +495,14 @@ void TestFlash_ToWriteAndReadData(void)
 	 delay_20us(20000);
 	 delay_20us(20000);
 	 delay_20us(20000);
-	 delay_20us(20000);
      delay_20us(20000);
 	 delay_20us(20000);
 	 delay_20us(20000);
 	 delay_20us(20000);
-
+	 
+#if 0
+	   FLASH_UnLock();
+   
 	  temp3 = FLASH_Read(FLASH_DATA,0x03); 	 
 	   
 	 dispnum = temp3;
@@ -567,11 +514,25 @@ void TestFlash_ToWriteAndReadData(void)
 	 delay_20us(20000);
 	 delay_20us(20000);
 	 delay_20us(20000);
-	 delay_20us(20000);
      delay_20us(20000);
 	 delay_20us(20000);
 	 delay_20us(20000);
+	 delay_20us(10000);
+#endif 	 
+	
+#if 0
+	  temp3 = FLASH_Read(FLASH_DATA,0x03); 	 
+	   
+	 dispnum = temp3;
+	 d1= dispnum % 10;
+	 d2= (dispnum/10) %10;
+	 d3= (dispnum/100) %10;
+	 
+	 LEDDisplay_TimerTim(d3,d2,d1);
 	 delay_20us(20000);
+	 delay_20us(20000);
+	 delay_20us(20000);
+	
      
        temp4 = FLASH_Read(FLASH_DATA,0x04); 	 
 	   
@@ -584,11 +545,8 @@ void TestFlash_ToWriteAndReadData(void)
 	 delay_20us(20000);
 	 delay_20us(20000);
 	 delay_20us(20000);
-	 delay_20us(20000);
-     delay_20us(20000);
-	 delay_20us(20000);
-	 delay_20us(20000);
-	 delay_20us(20000);
+#endif 
+	
 #endif  
 
 

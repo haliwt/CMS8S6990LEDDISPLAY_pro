@@ -32,6 +32,7 @@ uint16_t NetSetTimer;          //PM sensor averageValue
 	uint8_t  NetChangeFlag ;
     uint8_t  NetRec750Hour ;
     uint8_t  NetRec1500Hour ;
+uint8_t ISR_NetHourAdj;	
 
 /******************************************************************************
  ** \brief	 INT0 interrupt service function
@@ -90,13 +91,17 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
 		{
 	            recMinute =0;
 				NetRecMinute ++ ;    //存储分钟
-				if(NetRecMinute ==60){ //1小时=60分钟
+				//if(NetRecMinute ==60){ //1小时=60分钟
+				if(NetRecMinute ==10) //TEST 
+				{
 					NetRecMinute =0;
-					 NetRecHour ++; //存储小时
+					NetRecHour ++;     //存储小时
+					 Telecom.ISR_NetHourAdj=1;
 					     if(NetRecHour ==200)//200个小时
 					     {
 							NetRecHour =0;
 							NetRecMoreHour ++;  //存储小时 的倍数
+							Telecom.ISR_NetMoreHourAdj =1;
 
 							 if(NetRecMoreHour ==15){//3000 小时
 								NetChangeFlag=1; //更换虑网时间到
@@ -265,12 +270,18 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
 		
 		if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_7))
 		{
-			     if(keyflg ==0){
+                 Telecom.timer_state=0;
+				 Telecom.wind_state =0;
+
+				 if(keyflg ==0){
 					   keyflg =1;
 				      Telecom.lockSonudKey=1;
 			     }
 		  
 			GPIO_ClearIntFlag(GPIO1, GPIO_PIN_7);
+			GPIO_ClearIntFlag(GPIO1, GPIO_PIN_6);
+			 GPIO_ClearIntFlag(GPIO1, GPIO_PIN_5);
+			  GPIO_ClearIntFlag(GPIO1, GPIO_PIN_4);
 		}
 		if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_6)) //风速按键
 		{
@@ -325,7 +336,7 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
     }
 
 
-	if(childLock == 0){
+	if(childLock == 0 ){
 		if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_7))
 		{
 			 NetKeyNum =0;

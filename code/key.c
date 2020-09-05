@@ -183,7 +183,7 @@ void GPIO_Config(void)
 {
      
 	  uint8_t keyevent =0;
-	  if(Telecom.power_state ==1){
+	 
 
 		  if(Telecom.criticalKey==0){
 			if(Telecom.timer_state == 1&& keyevent ==0){
@@ -192,6 +192,7 @@ void GPIO_Config(void)
 			         Telecom.keyEvent =1;
                       NetKeyNum =0;
 					  timer0_ten_num=0; //清空PM 检测值
+					  Telecom.wind_state =0;
 			        
 					Telecom.TimeBaseUint ++ ;
 					if(Telecom.TimeHour == 8){
@@ -229,6 +230,7 @@ void GPIO_Config(void)
 			if(Telecom.wind_state ==1 && keyevent ==0){
 			         NetKeyNum =0;
 					 keyevent =1;
+			        Telecom.timer_state=0;
 					Telecom.wind_state =0;
 			          timer0_ten_num=0; //清空PM检查值
 			        
@@ -256,6 +258,8 @@ void GPIO_Config(void)
 			}
 			 
 		   if(Telecom.net_state ==1 ){
+		   	      Telecom.timer_state=0;
+					Telecom.wind_state =0;
 			      
 				if(NetKeyNum ==2){
                    NetKeyNum =0;
@@ -267,8 +271,9 @@ void GPIO_Config(void)
                }
 
 		   	}
-		  	}
+		  	
 	  }	
+	 
 
 }
 
