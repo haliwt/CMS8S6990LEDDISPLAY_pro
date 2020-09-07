@@ -496,6 +496,7 @@ void Flash_DisplayNumber(void)
 	 LEDDisplay_TimerTim(d3,d2,d1);
 	 delay_20us(20000);
 	 delay_20us(20000);
+	  delay_20us(20000);
 	
 
 	 temp1 = FLASH_Read(FLASH_DATA,0x01); 	 
@@ -508,6 +509,7 @@ void Flash_DisplayNumber(void)
 	 LEDDisplay_TimerTim(d3,d2,d1);
 	 delay_20us(20000);
 	 delay_20us(20000);
+	  delay_20us(20000);
 	
 
 	  temp2 = FLASH_Read(FLASH_DATA,0x02); 	 
@@ -520,6 +522,7 @@ void Flash_DisplayNumber(void)
 	 LEDDisplay_TimerTim(d3,d2,d1);
 	 delay_20us(20000);
 	 delay_20us(20000);
+	  delay_20us(20000);
 	
 
 }

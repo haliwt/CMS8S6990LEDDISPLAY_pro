@@ -152,7 +152,8 @@ int main(void)
 				  	{
 				  	   Flash_ToWriteData();
                        if(NetRecMinute !=0 && NetRecMinute !=0xff)
-                       Telecom.net_dispnumb =1;
+                        Telecom.net_dispnumb =1;
+                       
 					   
 					}
 
@@ -162,7 +163,12 @@ int main(void)
 						    
 		 			}
 				   	else {
-	                      LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
+						   if( Telecom.net_dispnumb ==1 ){
+						   	    Telecom.net_dispnumb =0;
+								 Flash_DisplayNumber();
+						   }
+						   else  
+						   	    LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
 						  delay_20us(1000); // disp bug
 
 				   	}

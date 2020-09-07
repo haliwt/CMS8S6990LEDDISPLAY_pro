@@ -272,21 +272,13 @@ void GPIO_Config(void)
 				keyflg =0;
 				
                     BUZZER_Config();
-                     delay_20us(10000)  ; 
+                     delay_20us(2000)  ; 
                    BUZ_DisableBuzzer();
 				   FLASH_Init();
                     
 				   Flash_DisplayNumber();
-			  
-            
-				 
-                
-            }
-		   if( Telecom.net_dispnumb ==1 && keyflg==0 ){
-		   	    Telecom.net_dispnumb =0;
-				keyflg=1;
-				 Flash_DisplayNumber();
-		   }
+			 }
+		  
 	 }
 	 
 
