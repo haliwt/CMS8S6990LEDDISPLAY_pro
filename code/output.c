@@ -41,7 +41,7 @@ void PM_SendData(void)
 	 
 		 timer0_num =0;
         
-         if(disp <75 && disp > 10){
+         if(disp <75 && disp > 12){
               PMave1++;
           }
           else if(disp > 75 &&  disp <150) PMave2++;

@@ -40,16 +40,8 @@ int main(void)
   
 	while(1)
 	{	
-	//FLASH_Init();
-	
-	  // Flash_ToWriteData();
-    //  if(NetRecMinute %  2  == 0 && (NetRecMinute != 0 ))
-	  //  Flash_DisplayNumber();			 
-	//	TestFlash_ToWriteAndReadData();   
-         PM_SendData();
-	
-/***************************************************************************/
-	 #if 0
+
+	 #if 1
 
      if(childLock  ==1){
             if(BuzzerSound==1){
@@ -157,7 +149,7 @@ int main(void)
 			 else {
 			   
 					TimerOnDisplay();
-					if(NetRecMinute %  2  == 0 )
+					if(NetRecMinute %  55  == 0 )
 				  	{
 				  	   Flash_ToWriteData();
                        if(NetRecMinute !=0 )
