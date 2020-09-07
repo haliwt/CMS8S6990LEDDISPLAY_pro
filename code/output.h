@@ -14,7 +14,7 @@ extern uint8_t windLevelHighest ;
 
 
 
-enum WindSpeed{wind_stop,wind_sleep,wind_middle,wind_high,wind_highest,wind_auto};
+enum WindSpeed{wind_stop,wind_sleep,wind_middle,wind_high,wind_auto,wind_highest};
 
 
 

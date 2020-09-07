@@ -132,59 +132,62 @@ int main(void)
 				}
 			}
 			   
-
+       
 			if( Telecom.WindSelectLevel==wind_sleep){
 
 	                  LEDDisplay_SleepLamp();
 			
-			  }
-			  else {
+			 }
+			 else if(windLevelHighest ==1 && Telecom.WindSelectLevel == wind_auto){ //检查到PM值大于300 ，显示 “H”
+                   
+ 				LED_DispHlogo();
+				if( Telecom.WindSelectLevel==wind_auto){
+				    cont ++;
+				   if(cont >20)
+				   	{
+						cont =0;
+					   PM_SendData();
+					
+			     	}
+			    }
+						    
+		 	}
+			 else {
 			   
-					LEDDisplay_GreenColorRing();
 					TimerOnDisplay();
-
-				  if(Flash_ToReadDiffData()==0) LEDDisplay_GreenColorRing();
-				  else if(Flash_ToReadDiffData()==1)LED_DispThreeRadin();
-                  else if(Flash_ToReadDiffData()==2)LED_DispTwoRadin();
-				  else if(Flash_To750Hour_Vertict()==1)LED_DispOneRadin();
-
-				    if(NetRecMinute %  2  == 0 )
+					if(NetRecMinute %  5  == 0 )
 				  	{
 				  	   Flash_ToWriteData();
-                       if(NetRecMinute !=0 && NetRecMinute !=0xff)
+                       if(NetRecMinute !=0 )
                         Telecom.net_dispnumb =1;
-                       
-					   
-					}
-
-                   if(windLevelHighest ==1){ //检查到PM值大于300 ，显示 “H”
-                   
-		 					LED_DispHlogo();
-						    
-		 			}
-				   	else {
-						   if( Telecom.net_dispnumb ==1 ){
+                    }
+					//display LED
+					if( Telecom.net_dispnumb ==1 ){
 						   	    Telecom.net_dispnumb =0;
 								 Flash_DisplayNumber();
-						   }
-						   else  
-						   	    LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
-						  delay_20us(1000); // disp bug
+						         LEDDisplay_GreenColorRing();
+					}
+					else if(Flash_ToReadDiffData()==3)LED_DispThreeRadin();
+	                  else if(Flash_ToReadDiffData()==2)LED_DispTwoRadin();
+					  else if(Flash_ToReadDiffData()==1)LED_DispOneRadin();
+					  else if(Flash_ToReadDiffData()==5)LEDDisplay_RedColorRing(); //到更换滤网时间
+					  else { 
+					   	    LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
+							LEDDisplay_GreenColorRing();
+					  }
+					  delay_20us(1000); // disp bug
+			 }
 
-				   	}
-
-					if( Telecom.WindSelectLevel==wind_auto){
-					    cont ++;
-					   if(cont >20)
-					   	{
-							cont =0;
-						   PM_SendData();
-						
-				     	}
-
-				  }
-				   
-			   }
+			if( Telecom.WindSelectLevel==wind_auto){
+			    cont ++;
+			   if(cont >20)
+			   	{
+					cont =0;
+				   PM_SendData();
+				
+		     	}
+			}
+			
 	  	}
 	  	     
 	 	#endif 

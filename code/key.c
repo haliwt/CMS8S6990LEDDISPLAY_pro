@@ -238,8 +238,13 @@ void GPIO_Config(void)
 			          timer0_ten_num=0; //清空PM检查值
 			           delay_20us(1000);
 			        
+
+					
+
 					if(Telecom.WindLevelData ==5)Telecom.WindLevelData =0;
-					 	Telecom.WindLevelData ++ ;
+					 Telecom.WindLevelData ++ ;
+                     if(Telecom.WindLevelData ==5)Telecom.WindLevelData =1;
+					 	
 					switch (Telecom.WindLevelData ){
 
 					    case  wind_sleep :

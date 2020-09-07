@@ -72,7 +72,8 @@ if(timer0_num >= 1000 && timer0_num <=1060 ){
 		 if(wdl == wind_sleep)OutputData(0x01);
 		 else if(wdl == wind_middle)OutputData(0x02);
 		 else if(wdl == wind_high)OutputData(0x03);
-		 else if(wdl== wind_highest)OutputData(0x04);
+		 else if(wdl== wind_highest)OutputData(0x05);
+		 
 		 
 	  }
 
@@ -112,7 +113,13 @@ if(timer0_num >= 1000 && timer0_num <=1060 ){
 			 windLevelHighest =0;
 	  break;
 
-	  case wind_highest :   //7%
+	  case wind_auto :   //7% 0x05
+	    
+		 windLevelHighest =0;
+
+	  break;
+
+	  case wind_highest :   //7% 0x05
 	     TMR2_Config(0x03);
 		 windLevelHighest =1;
 

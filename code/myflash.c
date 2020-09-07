@@ -413,27 +413,55 @@ uint8_t Flash_To3000Hour_Vertict(void)
 uint8_t Flash_ToReadDiffData(void)
 {
 
-	    uint8_t temp;
+	    uint8_t temp1,temp0,temp2;
 
 	
 	     FLASH_UnLock();
 	  
-         
-		temp = FLASH_Read(FLASH_DATA,0x02); 
+        temp0 = FLASH_Read(FLASH_DATA,0x00); 
+		temp1 = FLASH_Read(FLASH_DATA,0x01); 
+		temp2 = FLASH_Read(FLASH_DATA,0x02); 
 		
-		
-		if(temp==0x0B)//11
+		//显示全部
+		if(temp1 <= 3)//3*200 = 600 (750 从1 开始计时 到 3000小时)
 		 {
-			return 1; //2200小时
-
+            if(temp0 <=150 )
+			return 0; //    
 		 }
-		if(temp == 0x07)
+		//显示3个弧度
+		if(temp1 >3  && temp1 <=7 )
 		{
-			return 2; //1400小时
+            if(temp0 > 150 )
+			return 3; //   750 houres <  x < 1500小时
 
 		}	
+		//显示两个绿色弧度
+	   if(temp1 >7	&& temp2 <=11 )
+	   {
+		   if(temp0 <= 150 )
+		   return 2; //   2250 houres <	x < 1500小时
 
-	   return 0;
+	   }
+	   
+	  //显示1个绿色弧度
+		if(temp1 >11  && temp2 <=15 )
+		  {
+			  if(temp0 > 150 )
+			  return 1; //	 750 houres <  x < 1500小时
+  
+		  }
+
+		//到更换滤网时间
+		if( temp2==15 )
+		  {
+			 
+			 return 5; //	 750 houres <  x < 1500小时
+  
+		  }
+    return 0;
+		
+
+	   
 
 
 }
@@ -495,8 +523,8 @@ void Flash_DisplayNumber(void)
 	 
 	 LEDDisplay_TimerTim(d3,d2,d1);
 	 delay_20us(20000);
-	 delay_20us(20000);
-	  delay_20us(20000);
+	
+
 	
 
 	 temp1 = FLASH_Read(FLASH_DATA,0x01); 	 
@@ -508,11 +536,8 @@ void Flash_DisplayNumber(void)
 	 
 	 LEDDisplay_TimerTim(d3,d2,d1);
 	 delay_20us(20000);
-	 delay_20us(20000);
-	  delay_20us(20000);
 	
-
-	  temp2 = FLASH_Read(FLASH_DATA,0x02); 	 
+	 temp2 = FLASH_Read(FLASH_DATA,0x02); 	 
 	   
 	 dispnum = temp2;
 	 d1= dispnum % 10;
@@ -521,10 +546,6 @@ void Flash_DisplayNumber(void)
 	 
 	 LEDDisplay_TimerTim(d3,d2,d1);
 	 delay_20us(20000);
-	 delay_20us(20000);
-	  delay_20us(20000);
-	
-
 }
 
 
