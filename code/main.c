@@ -41,14 +41,15 @@ int main(void)
 	while(1)
 	{	
 	//FLASH_Init();
-
-	 //   Flash_ToWriteData();
-					 
+	
+	  // Flash_ToWriteData();
+    //  if(NetRecMinute %  2  == 0 && (NetRecMinute != 0 ))
+	  //  Flash_DisplayNumber();			 
 	//	TestFlash_ToWriteAndReadData();   
-	//LED_DispHlogo();
+         PM_SendData();
 	
 /***************************************************************************/
-	 #if 1
+	 #if 0
 
      if(childLock  ==1){
             if(BuzzerSound==1){
@@ -116,16 +117,17 @@ int main(void)
 					
 				 
               }
-			  else KEY_Handing();
+		      else   KEY_Handing();
+			  
 		}
         
-	  if(Telecom.power_state == 1){
+	   if(Telecom.power_state == 1){
 
-	      
+	    
 
 	       if(Telecom.TimerOn ==0 &&  Telecom.keyEvent ==0){
 
-				if(Telecom.TimerEvent >= 5) //5s 后，自动跳转到定时功能
+				if(Telecom.TimerEvent >= 3) //5s 后，自动跳转到定时功能
 	            {
 					Telecom.TimerEvent = 0;
 					Telecom.TimerOn =1;
@@ -155,7 +157,7 @@ int main(void)
 			 else {
 			   
 					TimerOnDisplay();
-					if(NetRecMinute %  5  == 0 )
+					if(NetRecMinute %  2  == 0 )
 				  	{
 				  	   Flash_ToWriteData();
                        if(NetRecMinute !=0 )

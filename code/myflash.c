@@ -28,10 +28,7 @@ void Flash_ToWriteData(void)
 	   else NetRecMoreHour  =temparr[2];
 	  
    
-
-   
-  #if 1
-      if(Telecom.ISR_NetRecMinuteAdj ==1){
+     if(Telecom.ISR_NetRecMinuteAdj ==1){
 	  Telecom.ISR_NetRecMinuteAdj=0;
 	  NetRecMinute =0 ;
        temparr[0] =NetRecMinute ;
@@ -44,7 +41,7 @@ void Flash_ToWriteData(void)
 			temparr[1] =NetRecHour ;
 
 	  }
-#endif 
+
    addr =0;
    
     FLASH_UnLock();
@@ -523,9 +520,16 @@ void Flash_DisplayNumber(void)
 	 
 	 LEDDisplay_TimerTim(d3,d2,d1);
 	 delay_20us(20000);
-	
-
-	
+#if 0	
+	 delay_20us(20000);
+	  delay_20us(20000);
+	   delay_20us(20000);
+	    delay_20us(20000);
+        delay_20us(20000);
+	  delay_20us(20000);
+	   delay_20us(20000);
+	    delay_20us(20000);
+#endif 	
 
 	 temp1 = FLASH_Read(FLASH_DATA,0x01); 	 
 	   
@@ -536,6 +540,17 @@ void Flash_DisplayNumber(void)
 	 
 	 LEDDisplay_TimerTim(d3,d2,d1);
 	 delay_20us(20000);
+
+#if 0
+	  delay_20us(20000);
+	  delay_20us(20000);
+	   delay_20us(20000);
+	    delay_20us(20000);
+        delay_20us(20000);
+	  delay_20us(20000);
+	   delay_20us(20000);
+	    delay_20us(20000);
+#endif 
 	
 	 temp2 = FLASH_Read(FLASH_DATA,0x02); 	 
 	   
@@ -546,6 +561,16 @@ void Flash_DisplayNumber(void)
 	 
 	 LEDDisplay_TimerTim(d3,d2,d1);
 	 delay_20us(20000);
+#if 0
+	  delay_20us(20000);
+	  delay_20us(20000);
+	   delay_20us(20000);
+	    delay_20us(20000);
+        delay_20us(20000);
+	  delay_20us(20000);
+	   delay_20us(20000);
+	    delay_20us(20000);
+#endif 
 }
 
 

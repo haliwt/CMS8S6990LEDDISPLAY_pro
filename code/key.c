@@ -192,8 +192,8 @@ void GPIO_Config(void)
 			         Telecom.net_state =0;
 					 Telecom.TimerOn =0;
 			         Telecom.keyEvent =1;
-                   //   NetKeyNum =0;
-					  timer0_ten_num=0; //清空PM 检测值
+					 Telecom.TimerEvent = 0; //计时，时间计时开始时间
+                     timer0_ten_num=0; //清空PM 检测值
 			
 			        
 					Telecom.TimeBaseUint ++ ;
@@ -226,6 +226,7 @@ void GPIO_Config(void)
 						}	
 					}
 					 Telecom.keyEvent =0;
+					Telecom.TimerEvent = 0;
 			      LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
 				}
 				
@@ -239,9 +240,7 @@ void GPIO_Config(void)
 			           delay_20us(1000);
 			        
 
-					
-
-					if(Telecom.WindLevelData ==5)Telecom.WindLevelData =0;
+				 if(Telecom.WindLevelData ==5)Telecom.WindLevelData =0;
 					 Telecom.WindLevelData ++ ;
                      if(Telecom.WindLevelData ==5)Telecom.WindLevelData =1;
 					 	
@@ -275,11 +274,11 @@ void GPIO_Config(void)
 		   	    Telecom.net_state =0;
 				 
 				keyflg =0;
-				
+				     FLASH_Init();
                     BUZZER_Config();
-                     delay_20us(2000)  ; 
+                     delay_20us(5000)  ; 
                    BUZ_DisableBuzzer();
-				   FLASH_Init();
+				   
                     
 				   Flash_DisplayNumber();
 			 }
