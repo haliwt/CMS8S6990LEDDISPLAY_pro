@@ -41,7 +41,10 @@
 #define   seg_k 0x04
 #define   seg_l 0x08 
 
-#define char_H       seg_b+seg_c+seg_e+seg_f+seg_g      //char "H"	
+#define char_H     seg_b+seg_c+seg_e+seg_f+seg_g      //char "H"	
+
+
+
 
 const unsigned char GreeNumber[];
 

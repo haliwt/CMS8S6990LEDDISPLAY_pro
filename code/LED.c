@@ -1,5 +1,8 @@
 #include "LED.h"
 
+
+
+
 const unsigned char segNumber[]={
          seg_a+seg_b+seg_c+seg_d+seg_e+seg_f,        		// char "0"  0x00
          seg_b+seg_c,                                      // char "1"  0x01
@@ -676,7 +679,37 @@ void LED_DispPMLogo(void)
 ********************************************************************************/
 void LED_DispHlogo(void)
 {
-   LEDDisplay_TimerTim(char_H,char_H,char_H);
+    STB_TM1629D =0 ;  
+        Tm1629DSentData(ModeDisTM1629D); //写数据到显示寄存器
+	    STB_TM1629D =1; 
+	
+        STB_TM1629D=0;   
+		Tm1629DSentData(AddrFixed);//AddrFixed 写固定地址
+		//写显示，固定定制模式
+		STB_TM1629D=1; 
+		
+        STB_TM1629D=0;   
+		Tm1629DSentData(Addr00H);
+		//指向地址0   
+	    Tm1629DSentData(char_H); //主显示3 位---百位
+	    STB_TM1629D=1; 
+		
+        STB_TM1629D=0;   
+		Tm1629DSentData(Addr02H);
+		//指向地址2   
+	    Tm1629DSentData(char_H); //主显示2位---十位
+	    STB_TM1629D=1; 
+		
+        //写第三位
+         STB_TM1629D=0;   
+		Tm1629DSentData(Addr04H);
+		//指向地址4   
+	    Tm1629DSentData(char_H); //主显示1位----个位
+         STB_TM1629D=1; 
+	
+       STB_TM1629D =0; 
+       Tm1629DSentData(OpenDisTM1629D|Set14_16TM1629D); //开显示，显示，设置脉冲宽带 14/16
+       STB_TM1629D =1; 	 
 
 }
 /******************************************************************************

@@ -89,7 +89,7 @@ int main(void)
 			Telecom.criticalKey=0;
 			
 		if(Telecom.power_state == 0){
-			   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_7);
+			 
 			   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_6);
 			   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_5);
 			   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_4);
@@ -148,10 +148,12 @@ int main(void)
                   else if(Flash_ToReadDiffData()==2)LED_DispTwoRadin();
 				  else if(Flash_To750Hour_Vertict()==1)LED_DispOneRadin();
 
-				    if(NetRecMinute %  5  == 0 )
+				    if(NetRecMinute %  2  == 0 )
 				  	{
-				  	  Flash_ToWriteData();
-					 
+				  	   Flash_ToWriteData();
+                       if(NetRecMinute !=0 && NetRecMinute !=0xff)
+                       Telecom.net_dispnumb =1;
+					   
 					}
 
                    if(windLevelHighest ==1){ //检查到PM值大于300 ，显示 “H”
@@ -159,10 +161,11 @@ int main(void)
 		 					LED_DispHlogo();
 						    
 		 			}
-				   	else 
+				   	else {
 	                      LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
+						  delay_20us(1000); // disp bug
 
-					
+				   	}
 
 					if( Telecom.WindSelectLevel==wind_auto){
 					    cont ++;

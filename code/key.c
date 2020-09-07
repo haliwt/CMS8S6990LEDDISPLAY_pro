@@ -3,9 +3,9 @@
 //static uint8_t KEY_Scan(void);
 key_types   key;
 
-static uint8_t Lockflag =0;
+//static uint8_t Lockflag =0;
 
-uint8_t NetKeyNum ;
+//uint8_t NetKeyNum ;
 
 /******************************************************************************
  **
@@ -182,17 +182,17 @@ void GPIO_Config(void)
  void KEY_Handing(void)
 {
      
-	  uint8_t keyevent =0;
+	  uint8_t keyflg =0;
 	  if(Telecom.power_state ==1){
 
-		  if(Telecom.criticalKey==0){
-			if(Telecom.timer_state == 1&& keyevent ==0){
+		  
+			if(Telecom.timer_state == 1&& Telecom.keyEvent ==0){
 	                 Telecom.timer_state=0;
 					 Telecom.wind_state =0;
 			         Telecom.net_state =0;
 					 Telecom.TimerOn =0;
 			         Telecom.keyEvent =1;
-                      NetKeyNum =0;
+                   //   NetKeyNum =0;
 					  timer0_ten_num=0; //清空PM 检测值
 			
 			        
@@ -229,9 +229,9 @@ void GPIO_Config(void)
 			      LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
 				}
 				
-			if(Telecom.wind_state ==1 && keyevent ==0){
-			         NetKeyNum =0;
-					 keyevent =1;
+			if(Telecom.wind_state ==1 && keyflg ==0){
+			       //  NetKeyNum =0;
+					 keyflg =1;
 					Telecom.wind_state =0;
 					 Telecom.timer_state=0;
 					   Telecom.net_state =0;
@@ -266,26 +266,29 @@ void GPIO_Config(void)
 					}
 			}
 			 
-		   if(Telecom.net_state ==1 ){
+		   if(Telecom.net_state ==1 && keyflg==0 ){
 		   	    Telecom.net_state =0;
-				if(NetKeyNum ==2){
-                   NetKeyNum =0;
-                     BUZZER_Config();
-                     delay_20us(5000)  ; 
-                    BUZ_DisableBuzzer();
-			     FLASH_Init();
-               }
-            if(NetKeyNum !=2){
-                #if TESTCODES 
-                        
-                Flash_DisplayNumber();
-                   
-                 #endif 
-            }
+				 
+				keyflg =0;
+				
+                    BUZZER_Config();
+                     delay_20us(10000)  ; 
+                   BUZ_DisableBuzzer();
+				   FLASH_Init();
+                    
+				   Flash_DisplayNumber();
+			  
+            
+				 
                 
             }
-		  }
-	  }	
+		   if( Telecom.net_dispnumb ==1 && keyflg==0 ){
+		   	    Telecom.net_dispnumb =0;
+				keyflg=1;
+				 Flash_DisplayNumber();
+		   }
+	 }
+	 
 
 }
 

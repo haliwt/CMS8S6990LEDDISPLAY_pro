@@ -315,7 +315,7 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
 
 		
 	if(Telecom.lockSonudKey==1){
-           NetKeyNum =0;
+         //  NetKeyNum =0;
            Telecom.lockSonudKey=0;
 			    BUZZER_Config();
 				delay_20us(10000)  ; 
@@ -333,9 +333,12 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
 		if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_7))
 		{
 
-           
+           GPIO_ClearIntFlag(GPIO1, GPIO_PIN_6);
+			 GPIO_ClearIntFlag(GPIO1, GPIO_PIN_5);
+			 GPIO_ClearIntFlag(GPIO1, GPIO_PIN_4);
 
-			 NetKeyNum =0;
+			delay_20us(60000);
+            delay_20us(60000);
             powerkey= powerkey ^ 0x01;
 			
 	        if(powerkey==1 && keyflg ==0){
@@ -351,9 +354,7 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
 		    }
 		
 		    GPIO_ClearIntFlag(GPIO1, GPIO_PIN_7);
-			 GPIO_ClearIntFlag(GPIO1, GPIO_PIN_6);
-			  GPIO_ClearIntFlag(GPIO1, GPIO_PIN_5);
-			   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_4);
+			
 			
 		}
 		
@@ -361,8 +362,8 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
 				if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_6)) //风速按键
 				{
 
-					
-				 
+					 delay_20us(60000);
+				      delay_20us(60000);
 				
 					 if(keyflg ==0){
 					   keyflg =1;
@@ -375,8 +376,8 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
 				
 				if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_5)) //定时按键
 				{
-
-						
+                       delay_20us(60000);
+					
 					
 					 if(keyflg ==0){
 					      keyflg =1;
@@ -390,13 +391,25 @@ void P1EI_IRQHandler(void)  interrupt P1EI_VECTOR
 				if(GPIO_GetIntFlag(GPIO1, GPIO_PIN_4)) //置换虑网按键
 				{
 					     
-                       
-                         
-                            keyflg =1;
-                            keycont =0;
-                            NetKeyNum ++;
-			         	    Telecom.net_state =1;
-                         GPIO_ClearIntFlag(GPIO1, GPIO_PIN_4);
+							 
+							  delay_20us(60000);
+                              delay_20us(60000);
+                              delay_20us(60000);
+                              delay_20us(60000);
+                              delay_20us(60000);
+                              delay_20us(60000);
+                              delay_20us(60000);
+                              delay_20us(60000);
+                              delay_20us(60000);
+                              delay_20us(60000);
+                              delay_20us(60000);
+                              delay_20us(60000);
+                              delay_20us(60000);
+                              delay_20us(60000);
+			         	      Telecom.net_state =1;
+							
+							
+                       GPIO_ClearIntFlag(GPIO1, GPIO_PIN_4);
 				}
 
 		}

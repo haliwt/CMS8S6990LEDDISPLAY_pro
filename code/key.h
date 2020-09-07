@@ -89,6 +89,7 @@ typedef struct _TELEC_
     uint8_t wind_state: 1;
 	uint8_t timer_state: 1;
 	uint8_t net_state:1;
+	uint8_t net_dispnumb : 1;
 	uint8_t criticalKey:1;           //组合按琐住标志瞬间''
 	uint8_t lockSonudKey :1;
 	uint8_t ISR_NetRecMinuteAdj:1;
@@ -99,7 +100,7 @@ typedef struct _TELEC_
 
 extern Telec Telecom;
 
-extern uint8_t NetKeyNum;
+//extern uint8_t NetKeyNum;
 /******************************************************************************
  ** \brief	 GPIO_Config
  ** \param [in] 
