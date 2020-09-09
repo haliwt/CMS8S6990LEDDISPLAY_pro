@@ -205,7 +205,17 @@ void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR
 ******************************************************************************/
 void UART0_IRQHandler(void)  interrupt UART0_VECTOR 
 {
-
+#if 0
+    if(UART_GetSendIntFlag(UART0))
+	{
+		UART_ClearSendIntFlag(UART0);	
+	}
+	if(UART_GetReceiveIntFlag(UART0))
+	{
+		UART_SendBuff(UART0,UART_GetBuff(UART0));
+		UART_ClearReceiveIntFlag(UART0);	
+	}	
+	#endif
 }
 /******************************************************************************
  ** \brief	 Timer 2 interrupt service function
@@ -485,79 +495,7 @@ void ACMP_IRQHandler(void)  interrupt ACMP_VECTOR
 ******************************************************************************/
 void Timer3_IRQHandler(void)  interrupt TMR3_VECTOR 
 {
-    // static uint8_t recMinute =0;
-
-#if 0
-timer0_ten_num++;
-   
-    if(timer0_ten_num==10){
-              timer0_ten_num=0;
-			  timer0_num ++ ;
-             if(timer0_num > 1080)timer0_num=0;
-             
-              if(P22==0){
-                   if(vairI==0){
-                   rec_num++ ; 
-                  // rec2_num=0;
-                }
-                else{
-                   
-                    rec2_num++;
-                    //rec_num=0;
-                }
-              }
-           
-         
-          
-   }
-
-
-#endif 	
- #if 0
-static uint16_t seconds=0;
-    static uint8_t min60=0;
-    seconds ++;
-	if(seconds == 5000)// 500ms
-	{ 
-   		    seconds=0;
-		Telecom.TimerEvent ++;
-			 min60++;
-		if(min60==41){ //60s = 1 分钟
-			min60=0;
-		    if(Telecom.TimerOn ==1)
-		    {
-			 //if(Telecom.TimeBaseUint == 0) Telecom.TimeBaseUint=1;
-			  Telecom.TimeBaseUint --;
-			} 
-
-		}
-	}  
-#endif     
-
-	#if 0
-   if(NetSetTimer ==60000){  // 滤网定时器6.0s
-        NetSetTimer =0;
-		recMinute ++ ;
-		if(recMinute ==10)//1分钟时间=60秒
-		{
-	            recMinute =0;
-				NetRecMinute ++ ;    //存储分钟
-				if(NetRecMinute ==60){ //1小时=60分钟
-					NetRecMinute =0;
-					 NetRecHour ++; //存储小时
-					     if(NetRecHour ==200)//200个小时
-					     {
-							NetRecHour =0;
-							NetRecMoreHour ++;  //存储小时 的倍数
-
-							 if(NetRecMoreHour ==15){//3000 小时
-								NetChangeFlag=1; //更换虑网时间到
-							    }
-						 }
-				}
-	    }
-	}
-#endif 
+ 
 }
 /******************************************************************************
  ** \brief	 Timer 4 interrupt service function

@@ -9,6 +9,7 @@
 #include "timer2.h"
 #include "output.h"
 #include "buzzer.h"
+#include "demo_uart.h"
 
 
 uint32_t Systemclock = 24000000;
@@ -31,93 +32,34 @@ int main(void)
 
     TMR1_Config();
 	TMR0_Config();
-   // GPIO_Config();
-    TMR3_Config();
+    UART0_Config();
 
-    LED_GPIO_Init();
-   GPIO_Interrupt_Init();
+
 
   
 	while(1)
-	{	
+	{
+
+        if(UART_GetSendIntFlag(UART0))
+	{
+		UART_ClearSendIntFlag(UART0);	
+	}
+	if(UART_GetReceiveIntFlag(UART0))
+	{
+		UART_SendBuff(UART0,UART_GetBuff(UART0));
+		UART_ClearReceiveIntFlag(UART0);	
+	}	
+	        
 
 	 #if 1
 
-     if(childLock  ==1){
-            if(BuzzerSound==1){
-                BuzzerSound =0;
-				BUZZER_Config();
-				delay_20us(5000)  ; 
-		        BUZ_DisableBuzzer();	
-				
-		   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_7);
-		   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_6);
-		   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_5);
-		   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_4);
-				 Telecom.criticalKey=1;
-			}
-			BuzzerSound =0;
-	
-		   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_7);
-		   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_6);
-		   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_5);
-		   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_4);
-		   Telecom.criticalKey=0;
+      
         
-        }
-        else if(childLock  ==0){
-			if(BuzzerSound==1 ){
-				BuzzerSound =0;
-				BUZZER_Config();
-				delay_20us(5000)  ; 
-				Telecom.criticalKey=1;
-				BUZ_DisableBuzzer();
-			   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_7);
-			   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_6);
-			   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_5);
-			   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_4);
-			}
-			BuzzerSound =0;
-			BUZ_DisableBuzzer();
-			Telecom.criticalKey=0;
-			
-		if(Telecom.power_state == 0){
-			 
-			   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_6);
-			   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_5);
-			   GPIO_ClearIntFlag(GPIO1, GPIO_PIN_4);
-
-					cont++;
-					if(cont >=50){
-
-						LEDDisplay_TurnOff();
-						cont1++;
-						if(cont1>=25){
-							cont1=0;
-							cont=0;
-						}
-					}
-					else{
-
-						LEDDisplay_RedColorRing();
-						if(Telecom.PowerOnFrequency ==1){
-						  Telecom.PowerOnFrequency ++ ;
-                          Flash_ToWriteData();
-
-				      }
-					}
-					
-				 
-              }
-		      else   KEY_Handing();
-			  
-		}
-        
-	   if(Telecom.power_state == 1){
+	   if(Telecom.power_state == 0){
 
 	    
 
-	       if(Telecom.TimerOn ==0 &&  Telecom.keyEvent ==0){
+	       if(Telecom.TimerOn ==0){
 
 				if(Telecom.TimerEvent >= 3) //5s 后，自动跳转到定时功能
 	            {
@@ -127,12 +69,12 @@ int main(void)
 			}
 			   
        
-			if( Telecom.WindSelectLevel==wind_sleep){
+		//	if( Telecom.WindSelectLevel==wind_sleep){
 
-	                  LEDDisplay_SleepLamp();
+	           //       LEDDisplay_SleepLamp();
 			
-			 }
-			 else if(windLevelHighest ==1 && Telecom.WindSelectLevel == wind_auto){ //检查到PM值大于300 ，显示 “H”
+			// }
+			// else if(windLevelHighest ==1 && Telecom.WindSelectLevel == wind_auto){ //检查到PM值大于300 ，显示 “H”
                    
  				LED_DispHlogo();
 				if( Telecom.WindSelectLevel==wind_auto){
@@ -166,7 +108,7 @@ int main(void)
 					  else if(Flash_ToReadDiffData()==1)LED_DispOneRadin();
 					  else if(Flash_ToReadDiffData()==5)LEDDisplay_RedColorRing(); //到更换滤网时间
 					  else { 
-					   	    LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
+					   	   // LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
 							LEDDisplay_GreenColorRing();
 					  }
 					  delay_20us(1000); // disp bug
@@ -188,7 +130,7 @@ int main(void)
 	}	
 
 
-}   
+  
 
 
 
