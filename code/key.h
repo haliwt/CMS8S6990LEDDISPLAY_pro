@@ -85,6 +85,7 @@ typedef struct _TELEC_
     uint8_t PowerOnFrequency:1 ;          //开关机的次数
 	uint8_t power_state :1;               //开启电源
 	uint8_t childLock : 1;
+	uint8_t TimerFlg:1;
     uint8_t TimerOn:1;
 	uint8_t keyEvent:1;
     uint8_t wind_state: 1;
@@ -113,16 +114,12 @@ extern Telec Telecom;
 void delay_30us(uint16_t n) ;
 void delay_20us(uint16_t n) ;
 void delay_us(uint16_t n)  ;
-void GPIO_Config(void);
-uint8_t KEY_FUNCTION(void);
-uint8_t KEY_Scan(void);
-void KEY_Handing(void);
-uint8_t KEY_HDScan(uint8_t mode);
-void LockKey_Function(void);
-void GPIO_Interrupt_Init(void);
-void TimerOnDisplay(void);
+
+
 
 void WindLevel_Data(void);
+void Net_Data(void);
+void Timer_Data(void);
 
 
 #endif /* __DEMO_GPIO_H__ */

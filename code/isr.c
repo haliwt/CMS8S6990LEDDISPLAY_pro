@@ -36,9 +36,9 @@ uint16_t NetSetTimer;          //PM sensor averageValue
     uint8_t  NetRec750Hour ;
     uint8_t  NetRec1500Hour ;
 
-uint8_t Rxbuff[3];
+
 unsigned char cntRxd = 0; //接收字节计数器
-unsigned char bufRxd[3]; //接收字节缓冲区
+unsigned char bufRxd[5]; //接收字节缓冲区
 
 
 
@@ -176,7 +176,8 @@ void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR
 ******************************************************************************/
 void UART0_IRQHandler(void)  interrupt UART0_VECTOR 
 {
-     uint8_t ver=0;
+	#if 1
+	 uint8_t ver=0,trueflg =0;
 
     if(UART_GetSendIntFlag(UART0))
 	{
@@ -184,48 +185,56 @@ void UART0_IRQHandler(void)  interrupt UART0_VECTOR
 	}
 	if(UART_GetReceiveIntFlag(UART0))
 	{   
-        UART_ClearReceiveIntFlag(UART0);	
+        UART_ClearReceiveIntFlag(UART0);
+
+		         
     
-       if (cntRxd < 4){
+       if (cntRxd <=6){
             bufRxd[cntRxd++] = UART_GetBuff(UART0);
-			if(cntRxd ==4)cntRxd=0;
+			if(cntRxd ==5)cntRxd=0;
         }
        usartdat.usart_1=bufRxd[0] ;
 	   usartdat.usart_2=bufRxd[1] ;
 	   usartdat.usart_3=bufRxd[2] ;
-        #if 0
-        if(usartdat.usart_1 == 0xAA ){
-             
-             ver = BCC(usartdat.usart_2);
-            if(ver == usartdat.usart_3){
-				Telecom.power_state = usartdat.usart_2 & 0x80;
-                 
-            }
-        }
-	   if(usartdat.usart_2 == 0xAA ){
-             
-             ver = BCC(usartdat.usart_3);
-            if(ver == usartdat.usart_1){
-				Telecom.power_state = usartdat.usart_3 & 0x80;
-                 
-            }
-        }
-        if(usartdat.usart_3 == 0xAA ) {
-             
-             ver = BCC(usartdat.usart_1);
-            if(ver == usartdat.usart_2){
-				Telecom.power_state = usartdat.usart_1 & 0x80;
-                 
-            }
-        }
-      #endif   
+	  // usartdat.usart_4=bufRxd[3] ;
+	    if((bufRxd[1])==0xAA) {
+			trueflg =1;
+			Telecom.power_state =1;
+		}
+		  ver = BCC(bufRxd[2]);
+		if(ver==bufRxd[3] && trueflg ==1) LEDDisplay_RedColorRing();
+			
+		
+		#if 0
+	    switch(bufRxd[4]){
+           
+		  case 0xAA :
+			  
+                Telecom.power_state =1;
+		  break;
+		  
+		  case 0xB3:
+			   Telecom.power_state =0;
+		       
+		       // LEDDisplay_RedColorRing();
+		        BUZ_DisableBuzzer();
+			  
+		  break;
+		  case 0x19:
+			 LEDDisplay_RedColorRing();
+			  
+		  break; 
+
+
+		}
+      #endif 
 	
 		UART_SendBuff(UART0,UART_GetBuff(UART0));
        
       
 
      }
-       
+    #endif    
 }
 
  

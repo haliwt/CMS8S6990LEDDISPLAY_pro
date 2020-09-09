@@ -20,6 +20,8 @@ uint8_t windLevelHighest ;
 uint8_t flashflg=0;
 struct usarts  usartdat;
 
+
+
 /*******************************************************
 	*
 	*Function Name: int main(void)
@@ -43,92 +45,91 @@ int main(void)
 	while(1)
 	{
         
-        
-          if(usartdat.usart_1 == 0xAA ){
-             
-             ver = BCC(usartdat.usart_2);
-            if(ver == usartdat.usart_3){
-				Telecom.power_state = usartdat.usart_2 & 0x80;
-			    Telecom.childLock = usartdat.usart_2 & 0x40;
-			    Telecom.TimerOn  = usartdat.usart_2 & 0x20;
-				Telecom.net_state =   usartdat.usart_2 & 0x10;
-				Telecom.WindSelectLevel = usartdat.usart_2 & 0x0f;
-                 
-            }
-        }
-	   else if(usartdat.usart_2 == 0xAA ){
-             
-             ver = BCC(usartdat.usart_3);
-            if(ver == usartdat.usart_1){
-				Telecom.power_state = usartdat.usart_3 & 0x80;
-			    Telecom.childLock = usartdat.usart_3 & 0x40;
-			    Telecom.TimerOn  = usartdat.usart_3 & 0x20;
-				Telecom.net_state =   usartdat.usart_3 & 0x10;
-				Telecom.WindSelectLevel = usartdat.usart_3 & 0x0f;
-                 
-            }
-        }
-        else if(usartdat.usart_3 == 0xAA ) {
-             
-             ver = BCC(usartdat.usart_1);
-            if(ver == usartdat.usart_2){
-				Telecom.power_state = usartdat.usart_1 & 0x80;
-			    Telecom.childLock = usartdat.usart_1 & 0x40;
-			    Telecom.TimerOn  = usartdat.usart_1 & 0x20;
-				Telecom.net_state =   usartdat.usart_1 & 0x10;
-				Telecom.WindSelectLevel = usartdat.usart_1 & 0x0f;
-                 
-            }
-        }
-
-   // if(usartdat.usart_1 == 0x80)Telecom.power_state = 1;
-	//	 if(usartdat.usart_3 == 0x80)Telecom.power_state = 1;
-		// if(usartdat.usart_2 == 0x80)Telecom.power_state = 1;
-#if 1
+       
+   
+#if 0
+       
        d3= (usartdat.usart_2 /100) %10;
 	   d2= (usartdat.usart_2 /10) %10;
 	   d1= usartdat.usart_2 % 10;
 	   LEDDisplay_TimerTim(d3,d2,d1);
 	   delay_20us(40000);
-	   delay_20us(40000);
-	   delay_20us(40000);
-	   delay_20us(40000);
-	   delay_20us(40000);
-	   delay_20us(40000);
-	    if(usartdat.usart_1 == 128)Telecom.power_state = 1;
-		 if(usartdat.usart_3 == 128)Telecom.power_state = 1;
-		 if(usartdat.usart_2 == 128)Telecom.power_state = 1;
+	 
+	
 	    d3= (usartdat.usart_1 /100) %10;
 	   d2= (usartdat.usart_1 /10) %10;
 	   d1= usartdat.usart_1 % 10;
 	   LEDDisplay_TimerTim(d3,d2,d1);
 	   delay_20us(40000);
-	   delay_20us(40000);
-	   delay_20us(40000);
-	   delay_20us(40000);
-	   delay_20us(40000);
-	   delay_20us(40000);
-	    if(usartdat.usart_3 == 128)Telecom.power_state = 1;
-	     d3= (usartdat.usart_3 /100) %10;
+	
+	 
+	   d3= (usartdat.usart_3 /100) %10;
 	   d2= (usartdat.usart_3 /10) %10;
 	   d1= usartdat.usart_3 % 10;
 	   LEDDisplay_TimerTim(d3,d2,d1);
 	   delay_20us(40000);
-	   delay_20us(40000);
-	   delay_20us(40000);
-	   delay_20us(40000);
-	   delay_20us(40000);
-	   delay_20us(40000);
-	   if(usartdat.usart_2 == 128)Telecom.power_state = 1;
+     #endif 
+	    if(usartdat.usart_1 == 170 ){
+             
+             ver = BCC(usartdat.usart_2);
+            if(ver == usartdat.usart_3){
+                 if(usartdat.usart_2 & 0x80 == 128)Telecom.power_state = 1;
+				
+                if(usartdat.usart_2 & 0x40  ==64) Telecom.childLock =1;
+			     if( usartdat.usart_2 & 0x20  == 32)Telecom.TimerFlg =1;
+			     if(usartdat.usart_2 & 0x10  == 10)Telecom.net_state =1;
+				 
+				  Telecom.WindSelectLevel = usartdat.usart_2 & 0x0f;
+                 
+            }
+        }
+	   if(usartdat.usart_2 == 0xAA ){
+             
+             ver = BCC(usartdat.usart_3);
+            if(ver == usartdat.usart_1){
+				  if(usartdat.usart_3 & 0x80 == 128)Telecom.power_state = 1;
+				
+                if(usartdat.usart_3  & 0x40  ==64) Telecom.childLock =1;
+			     if( usartdat.usart_3 & 0x20  == 32)Telecom.TimerFlg =1;
+			     if(usartdat.usart_3  & 0x10  == 10)Telecom.net_state =1;
+				 
+				  Telecom.WindSelectLevel = usartdat.usart_3 & 0x0f;
+                 
+            }
+        }
+        if(usartdat.usart_3 == 0xAA ) {
+             
+            ver = BCC(usartdat.usart_1);
+            if(ver == usartdat.usart_2){
+				 if(usartdat.usart_1 & 0x80 == 128)Telecom.power_state = 1;
+				
+                if(usartdat.usart_1  & 0x40  ==64) Telecom.childLock =1;
+			     if( usartdat.usart_1  & 0x20  == 32)Telecom.TimerFlg =1;
+			     if(usartdat.usart_1  & 0x10  == 10)Telecom.net_state =1;
+				 
+				  Telecom.WindSelectLevel = usartdat.usart_1 & 0x0f;
+                 
+            
+        }
+		
+        }
+	 
 
-	   #endif 
+	
       #if 1
 
        if(Telecom.power_state == 1){
            LEDDisplay_GreenColorRing();
-	      if(Telecom.childLock ==1){
+	            BUZZER_Config();
+				delay_20us(10000)  ; 
+			    BUZ_DisableBuzzer();
+	   	
+         
+		  Telecom.lockSonudKey=0;
+	     if(Telecom.childLock ==1){
         
-              Telecom.lockSonudKey=0;
+            if(Telecom.power_state ==0 && Telecom.lockSonudKey==0){
+			  Telecom.lockSonudKey=1;
 			    BUZZER_Config();
 				delay_20us(10000)  ; 
 			    BUZ_DisableBuzzer();
@@ -141,16 +142,15 @@ int main(void)
 				  	   Flash_ToWriteData();
                        if(NetRecMinute !=0 )
                         Telecom.net_dispnumb =1;
-                  } 
+                  }
+             }
 		}
 	    else {
 
-	    
-
-	  
-		  WindLevel_Data();
-       
-		  if( Telecom.WindSelectLevel==wind_sleep){
+	    WindLevel_Data();   //wind key
+		Net_Data();      //Net key 
+        Timer_Data();    //Timer key
+		 if( Telecom.WindSelectLevel==wind_sleep){
 
 	                 LEDDisplay_SleepLamp();
 					 if(NetRecMinute %  55  == 0 )
@@ -179,7 +179,7 @@ int main(void)
 					else if(Flash_ToReadDiffData()==1)LED_DispOneRadin();
 					else if(Flash_ToReadDiffData()==5)LEDDisplay_RedColorRing(); //到更换滤网时间
 					else { 
-					   	     LEDDisplay_TimerTim(PM_3,PM_2,PM_1);
+					   	    LEDDisplay_TimerTim(PM_3,PM_2,PM_1);
 							LEDDisplay_GreenColorRing();
 					  }
 					  delay_20us(1000); // disp bug
@@ -191,6 +191,7 @@ int main(void)
 					   	{
 							cont =0;
 						   PM_SendData();
+						   LEDDisplay_GreenColorRing();
 						
 				     	}
 					}

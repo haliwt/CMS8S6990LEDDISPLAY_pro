@@ -45,6 +45,7 @@ typedef struct usarts
     
     uint8_t usart_2 ;
     uint8_t usart_3;
+	uint8_t usart_4;
    
  } ;
 
