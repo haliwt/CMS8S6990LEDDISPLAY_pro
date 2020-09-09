@@ -199,12 +199,20 @@ void UART0_IRQHandler(void)  interrupt UART0_VECTOR
 	  // usartdat.usart_4=bufRxd[3] ;
 	    if((bufRxd[1])==0xAA) {
 			trueflg =1;
-			Telecom.power_state =1;
+			//Telecom.power_state =1;
 		}
 		  ver = BCC(bufRxd[2]);
-		if(ver==bufRxd[3] && trueflg ==1) LEDDisplay_RedColorRing();
+		if(ver==bufRxd[3] && trueflg ==1){
+			 LEDDisplay_RedColorRing();
+			  if(bufRxd[2] & 0x80 == 0x80)Telecom.power_state = 1;
+				
+                if(bufRxd[2] & 0x40  ==0x40) Telecom.childLock =1;
+			     if( bufRxd[2] & 0x20  == 0x20)Telecom.TimerFlg =1;
+			     if(bufRxd[2]  & 0x10  == 0x10)Telecom.net_state =1;
+				 
+				  Telecom.WindSelectLevel = bufRxd[2] & 0x0f;
 			
-		
+		}
 		#if 0
 	    switch(bufRxd[4]){
            
