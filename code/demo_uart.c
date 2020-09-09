@@ -54,6 +54,27 @@ void UART0_Config(void)
 
 
 
+/*************************************************************************
+ 	*
+	*Function Name: uint8_t BCC(uint8_t *sbytes,uint8_t width)
+	*Function : BCC checksum code
+	*Input Ref: 
+	*Output Ref:No
+	*
+******************************************************************************/
+uint8_t BCC(uint8_t ver)
+{
+     uint8_t sbytes[2],tembyte;
+	 sbytes[0]=0xAA;
+
+	 
+	 sbytes[1]= ver;
+
+      tembyte =  sbytes[0]^ sbytes[1];
+    
+    return tembyte;
+
+}
 
 
 

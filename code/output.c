@@ -2,6 +2,9 @@
 #include "timer2.h"
 
  void OutputData(uint8_t wds);
+ uint8_t PM_1;
+ uint8_t PM_2;
+ uint8_t PM_3;
 
 
 /***************************************************
@@ -15,7 +18,7 @@
 void PM_SendData(void)
 {  
    static uint8_t disp =0,PMave1,PMave2,PMave3,PMave4;
-	uint8_t i=0,j=0,disdat3=0,disdat2=0,disdat1=0;
+	uint8_t i=0,j=0;
     uint8_t wdl=0;
        if(timer0_num >= 1000 && timer0_num <=1060 ){
 			timer0_num =0;
@@ -24,20 +27,20 @@ void PM_SendData(void)
 			 disp =rec_num ;
 			 
 			 vairI=1;
-			disdat3 = (rec_num /100) %10;	 //百位
-			 disdat2 = (rec_num /10) %10;  //十位
-			 disdat1 = rec_num	%10;		//个位
+			PM_3 = (rec_num /100) %10;	 //百位
+			 PM_2 = (rec_num /10) %10;  //十位
+			 PM_3 = rec_num	%10;		//个位
 			 rec2_num=0;
 		 }
 		 else {
 			 disp = rec2_num;
 			 vairI=0;
-			 disdat3 = (rec2_num /100) %10;   //百位
-			 disdat2 = (rec2_num /10) %10;	//十位
-			 disdat1 = rec2_num  %10;		 //个位
+			 PM_3 = (rec2_num /100) %10;   //百位
+			 PM_2 = (rec2_num /10) %10;	//十位
+			 PM_1 = rec2_num  %10;		 //个位
 			 rec_num =0;
 		 }
-		 LEDDisplay_TimerTim(disdat3,disdat2,disdat1);
+		 LEDDisplay_TimerTim(PM_3,PM_2,PM_1);
 	 
 		 timer0_num =0;
         

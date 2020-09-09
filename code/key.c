@@ -3,9 +3,44 @@
 //static uint8_t KEY_Scan(void);
 key_types   key;
 
-//static uint8_t Lockflag =0;
+/******************************************************************************
+ **
+ ** Function Name:	void WindLevel_Data(void)
+ ** Function : 延时10*n微秒 24MHz ,实际测试32us
+ ** Input Ref:NO
+ ** Return Ref:NO
+ **   
+ ******************************************************************************/
 
-//uint8_t NetKeyNum ;
+void WindLevel_Data(void)
+{
+
+    switch (Telecom.WindSelectLevel ){
+
+		   case  wind_sleep :
+			   LEDDisplay_SleepLamp();
+			   Telecom.WindSelectLevel =wind_sleep;
+			  OutputData(0x01);
+			break;
+			
+			case wind_middle:
+			
+				OutputData(0x02);
+				Telecom.WindSelectLevel =wind_middle;
+			break;
+				
+			case wind_high:
+				OutputData(0x03);
+				Telecom.WindSelectLevel =wind_high;
+		   break ;
+
+		   case wind_auto:
+					Telecom.WindSelectLevel =wind_auto;
+			break;
+		}
+
+
+ }
 
 /******************************************************************************
  **
@@ -69,224 +104,7 @@ void delay_us(uint16_t n)
 		  
      } 
 }
-/******************************************************************************
- **
- ** Function Name:	void delay_10us(uint16_t n) 
- ** Function : 延时10*n微秒 
- ** Input Ref:NO
- ** Return Ref:NO
- **   
- ******************************************************************************/
 
-void GPIO_Interrupt_Init(void)
-{
-	/*
-	(1)设置P17 IO功能
-	*/
-	GPIO_SET_MUX_MODE(P17CFG, GPIO_MUX_GPIO);		//设置P17为GPIO模式
-	GPIO_ENABLE_INPUT(P1TRIS, GPIO_PIN_7);			//设置为输入模式
-	GPIO_ENABLE_RD(P1RD, GPIO_PIN_7);				//开启下拉
-
-    GPIO_SET_MUX_MODE(P16CFG,GPIO_MUX_GPIO);   //风速按键P16
-	GPIO_ENABLE_INPUT(P1TRIS,GPIO_PIN_6); 
-	GPIO_ENABLE_RD(P1RD,GPIO_PIN_6) ;    
-	
-   
-	GPIO_SET_MUX_MODE(P15CFG, GPIO_MUX_GPIO);		//设置P15--定时按键
-	GPIO_ENABLE_INPUT(P1TRIS, GPIO_PIN_5);			//设置为输入模式
-	GPIO_ENABLE_RD(P1RD, GPIO_PIN_5);				//开启下拉
-
-	
-	GPIO_SET_MUX_MODE(P14CFG,GPIO_MUX_GPIO);   //虑网重置按键---P14
-	GPIO_ENABLE_INPUT(P1TRIS,GPIO_PIN_4);      //设置为输入模式
-	GPIO_ENABLE_RD(P1RD,GPIO_PIN_4);           //开启下拉
-
-
-
-    /*
-	(2)设置中断方式
-	*/
-	GPIO_SET_INT_MODE(P17EICFG,  GPIO_INT_RISING);	//设置为下降沿中断模式
-	GPIO_EnableInt(GPIO1, GPIO_PIN_7_MSK);			//开启P17中断
-
-	GPIO_SET_INT_MODE(P16EICFG,  GPIO_INT_RISING);	//设置为下降沿中断模式
-	GPIO_EnableInt(GPIO1, GPIO_PIN_6_MSK);			//开启P16中断
-
-	GPIO_SET_INT_MODE(P15EICFG,  GPIO_INT_RISING);	//设置为下降沿中断模式
-	GPIO_EnableInt(GPIO1, GPIO_PIN_5_MSK);			//开启P15中断
-
-	GPIO_SET_INT_MODE(P14EICFG,  GPIO_INT_RISING);	//设置为下降沿中断模式
-	GPIO_EnableInt(GPIO1, GPIO_PIN_4_MSK);			//开启P14中断
-	/*
-	(3)设置中断优先级
-	*/
-	IRQ_SET_PRIORITY(IRQ_P1, IRQ_PRIORITY_HIGH);
-	/*
-	(4)开启总中断
-	*/	
-	IRQ_ALL_ENABLE();
-
-	
-}
-
-/******************************************************************************
- ** \brief	 GPIO_Config
- ** \param [in] none
- **          GPIO中断功能
- ** \return  none
- ** \note  
- ******************************************************************************/
-void GPIO_Config(void)
-{
-	
-	/*
-	(1)设置P23 IO功能
-	*/
-
-	GPIO_SET_MUX_MODE(P22CFG, GPIO_MUX_GPIO);   //	PM2.5 sensor Input
-	GPIO_ENABLE_INPUT(P2TRIS, GPIO_PIN_2);
-	GPIO_ENABLE_UP(P2UP,GPIO_PIN_2) ;
-	
-   
-     //key gpio
-	GPIO_SET_MUX_MODE(P17CFG,GPIO_MUX_GPIO);   //开机按键  P17
-	GPIO_ENABLE_INPUT(P1TRIS,GPIO_PIN_7); 
-	GPIO_ENABLE_RD(P1RD,GPIO_PIN_7) ; 
-
-	
-	GPIO_SET_MUX_MODE(P16CFG,GPIO_MUX_GPIO);   //风速按键P16
-	GPIO_ENABLE_INPUT(P1TRIS,GPIO_PIN_6); 
-	GPIO_ENABLE_RD(P1RD,GPIO_PIN_6) ;    
-	
-   
-	GPIO_SET_MUX_MODE(P15CFG, GPIO_MUX_GPIO);		//设置P15--定时按键
-	GPIO_ENABLE_INPUT(P1TRIS, GPIO_PIN_5);			//设置为输入模式
-	GPIO_ENABLE_RD(P1RD, GPIO_PIN_5);				//开启下拉
-
-	
-	GPIO_SET_MUX_MODE(P14CFG,GPIO_MUX_GPIO);   //虑网重置按键---P14
-	GPIO_ENABLE_INPUT(P1TRIS,GPIO_PIN_4);      //设置为输入模式
-	GPIO_ENABLE_RD(P1RD,GPIO_PIN_4);           //开启下拉
-
-	
-}
-
-/******************************************************************************
- **
- ** Function Name:	void KEY_FUNCTION(void)
- ** Function : receive key input message 
- ** Input Ref:NO
- ** Return Ref:NO
- **   
- ******************************************************************************/
- void KEY_Handing(void)
-{
-     
-	  uint8_t keyflg =0;
-	  if(Telecom.power_state ==1){
-
-		  
-			if(Telecom.timer_state == 1&& Telecom.keyEvent ==0){
-	                 Telecom.timer_state=0;
-					 Telecom.wind_state =0;
-			         Telecom.net_state =0;
-					 Telecom.TimerOn =0;
-			         Telecom.keyEvent =1;
-					 Telecom.TimerEvent = 0; //计时，时间计时开始时间
-                     timer0_ten_num=0; //清空PM 检测值
-			
-			        
-					Telecom.TimeBaseUint ++ ;
-					if(Telecom.TimeHour == 8){
-					    Telecom.TimeBaseUint=0;
-					}
-					else if(Telecom.TimeBaseUint == 10){
-						Telecom.TimeBaseUint=0;
-						Telecom.TimeMinute++;
-						if(Telecom.TimeMinute==6){ 
-							Telecom.TimeMinute =0;
-							Telecom.TimeHour ++;
-							{
-							   if(Telecom.TimeHour == 8){
-									
-										Telecom.TimeBaseUint=0;
-										Telecom.TimeMinute=0;
-										
-								}
-							    if(Telecom.TimeHour >8){
-									Telecom.TimeBaseUint=0;
-									Telecom.TimeMinute=0;
-										
-									Telecom.TimeHour=0;
-
-								}
-							   
-							 
-							}
-						}	
-					}
-					 Telecom.keyEvent =0;
-					Telecom.TimerEvent = 0;
-			      LEDDisplay_TimerTim(Telecom.TimeHour,Telecom.TimeMinute,Telecom.TimeBaseUint);
-				}
-				
-			if(Telecom.wind_state ==1 && keyflg ==0){
-			       //  NetKeyNum =0;
-					 keyflg =1;
-					Telecom.wind_state =0;
-					 Telecom.timer_state=0;
-					   Telecom.net_state =0;
-			          timer0_ten_num=0; //清空PM检查值
-			           delay_20us(1000);
-			        
-
-				 if(Telecom.WindLevelData ==5)Telecom.WindLevelData =0;
-					 Telecom.WindLevelData ++ ;
-                     if(Telecom.WindLevelData ==5)Telecom.WindLevelData =1;
-					 	
-					switch (Telecom.WindLevelData ){
-
-					    case  wind_sleep :
-						  LEDDisplay_SleepLamp();
-						  Telecom.WindSelectLevel =wind_sleep;
-						  OutputData(0x01);
-						break;
-						
-						case wind_middle:
-						
-							OutputData(0x02);
-							Telecom.WindSelectLevel =wind_middle;
-						break;
-							
-						case wind_high:
-							OutputData(0x03);
-							Telecom.WindSelectLevel =wind_high;
-					   break ;
-
-					   case wind_auto:
-						
-							 Telecom.WindSelectLevel =wind_auto;
-						break;
-					}
-			}
-			 
-		   if(Telecom.net_state ==1 && keyflg==0 ){
-		   	    Telecom.net_state =0;
-				 
-				keyflg =0;
-				     FLASH_Init();
-                    BUZZER_Config();
-                     delay_20us(5000)  ; 
-                   BUZ_DisableBuzzer();
-				   
-                    
-				   Flash_DisplayNumber();
-			 }
-		  
-	 }
-	 
-
-}
 
 /******************************************************************************
  **

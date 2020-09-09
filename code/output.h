@@ -13,6 +13,9 @@ extern uint16_t rec2_num;
 extern uint8_t windLevelHighest ;
 
 
+extern  uint8_t PM_1;
+extern  uint8_t PM_2;
+extern  uint8_t PM_3;
 
 enum WindSpeed{wind_stop,wind_sleep,wind_middle,wind_high,wind_auto,wind_highest};
 

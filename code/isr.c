@@ -1,12 +1,14 @@
 #include "demo_buzzer.h"
 #include "key.h"
 #include "myflash.h"
+#include "led.h"
 
 #include "output.h"
 #include "demo_uart.h"
 
 uint16_t getMinute;
 uint8_t TimerCnt;
+
 
 uint8_t  BuzzerSound ;
 
@@ -33,6 +35,10 @@ uint16_t NetSetTimer;          //PM sensor averageValue
 	uint8_t  NetChangeFlag ;
     uint8_t  NetRec750Hour ;
     uint8_t  NetRec1500Hour ;
+
+uint8_t Rxbuff[3];
+unsigned char cntRxd = 0; //接收字节计数器
+unsigned char bufRxd[3]; //接收字节缓冲区
 
 
 
@@ -154,47 +160,9 @@ void INT1_IRQHandler(void)  interrupt INT1_VECTOR
 ******************************************************************************/
 void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR 
 {
-	uint8_t number=0,number1=0;
-	static uint8_t minute=0;
-    Timer1_num ++;
-
-	TH1 =(65536-200)>>8 ; //100us 
-	TL1 = 65536-200; 
-    if(Timer1_num >=1000){ //1s
-         Timer1_num =0;
-		
-	      minute ++;
-	     if(minute >=2){
-		 	minute =0;
+	
        
-	        if(KEY_HDScan(0)== WINDTI_PRES)
-	        {
-	            locklg = locklg ^ 0x01;
-				
-				if(locklg==1 ){
-	                childLock=1;
-				   Timer1_num =0;
-					childLock =1;
-				   BuzzerSound = 1;
-		           lockchild =1;
-				   Telecom.criticalKey=1;
-				   
-				}
-	            else{  
-	                
-					
-	                childLock=0;
-		             Timer1_num =0;
-	                childLock =0;
-		            BuzzerSound =1;
-					lockchild =0;
-					Telecom.criticalKey=1;
-					
-					}
-					 
-	            }
-	         }
-	       }
+	       
 
 	
     
@@ -208,36 +176,62 @@ void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR
 ******************************************************************************/
 void UART0_IRQHandler(void)  interrupt UART0_VECTOR 
 {
-     static uint8_t times;
-     uint8_t arr[3],i=0;
-	 times++ ;
+     uint8_t ver=0;
+
     if(UART_GetSendIntFlag(UART0))
 	{
 		UART_ClearSendIntFlag(UART0);	
 	}
 	if(UART_GetReceiveIntFlag(UART0))
-	{
-        if(times ==1){usartdat.usart_1 =UART_GetBuff(UART0);
-		    UART_SendBuff(UART0,usartdat.usart_1 );
-           UART_ClearReceiveIntFlag(UART0);
-
+	{   
+        UART_ClearReceiveIntFlag(UART0);	
+    
+       if (cntRxd < 4){
+            bufRxd[cntRxd++] = UART_GetBuff(UART0);
+			if(cntRxd ==4)cntRxd=0;
         }
-		if(times==2){
-			usartdat.usart_2 =UART_GetBuff(UART0);
-			 UART_SendBuff(UART0,usartdat.usart_2 );
-		UART_ClearReceiveIntFlag(UART0);
-		}
-	    if(times==3){
-			times=0;
-		 	usartdat.usart_3 =UART_GetBuff(UART0);
-		   UART_SendBuff(UART0,usartdat.usart_3 );
-		   UART_ClearReceiveIntFlag(UART0);
-	    }
-		//UART_SendBuff(UART0,UART_GetBuff(UART0));
-		//UART_ClearReceiveIntFlag(UART0);	
-	}	
+       usartdat.usart_1=bufRxd[0] ;
+	   usartdat.usart_2=bufRxd[1] ;
+	   usartdat.usart_3=bufRxd[2] ;
+        #if 0
+        if(usartdat.usart_1 == 0xAA ){
+             
+             ver = BCC(usartdat.usart_2);
+            if(ver == usartdat.usart_3){
+				Telecom.power_state = usartdat.usart_2 & 0x80;
+                 
+            }
+        }
+	   if(usartdat.usart_2 == 0xAA ){
+             
+             ver = BCC(usartdat.usart_3);
+            if(ver == usartdat.usart_1){
+				Telecom.power_state = usartdat.usart_3 & 0x80;
+                 
+            }
+        }
+        if(usartdat.usart_3 == 0xAA ) {
+             
+             ver = BCC(usartdat.usart_1);
+            if(ver == usartdat.usart_2){
+				Telecom.power_state = usartdat.usart_1 & 0x80;
+                 
+            }
+        }
+      #endif   
 	
+		UART_SendBuff(UART0,UART_GetBuff(UART0));
+       
+      
+
+     }
+       
 }
+
+ 
+   	
+  
+
 /******************************************************************************
  ** \brief	 Timer 2 interrupt service function
  **

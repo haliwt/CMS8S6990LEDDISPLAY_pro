@@ -52,7 +52,9 @@ extern struct usarts  usartdat;
 
 
 
+
 void UART0_Config(void);
+uint8_t BCC(uint8_t ver);
 
 
 #endif /* __DEMO_UART_H__ */
