@@ -3,6 +3,7 @@
 #include "myflash.h"
 
 #include "output.h"
+#include "demo_uart.h"
 
 uint16_t getMinute;
 uint8_t TimerCnt;
@@ -32,6 +33,8 @@ uint16_t NetSetTimer;          //PM sensor averageValue
 	uint8_t  NetChangeFlag ;
     uint8_t  NetRec750Hour ;
     uint8_t  NetRec1500Hour ;
+
+
 
 /******************************************************************************
  ** \brief	 INT0 interrupt service function
@@ -205,17 +208,35 @@ void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR
 ******************************************************************************/
 void UART0_IRQHandler(void)  interrupt UART0_VECTOR 
 {
-#if 0
+     static uint8_t times;
+     uint8_t arr[3],i=0;
+	 times++ ;
     if(UART_GetSendIntFlag(UART0))
 	{
 		UART_ClearSendIntFlag(UART0);	
 	}
 	if(UART_GetReceiveIntFlag(UART0))
 	{
-		UART_SendBuff(UART0,UART_GetBuff(UART0));
-		UART_ClearReceiveIntFlag(UART0);	
+        if(times ==1){usartdat.usart_1 =UART_GetBuff(UART0);
+		    UART_SendBuff(UART0,usartdat.usart_1 );
+           UART_ClearReceiveIntFlag(UART0);
+
+        }
+		if(times==2){
+			usartdat.usart_2 =UART_GetBuff(UART0);
+			 UART_SendBuff(UART0,usartdat.usart_2 );
+		UART_ClearReceiveIntFlag(UART0);
+		}
+	    if(times==3){
+			times=0;
+		 	usartdat.usart_3 =UART_GetBuff(UART0);
+		   UART_SendBuff(UART0,usartdat.usart_3 );
+		   UART_ClearReceiveIntFlag(UART0);
+	    }
+		//UART_SendBuff(UART0,UART_GetBuff(UART0));
+		//UART_ClearReceiveIntFlag(UART0);	
 	}	
-	#endif
+	
 }
 /******************************************************************************
  ** \brief	 Timer 2 interrupt service function

@@ -18,6 +18,7 @@ Telec Telecom;
 
 uint8_t windLevelHighest ;
 uint8_t flashflg=0;
+struct usarts  usartdat;
 
 /*******************************************************
 	*
@@ -29,7 +30,7 @@ uint8_t flashflg=0;
 int main(void)
 {		
     uint8_t cont=0,cont1=0,ONone=0;
-
+    uint8_t d1,d2,d3;
     TMR1_Config();
 	TMR0_Config();
     LED_GPIO_Init();
@@ -41,18 +42,15 @@ int main(void)
 	while(1)
 	{
 
-       LEDDisplay_GreenColorRing();  
-   PM_SendData();    
-        
-        if(UART_GetSendIntFlag(UART0))
-	{
-		UART_ClearSendIntFlag(UART0);	
-	}
-	if(UART_GetReceiveIntFlag(UART0))
-	{
-		UART_SendBuff(UART0,UART_GetBuff(UART0));
-		UART_ClearReceiveIntFlag(UART0);	
-	}	
+    
+					
+	
+
+	   LEDDisplay_GreenColorRing();  
+      // PM_SendData();  
+	   
+	
+  
 	   
 
 	 #if 0
