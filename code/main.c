@@ -32,6 +32,7 @@ int main(void)
 
     TMR1_Config();
 	TMR0_Config();
+    LED_GPIO_Init();
     UART0_Config();
 
 
@@ -40,6 +41,9 @@ int main(void)
 	while(1)
 	{
 
+       LEDDisplay_GreenColorRing();  
+   PM_SendData();    
+        
         if(UART_GetSendIntFlag(UART0))
 	{
 		UART_ClearSendIntFlag(UART0);	
@@ -49,9 +53,9 @@ int main(void)
 		UART_SendBuff(UART0,UART_GetBuff(UART0));
 		UART_ClearReceiveIntFlag(UART0);	
 	}	
-	        
+	   
 
-	 #if 1
+	 #if 0
 
       
         
@@ -76,7 +80,7 @@ int main(void)
 			// }
 			// else if(windLevelHighest ==1 && Telecom.WindSelectLevel == wind_auto){ //检查到PM值大于300 ，显示 “H”
                    
- 				LED_DispHlogo();
+ 			//	LED_DispHlogo();
 				if( Telecom.WindSelectLevel==wind_auto){
 				    cont ++;
 				   if(cont >20)
@@ -129,7 +133,7 @@ int main(void)
 	 	#endif 
 	}	
 
-
+}
   
 
 

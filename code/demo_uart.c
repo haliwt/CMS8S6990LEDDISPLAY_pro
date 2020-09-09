@@ -46,9 +46,9 @@ void UART0_Config(void)
 	 /*
 	 (4)…Ë÷√UART÷–∂œ
 	 */
-	 UART_EnableInt(UART0);
-	 IRQ_SET_PRIORITY(IRQ_UART0,IRQ_PRIORITY_HIGH);
-	 IRQ_ALL_ENABLE();
+	// UART_EnableInt(UART0);
+	// IRQ_SET_PRIORITY(IRQ_UART0,IRQ_PRIORITY_HIGH);
+	// IRQ_ALL_ENABLE();
 	 
 }
 
