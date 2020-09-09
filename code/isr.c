@@ -177,7 +177,7 @@ void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR
 void UART0_IRQHandler(void)  interrupt UART0_VECTOR 
 {
 	#if 1
-	 uint8_t ver=0,trueflg =0;
+	static uint8_t ver=0,trueflg =0,ver2;
 
     if(UART_GetSendIntFlag(UART0))
 	{
@@ -187,23 +187,22 @@ void UART0_IRQHandler(void)  interrupt UART0_VECTOR
 	{   
         UART_ClearReceiveIntFlag(UART0);
 
-		         
-    
-       if (cntRxd <=6){
+		if (cntRxd <=6){
             bufRxd[cntRxd++] = UART_GetBuff(UART0);
 			if(cntRxd ==5)cntRxd=0;
         }
-       usartdat.usart_1=bufRxd[0] ;
-	   usartdat.usart_2=bufRxd[1] ;
-	   usartdat.usart_3=bufRxd[2] ;
-	  // usartdat.usart_4=bufRxd[3] ;
+      
 	    if((bufRxd[1])==0xAA) {
 			trueflg =1;
 			//Telecom.power_state =1;
 		}
 		  ver = BCC(bufRxd[2]);
-		if(ver==bufRxd[3] && trueflg ==1){
-			 LEDDisplay_RedColorRing();
+		  ver2 = BCC(bufRxd[3]);
+		if((ver==bufRxd[3]|| ver2==bufRxd[4]) && trueflg ==1 ){
+			trueflg =0;
+			// LEDDisplay_RedColorRing();
+			//Telecom.lockSonudKey=0;
+			 if(ver==bufRxd[3]){
 			  if(bufRxd[2] & 0x80 == 0x80)Telecom.power_state = 1;
 				
                 if(bufRxd[2] & 0x40  ==0x40) Telecom.childLock =1;
@@ -211,6 +210,19 @@ void UART0_IRQHandler(void)  interrupt UART0_VECTOR
 			     if(bufRxd[2]  & 0x10  == 0x10)Telecom.net_state =1;
 				 
 				  Telecom.WindSelectLevel = bufRxd[2] & 0x0f;
+			 }
+			else if(ver2==bufRxd[4]){
+
+				 if(bufRxd[3] & 0x80 == 0x80)Telecom.power_state = 1;
+				
+                if(bufRxd[3] & 0x40  ==0x40) Telecom.childLock =1;
+			     if( bufRxd[3] & 0x20  == 0x20)Telecom.TimerFlg =1;
+			     if(bufRxd[3]  & 0x10  == 0x10)Telecom.net_state =1;
+				 
+				  Telecom.WindSelectLevel = bufRxd[3] & 0x0f;
+
+
+			}
 			
 		}
 		#if 0

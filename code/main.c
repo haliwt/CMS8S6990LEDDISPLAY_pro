@@ -31,8 +31,8 @@ struct usarts  usartdat;
 *******************************************************/
 int main(void)
 {		
-    uint8_t cont=0,cont1=0,ONone=0,ver;
-    uint8_t d1,d2,d3;
+   
+   
     
     TMR1_Config();
 	TMR0_Config();
@@ -46,159 +46,111 @@ int main(void)
 	{
         
        
-   
-#if 0
-       
-       d3= (usartdat.usart_2 /100) %10;
-	   d2= (usartdat.usart_2 /10) %10;
-	   d1= usartdat.usart_2 % 10;
-	   LEDDisplay_TimerTim(d3,d2,d1);
-	   delay_20us(40000);
-	 
-	
-	    d3= (usartdat.usart_1 /100) %10;
-	   d2= (usartdat.usart_1 /10) %10;
-	   d1= usartdat.usart_1 % 10;
-	   LEDDisplay_TimerTim(d3,d2,d1);
-	   delay_20us(40000);
-	
-	 
-	   d3= (usartdat.usart_3 /100) %10;
-	   d2= (usartdat.usart_3 /10) %10;
-	   d1= usartdat.usart_3 % 10;
-	   LEDDisplay_TimerTim(d3,d2,d1);
-	   delay_20us(40000);
-     #endif 
-	    if(usartdat.usart_1 == 170 ){
-             
-             ver = BCC(usartdat.usart_2);
-            if(ver == usartdat.usart_3){
-                 if(usartdat.usart_2 & 0x80 == 128)Telecom.power_state = 1;
-				
-                if(usartdat.usart_2 & 0x40  ==64) Telecom.childLock =1;
-			     if( usartdat.usart_2 & 0x20  == 32)Telecom.TimerFlg =1;
-			     if(usartdat.usart_2 & 0x10  == 10)Telecom.net_state =1;
-				 
-				  Telecom.WindSelectLevel = usartdat.usart_2 & 0x0f;
-                 
-            }
-        }
-	   if(usartdat.usart_2 == 0xAA ){
-             
-             ver = BCC(usartdat.usart_3);
-            if(ver == usartdat.usart_1){
-				  if(usartdat.usart_3 & 0x80 == 128)Telecom.power_state = 1;
-				
-                if(usartdat.usart_3  & 0x40  ==64) Telecom.childLock =1;
-			     if( usartdat.usart_3 & 0x20  == 32)Telecom.TimerFlg =1;
-			     if(usartdat.usart_3  & 0x10  == 10)Telecom.net_state =1;
-				 
-				  Telecom.WindSelectLevel = usartdat.usart_3 & 0x0f;
-                 
-            }
-        }
-        if(usartdat.usart_3 == 0xAA ) {
-             
-            ver = BCC(usartdat.usart_1);
-            if(ver == usartdat.usart_2){
-				 if(usartdat.usart_1 & 0x80 == 128)Telecom.power_state = 1;
-				
-                if(usartdat.usart_1  & 0x40  ==64) Telecom.childLock =1;
-			     if( usartdat.usart_1  & 0x20  == 32)Telecom.TimerFlg =1;
-			     if(usartdat.usart_1  & 0x10  == 10)Telecom.net_state =1;
-				 
-				  Telecom.WindSelectLevel = usartdat.usart_1 & 0x0f;
-                 
-            
-        }
-		
-        }
-	 
+	   if(Telecom.power_state == 1){
+        //   LEDDisplay_GreenColorRing();
+		  //  LEDDisplay_TimerTim(PM_3,PM_2,PM_1);
+	    
+          
+		switch (Telecom.WindSelectLevel ){
 
-	
-      #if 1
+			  
 
-       if(Telecom.power_state == 1){
-           LEDDisplay_GreenColorRing();
-	            BUZZER_Config();
-				delay_20us(10000)  ; 
+		   case  wind_sleep :
+		       if(Telecom.lockSonudKey ==0){
+				   Telecom.lockSonudKey =1;
+		       BUZZER_Config();
+				delay_20us(5000)  ; 
 			    BUZ_DisableBuzzer();
-	   	
-         
-		  Telecom.lockSonudKey=0;
-	     if(Telecom.childLock ==1){
-        
-            if(Telecom.power_state ==0 && Telecom.lockSonudKey==0){
-			  Telecom.lockSonudKey=1;
-			    BUZZER_Config();
-				delay_20us(10000)  ; 
+			   }
+			  OutputData(0x01);
+			  Telecom.WindSetupLevel=wind_sleep;
+			break;
+			
+			case wind_middle:
+			     if(Telecom.lockSonudKey ==0){
+				   Telecom.lockSonudKey =1;
+		       BUZZER_Config();
+				delay_20us(5000)  ; 
 			    BUZ_DisableBuzzer();
+			   }
+				OutputData(0x02);
+				Telecom.WindSetupLevel=wind_middle;
+				
+				
+			break;
+				
+			case wind_high:
+			 if(Telecom.lockSonudKey ==0){
+				   Telecom.lockSonudKey =1;
+		       BUZZER_Config();
+				delay_20us(5000)  ; 
+			    BUZ_DisableBuzzer();
+			   }
+				OutputData(0x03);
+				Telecom.WindSetupLevel=wind_high;
+				
+				
+		   break ;
 
-				BUZZER_Config();
-				delay_20us(10000)  ; 
-			    BUZ_DisableBuzzer();
-				if(NetRecMinute %  55  == 0 )
-				  {
-				  	   Flash_ToWriteData();
-                       if(NetRecMinute !=0 )
-                        Telecom.net_dispnumb =1;
-                  }
-             }
+		   case wind_auto:
+		     if(Telecom.lockSonudKey ==0){
+				  Telecom.lockSonudKey =1;
+		          BUZZER_Config();
+				 delay_20us(5000)  ; 
+			     BUZ_DisableBuzzer();
+			   }
+				Telecom.WindSetupLevel=wind_auto;
+					
+			break;
 		}
-	    else {
+	
+		
+		if(Telecom.WindSetupLevel==wind_sleep){
+			LEDDisplay_SleepLamp();
+			 Telecom.lockSonudKey =0;
+		
+		}  
+		else if(Telecom.WindSetupLevel==wind_high || Telecom.WindSetupLevel==wind_middle) {
 
-	    WindLevel_Data();   //wind key
-		Net_Data();      //Net key 
-        Timer_Data();    //Timer key
-		 if( Telecom.WindSelectLevel==wind_sleep){
+				LEDDisplay_TimerTim(PM_3,PM_2,PM_1);
+				LEDDisplay_GreenColorRing();
+				delay_20us(1000); // disp bug
+				 Telecom.lockSonudKey =0;
+		
 
-	                 LEDDisplay_SleepLamp();
-					 if(NetRecMinute %  55  == 0 )
+
+		}
+		else if(Telecom.WindSetupLevel==wind_auto && Telecom.WindSetupLevel!=wind_sleep ){
+
+			 Telecom.lockSonudKey =0;
+             PM_SendData();
+			#if 0
+			if(Flash_ToReadDiffData()==3)LED_DispThreeRadin();
+			else if(Flash_ToReadDiffData()==2)LED_DispTwoRadin();
+			else if(Flash_ToReadDiffData()==1)LED_DispOneRadin();
+			else if(Flash_ToReadDiffData()==5)LEDDisplay_RedColorRing(); //到更换滤网时间
+			else { 
+					LEDDisplay_TimerTim(PM_3,PM_2,PM_1);
+					LEDDisplay_GreenColorRing();
+			}
+			#endif 
+			LEDDisplay_GreenColorRing();
+			delay_20us(1000); // disp bug
+
+		}
+
+
+
+
+				if(NetRecMinute %  55  == 0 )
 				  	{
 				  	   Flash_ToWriteData();
                        if(NetRecMinute !=0 )
                         Telecom.net_dispnumb =1;
                     } 
-			
-			}
-		  else{ 
-                 if(NetRecMinute %  55  == 0 )
-				  	{
-				  	   Flash_ToWriteData();
-                       if(NetRecMinute !=0 )
-                        Telecom.net_dispnumb =1;
-                    }
-					//display LED
-					if( Telecom.net_dispnumb ==1 ){
-						   	    Telecom.net_dispnumb =0;
-								 Flash_DisplayNumber();
-						         LEDDisplay_GreenColorRing();
-					}
-					else if(Flash_ToReadDiffData()==3)LED_DispThreeRadin();
-	                else if(Flash_ToReadDiffData()==2)LED_DispTwoRadin();
-					else if(Flash_ToReadDiffData()==1)LED_DispOneRadin();
-					else if(Flash_ToReadDiffData()==5)LEDDisplay_RedColorRing(); //到更换滤网时间
-					else { 
-					   	    LEDDisplay_TimerTim(PM_3,PM_2,PM_1);
-							LEDDisplay_GreenColorRing();
-					  }
-					  delay_20us(1000); // disp bug
-			
-
-					if( Telecom.WindSelectLevel==wind_auto){
-					    cont ++;
-					   if(cont >20)
-					   	{
-							cont =0;
-						   PM_SendData();
-						   LEDDisplay_GreenColorRing();
-						
-				     	}
-					}
-			
-	  	     }
-	    }
-	 	#endif 
+	    
+		
+	 	
 	}
 }
 }   

@@ -86,9 +86,10 @@ typedef struct _TELEC_
 	uint8_t power_state :1;               //开启电源
 	uint8_t childLock : 1;
 	uint8_t TimerFlg:1;
+
     uint8_t TimerOn:1;
 	uint8_t keyEvent:1;
-    uint8_t wind_state: 1;
+    uint8_t WindSetupLevel: 3;
 	uint8_t timer_state: 1;
 	uint8_t net_state:1;
 	uint8_t net_dispnumb : 1;
