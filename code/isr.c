@@ -204,6 +204,7 @@ void UART0_IRQHandler(void)  interrupt UART0_VECTOR
          
 		 if(bufRxd[2]== uartR){
 		  
+		     Telecom.lockSonudKey=0;
 			  if( bufRxd[1] & 0x80 == 0x80)Telecom.power_state = 1;
 			  else Telecom.power_state = 0;
 				

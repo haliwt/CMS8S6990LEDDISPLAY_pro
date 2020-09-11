@@ -46,15 +46,11 @@ int main(void)
 
 		if(Telecom.childLock ==1 ){
 			    
-				cont ++ ;
-				if(cont ==1) arr[0] = Telecom.WindSelectLevel;
-				if(cont >1)arr[1] = Telecom.WindSelectLevel;
-                if(cont >=255)cont =0;
-				if(arr[0]==arr[1]){
 				
-				}
-				else{
+				
+			 if(Telecom.WindSelectLevel == 0x08){
 
+				   Telecom.WindSelectLevel =0;
 					BUZZER_Config();
 					delay_20us(2000)  ; 
 					BUZ_DisableBuzzer();
@@ -63,12 +59,12 @@ int main(void)
 					delay_20us(2000)  ; 
 					BUZ_DisableBuzzer();
 					arr[0]= arr[1];
-					
-				}
+				 }
+				
 				
 
 		}
-          
+        else {
 		switch (Telecom.WindSelectLevel){
 
 			  case  0x01 :
@@ -124,7 +120,7 @@ int main(void)
 			break;
 		}
 	
-		
+		}
 		if(Telecom.WindSetupLevel==wind_sleep){
 			LEDDisplay_SleepLamp();
 			 
