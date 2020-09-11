@@ -216,6 +216,7 @@ void UART0_IRQHandler(void)  interrupt UART0_VECTOR
 			   if( bufRxd[1] & 0x10  == 0x10)Telecom.net_state =1;
 				 
 				Telecom.WindSelectLevel =  bufRxd[1] & 0x0f;
+			   	Telecom.lockSonudKey=0;
 			}
 
 

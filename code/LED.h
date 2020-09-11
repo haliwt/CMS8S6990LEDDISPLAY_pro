@@ -47,12 +47,17 @@
 #define PM_M       seg_i
 
 
-const unsigned char GreeNumber[];
+#define	Set(x,y)	((x) |= (1 << (y)))				//位置1
 
-const unsigned char BlueNumber[];
+extern uint8_t pmlog ;
 
 
-extern const unsigned char segNumber[];
+//const unsigned char GreeNumber[];
+
+//const unsigned char BlueNumber[];
+
+
+//extern const unsigned char segNumber[];
         
 void LED_GPIO_Init(void);
 void LEDDisplay_SleepLamp(void);
