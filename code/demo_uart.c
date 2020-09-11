@@ -30,7 +30,8 @@ void UART0_Config(void)
 	 BRTValue = UART_ConfigBaudRate(UART0, BaudRateVlue) ;
   #else 
 	//BRTValue = 65380; 				//使用数据手册上推荐的加载值(BRT章节)
-    BRTValue = 65484; //WT.EDIT 2020.09.09 
+  BRTValue = 65484;           //WT.EDIT 
+
   #endif
  
 	 UART_ConfigBRTPeriod(BRTValue);						/*配置重装值*/
@@ -40,8 +41,8 @@ void UART0_Config(void)
 	 */
 	// GPIO_SET_MUX_MODE(P23CFG,GPIO_MUX_TXD0);			/*TXD0*/
 	// GPIO_SET_MUX_MODE(P22CFG,GPIO_MUX_RXD0);	 		/*RXD0*/
-	GPIO_SET_MUX_MODE(P17CFG,GPIO_MUX_TXD0);			/*TXD0*/
-	GPIO_SET_MUX_MODE(P16CFG,GPIO_MUX_RXD0);	 		/*RXD0*/
+	 GPIO_SET_MUX_MODE(P16CFG,GPIO_MUX_TXD0);			/*TXD0*/
+	  GPIO_SET_MUX_MODE(P17CFG,GPIO_MUX_RXD0);	 		/*RXD0*/     
 	 
 	 /*
 	 (4)设置UART中断

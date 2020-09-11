@@ -32,7 +32,7 @@ struct usarts  usartdat;
 int main(void)
 {		
    
-   
+    uint8_t cont =0;
     
     TMR1_Config();
 	TMR0_Config();
@@ -47,15 +47,13 @@ int main(void)
         
        
 	   if(Telecom.power_state == 1){
-        //   LEDDisplay_GreenColorRing();
-		  //  LEDDisplay_TimerTim(PM_3,PM_2,PM_1);
-	    
+        
+
+		{
           
 		switch (Telecom.WindSelectLevel ){
 
-			  
-
-		   case  wind_sleep :
+			  case  wind_sleep :
 		       if(Telecom.lockSonudKey ==0){
 				   Telecom.lockSonudKey =1;
 		       BUZZER_Config();
@@ -107,7 +105,7 @@ int main(void)
 		
 		if(Telecom.WindSetupLevel==wind_sleep){
 			LEDDisplay_SleepLamp();
-			 Telecom.lockSonudKey =0;
+			 
 		
 		}  
 		else if(Telecom.WindSetupLevel==wind_high || Telecom.WindSetupLevel==wind_middle) {
@@ -115,14 +113,14 @@ int main(void)
 				LEDDisplay_TimerTim(PM_3,PM_2,PM_1);
 				LEDDisplay_GreenColorRing();
 				delay_20us(1000); // disp bug
-				 Telecom.lockSonudKey =0;
+				 
 		
 
 
 		}
 		else if(Telecom.WindSetupLevel==wind_auto && Telecom.WindSetupLevel!=wind_sleep ){
 
-			 Telecom.lockSonudKey =0;
+			 
              PM_SendData();
 			#if 0
 			if(Flash_ToReadDiffData()==3)LED_DispThreeRadin();
@@ -151,9 +149,10 @@ int main(void)
 	    
 		
 	 	
+	 }
 	}
 }
-}   
+}
 
 
   
