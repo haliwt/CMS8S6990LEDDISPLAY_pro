@@ -31,7 +31,7 @@ int main(void)
 {		
    
     uint8_t cont =0;
-    
+    uint8_t arr[2];
     TMR1_Config();
 	TMR0_Config();
     LED_GPIO_Init();
@@ -44,11 +44,17 @@ int main(void)
 
 	  if(Telecom.power_state == 1 ){
 
-		if(Telecom.childLock ==1 || Telecom.WindSelectLevel==0x0f){
+		if(Telecom.childLock ==1 ){
 			    
-				 Telecom.WindSelectLevel=0;
+				cont ++ ;
+				if(cont ==1) arr[0] = Telecom.WindSelectLevel;
+				if(cont >1)arr[1] = Telecom.WindSelectLevel;
+                if(cont >=255)cont =0;
+				if(arr[0]==arr[1]){
 				
-				
+				}
+				else{
+
 					BUZZER_Config();
 					delay_20us(2000)  ; 
 					BUZ_DisableBuzzer();
@@ -56,7 +62,9 @@ int main(void)
 					BUZZER_Config();
 					delay_20us(2000)  ; 
 					BUZ_DisableBuzzer();
-				
+					arr[0]= arr[1];
+					
+				}
 				
 
 		}
