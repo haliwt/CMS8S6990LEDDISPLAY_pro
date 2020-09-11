@@ -178,7 +178,7 @@ void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR
 void UART0_IRQHandler(void)  interrupt UART0_VECTOR 
 {
 	
-	static uint8_t  uartR=0;
+	static uint8_t  uartR=0,vair=0;
  
 
     if(UART_GetSendIntFlag(UART0))
@@ -209,27 +209,21 @@ void UART0_IRQHandler(void)  interrupt UART0_VECTOR
 				
                if( bufRxd[1]  & 0x40 ) Telecom.childLock =1;
 			    else Telecom.childLock =0;
-				UART_SendBuff(UART0,bufRxd[1]);
+				
 			   if(  bufRxd[1] & 0x20  == 0x20)Telecom.TimerFlg =1;
 			   else Telecom.TimerFlg =0;
 			   if( bufRxd[1] & 0x10  == 0x10)Telecom.net_state =1;
 				 else Telecom.net_state =0;
 				
-				Telecom.WindSelectLevel =  bufRxd[1] & 0x0f;
-			   	
+				vair =  bufRxd[1] ;
+				Telecom.WindSelectLevel= vair & 0x0f;
+			   	UART_SendBuff(UART0,bufRxd[1]);
 			}
-
-
-
 		}
        
      }
     
  }
-
- 
-   	
-  
 
 /******************************************************************************
  ** \brief	 Timer 2 interrupt service function

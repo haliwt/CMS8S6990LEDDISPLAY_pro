@@ -44,23 +44,11 @@ int main(void)
 
 	  if(Telecom.power_state == 1 ){
 
-	   if(Telecom.WindSelectLevel != wind_sleep && Telecom.childLock !=1){
-		 if(Telecom.lockSonudKey ==0){
-			   Telecom.lockSonudKey ++ ;
-		       			BUZZER_Config();
-					  delay_20us(2000)  ; 
-			  		  BUZ_DisableBuzzer();
-			}
-		   LED_DispPMLogo();
-		   PM_SendData();
-		   
-           LEDDisplay_GreenColorRing();
-		   delay_20us(1000); // disp bug
-		}
+	 
           
-		switch (Telecom.WindSelectLevel ){
+		switch (Telecom.WindSelectLevel){
 
-			  case  wind_sleep :
+			  case  0x01 :
 		       if(Telecom.lockSonudKey ==0){
 			   	Telecom.lockSonudKey ++ ;
 		        BUZZER_Config();
@@ -71,12 +59,12 @@ int main(void)
 			  Telecom.WindSetupLevel=wind_sleep;
 			break;
 			
-			case wind_middle:
-					if(Telecom.lockSonudKey ==0 ){
-			   			Telecom.lockSonudKey ++ ;
-		       			BUZZER_Config();
+			case 0x02:
+				if(Telecom.lockSonudKey ==0 ){
+			   		Telecom.lockSonudKey ++ ;
+		       		BUZZER_Config();
 					delay_20us(2000)  ; 
-			  		  BUZ_DisableBuzzer();
+			  		BUZ_DisableBuzzer();
 			     }
 				OutputData(0x02);
 				Telecom.WindSetupLevel=wind_middle;
@@ -84,7 +72,7 @@ int main(void)
 				
 			break;
 				
-			case wind_high:
+			case 0x03:
 			
 			    if(Telecom.lockSonudKey ==0){
 			   	Telecom.lockSonudKey ++ ;
@@ -98,7 +86,7 @@ int main(void)
 				
 		   break ;
 
-		   case wind_auto:
+		   case 0x04:
 		   	  if(Telecom.lockSonudKey ==0){
 			      Telecom.lockSonudKey ++ ;
 		          BUZZER_Config();
@@ -108,6 +96,9 @@ int main(void)
 				Telecom.WindSetupLevel=wind_auto;
 					
 			break;
+			default :
+					Telecom.WindSetupLevel=wind_auto;
+			break;
 		}
 	
 		
@@ -115,16 +106,13 @@ int main(void)
 			LEDDisplay_SleepLamp();
 			 
 		
-		}  
+		} 
 		else if(Telecom.WindSetupLevel==wind_high || Telecom.WindSetupLevel==wind_middle) {
 
 				LEDDisplay_TimerTim(PM_3,PM_2,PM_1);
 				LEDDisplay_GreenColorRing();
-				delay_20us(1000); // disp bug
+				
 				 
-		
-
-
 		}
 		else if(Telecom.WindSetupLevel==wind_auto && Telecom.WindSetupLevel!=wind_sleep ){
 
@@ -145,16 +133,12 @@ int main(void)
 			delay_20us(1000); // disp bug
 
 		}
-
-
-
-
-				if(NetRecMinute %  55  == 0 )
-				  	{
-				  	   Flash_ToWriteData();
-                       if(NetRecMinute !=0 )
-                        Telecom.net_dispnumb =1;
-                    } 
+			if(NetRecMinute %  55  == 0 )
+			{
+				Flash_ToWriteData();
+				if(NetRecMinute !=0 )
+				Telecom.net_dispnumb =1;
+			} 
 	    
 		
 	 	
