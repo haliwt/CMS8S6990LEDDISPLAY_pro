@@ -3,6 +3,7 @@
 
 
 
+
 const unsigned char segNumber[]={
          seg_a+seg_b+seg_c+seg_d+seg_e+seg_f,        		// char "0"  0x00
          seg_b+seg_c,                                      // char "1"  0x01
@@ -669,6 +670,7 @@ void LED_DispPMLogo(void)
 
 
 }
+
 /******************************************************************************
  * 	*
 	*函数名称：void LED_DispPMLogo(void)
