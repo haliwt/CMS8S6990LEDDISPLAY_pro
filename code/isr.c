@@ -178,8 +178,8 @@ void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR
 void UART0_IRQHandler(void)  interrupt UART0_VECTOR 
 {
 	
-	static uint8_t times=0, uartR=0;
-   // times ++ ;
+	static uint8_t  uartR=0;
+
 
     if(UART_GetSendIntFlag(UART0))
 	{
@@ -221,24 +221,8 @@ void UART0_IRQHandler(void)  interrupt UART0_VECTOR
 
 
 		  }
-		#if 0
-        if(times ==1)
-        {
-            bufRxd[1] =UART_GetBuff(UART0);
-             UART_SendBuff(UART0,bufRxd[1]);
-             times ++ ;
-        }
-        if(times ==2){
-            bufRxd[2] =UART_GetBuff(UART0);
-             UART_SendBuff(UART0,bufRxd[2]);
-             times=0; ;
-        }
-		#endif 
-        if(times >=1){
-			times =0;
-		    ParseUART_Data();
-	
-        }
+		
+        
      }
     
  }
