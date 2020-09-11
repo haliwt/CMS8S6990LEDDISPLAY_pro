@@ -20,9 +20,6 @@ uint8_t windLevelHighest ;
 uint8_t flashflg=0;
 struct usarts  usartdat;
 
-
-
-
 /*******************************************************
 	*
 	*Function Name: int main(void)
@@ -40,34 +37,14 @@ int main(void)
     LED_GPIO_Init();
     UART0_Config();
 
-
-
-  
 	while(1)
 	{
         
 
 
-	  if(Telecom.power_state == 1){
+	  if(Telecom.power_state == 1 ){
 
-	    if(Telecom.childLock ==1){
-
-				if(Telecom.lockSonudKey ==0){
-			   	Telecom.lockSonudKey ++ ;
-		        BUZZER_Config();
-			     delay_20us(2000)  ; 
-			    BUZ_DisableBuzzer();
-		       	}
-				 LED_DispPMLogo();
-			   PM_SendData();
-			   
-	           LEDDisplay_GreenColorRing();
-			   delay_20us(1000); // disp bug
-
-
-		}
-        else{
-		if(Telecom.WindSelectLevel != wind_sleep){
+	   if(Telecom.WindSelectLevel != wind_sleep && Telecom.childLock !=1){
 		 if(Telecom.lockSonudKey ==0){
 			   Telecom.lockSonudKey ++ ;
 		       			BUZZER_Config();
@@ -184,7 +161,7 @@ int main(void)
 	 }
 	  	}
 	}
-}
+
 
 
 

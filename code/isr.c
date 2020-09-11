@@ -188,8 +188,8 @@ void UART0_IRQHandler(void)  interrupt UART0_VECTOR
 	if(UART_GetReceiveIntFlag(UART0))
 	{   
         UART_ClearReceiveIntFlag(UART0);
-        UART_SendBuff(UART0,UART_GetBuff(UART0));
-         if (cntRxd <=3){
+      //  UART_SendBuff(UART0,UART_GetBuff(UART0));
+         if (cntRxd < 3){
              if(cntRxd ==0){ bufRxd[0] = UART_GetBuff(UART0);
                  cntRxd++;
              }
@@ -199,29 +199,29 @@ void UART0_IRQHandler(void)  interrupt UART0_VECTOR
              }
 			if(cntRxd ==3)cntRxd=0;
         }
-		
-            
-			
-       if(bufRxd[0]==0xAA){
-
-      
-          uartR= BCC(bufRxd[1]);
+		if(bufRxd[0]==0xAA){
+		 uartR= BCC(bufRxd[1]);
          
 		 if(bufRxd[2]== uartR){
 		  
 			  if( bufRxd[1] & 0x80 == 0x80)Telecom.power_state = 1;
+			  else Telecom.power_state = 0;
 				
-               if( bufRxd[1] & 0x40  ==0x40) Telecom.childLock =1;
+               if( bufRxd[1]  & 0x40 ) Telecom.childLock =1;
+			    else Telecom.childLock =0;
+				UART_SendBuff(UART0,bufRxd[1]);
 			   if(  bufRxd[1] & 0x20  == 0x20)Telecom.TimerFlg =1;
+			   else Telecom.TimerFlg =0;
 			   if( bufRxd[1] & 0x10  == 0x10)Telecom.net_state =1;
-				 
+				 else Telecom.net_state =0;
+				
 				Telecom.WindSelectLevel =  bufRxd[1] & 0x0f;
-			   	Telecom.lockSonudKey=0;
+			   	
 			}
 
 
 
-		  }
+		}
        
      }
     
