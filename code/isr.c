@@ -37,8 +37,9 @@ uint16_t NetSetTimer;          //PM sensor averageValue
     uint8_t  NetRec1500Hour ;
 
 
-unsigned char cntRxd = 0; //接收字节计数器
+
 unsigned char bufRxd[3]; //接收字节缓冲区
+uint8_t cntRxd ;
 
 
 
@@ -177,8 +178,8 @@ void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR
 void UART0_IRQHandler(void)  interrupt UART0_VECTOR 
 {
 	
-	static uint8_t ver=0,trueflg =0,times=0;
-    //times ++ ;
+	static uint8_t times=0, uartR=0;
+   // times ++ ;
 
     if(UART_GetSendIntFlag(UART0))
 	{
@@ -187,12 +188,40 @@ void UART0_IRQHandler(void)  interrupt UART0_VECTOR
 	if(UART_GetReceiveIntFlag(UART0))
 	{   
         UART_ClearReceiveIntFlag(UART0);
-
-		if(times ==0){
-            bufRxd[0] =UART_GetBuff(UART0);
-            UART_SendBuff(UART0,bufRxd[0]);
-            times ++ ;
+        UART_SendBuff(UART0,UART_GetBuff(UART0));
+         if (cntRxd <=3){
+             if(cntRxd ==0){ bufRxd[0] = UART_GetBuff(UART0);
+                 cntRxd++;
+             }
+			 else {
+                 bufRxd[cntRxd] = UART_GetBuff(UART0);
+                 cntRxd ++;
+             }
+			if(cntRxd ==3)cntRxd=0;
         }
+		
+            
+			
+       if(bufRxd[0]==0xAA){
+
+      
+          uartR= BCC(bufRxd[1]);
+         
+		 if(bufRxd[2]== uartR){
+		  
+			  if( bufRxd[1] & 0x80 == 0x80)Telecom.power_state = 1;
+				
+               if( bufRxd[1] & 0x40  ==0x40) Telecom.childLock =1;
+			   if(  bufRxd[1] & 0x20  == 0x20)Telecom.TimerFlg =1;
+			   if( bufRxd[1] & 0x10  == 0x10)Telecom.net_state =1;
+				 
+				Telecom.WindSelectLevel =  bufRxd[1] & 0x0f;
+			}
+
+
+
+		  }
+		#if 0
         if(times ==1)
         {
             bufRxd[1] =UART_GetBuff(UART0);
@@ -204,14 +233,17 @@ void UART0_IRQHandler(void)  interrupt UART0_VECTOR
              UART_SendBuff(UART0,bufRxd[2]);
              times=0; ;
         }
-        if(times >=2)times =0;
+		#endif 
+        if(times >=1){
+			times =0;
+		    ParseUART_Data();
 	
-
+        }
      }
     
-
-
  }
+
+ 
    	
   
 

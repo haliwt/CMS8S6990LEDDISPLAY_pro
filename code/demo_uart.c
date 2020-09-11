@@ -78,6 +78,47 @@ uint8_t BCC(uint8_t ver)
 }
 
 
+/*************************************************************************
+ 	*
+	*Function Name: void ParseUART_Data(void)
+	*Function : parse receive UART data
+	*Input Ref: NO
+	*Output Ref:No
+	*
+******************************************************************************/
+void ParseUART_Data(uint8_t n)
+{
+    uint8_t uartR=0,uartData;;
+    if(bufRxd[n]==0xAA){
+
+        uartData = bufRxd[n++]; 
+        uartR= BCC(uartData);
+         
+		 if(bufRxd[n++]== uartR){
+		  
+			  if( uartData & 0x80 == 0x80)Telecom.power_state = 1;
+				
+               if( uartData & 0x40  ==0x40) Telecom.childLock =1;
+			   if(  uartData & 0x20  == 0x20)Telecom.TimerFlg =1;
+			   if( uartData & 0x10  == 0x10)Telecom.net_state =1;
+				 
+				Telecom.WindSelectLevel =  uartData & 0x0f;
+			
+
+
+			}
+
+
+
+		  }
+    n=0;
+
+}
+
+
+
+
+
 
 
 

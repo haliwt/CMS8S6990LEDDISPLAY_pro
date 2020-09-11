@@ -22,6 +22,7 @@ struct usarts  usartdat;
 
 
 
+
 /*******************************************************
 	*
 	*Function Name: int main(void)
@@ -45,9 +46,10 @@ int main(void)
 	while(1)
 	{
         
-       
+      
 	   if(Telecom.power_state == 1){
-        
+               LEDDisplay_GreenColorRing();
+		   LEDDisplay_TimerTim(PM_3,PM_2,PM_1);
 
 		{
           
