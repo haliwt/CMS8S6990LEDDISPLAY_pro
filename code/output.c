@@ -40,6 +40,7 @@ void PM_SendData(void)
 			 PM_1 = rec2_num  %10;		 //个位
 			 rec_num =0;
 		 }
+		 LED_DispPMLogo();
 		 LEDDisplay_TimerTim(PM_3,PM_2,PM_1);
 	 
 		 timer0_num =0;

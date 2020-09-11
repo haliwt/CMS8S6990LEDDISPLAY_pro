@@ -5,20 +5,22 @@
 
 
 const unsigned char segNumber[]={
-         seg_a+seg_b+seg_c+seg_d+seg_e+seg_f,        		// char "0"  0x00
-         seg_b+seg_c,                                      // char "1"  0x01
-         seg_a+seg_b+seg_d+seg_e+seg_g,              		// char "2"  0x02
-         seg_a+seg_b+seg_c+seg_d+seg_g,              		// char "3"  0x03
-         seg_b+seg_c+seg_f+seg_g,                   		 // char "4"  0x04
-         seg_a+seg_c+seg_d+seg_f+seg_g,              		// char "5"  0x05
-         seg_a+seg_c+seg_d+seg_e+seg_f+seg_g,              // char "6"  0x06
-         seg_a+seg_b+seg_c+seg_f,                    		// char "7"  0x07
-         seg_a+seg_b+seg_c+seg_d+seg_e+seg_f+seg_g,  		// char "8"  0x08
-         seg_a+seg_b+seg_c+seg_d+seg_f+seg_g,        		// char "9"  0x09
+         seg_a+seg_b+seg_c+seg_d+seg_e+seg_f+seg_h,        		// char "0"  0x00
+         seg_b+seg_c+seg_h,                                      // char "1"  0x01
+         seg_a+seg_b+seg_d+seg_e+seg_g+seg_h,              		// char "2"  0x02
+         seg_a+seg_b+seg_c+seg_d+seg_g+seg_h,              		// char "3"  0x03
+         seg_b+seg_c+seg_f+seg_g+seg_h,                   		 // char "4"  0x04
+         seg_a+seg_c+seg_d+seg_f+seg_g+seg_h,              		// char "5"  0x05
+         seg_a+seg_c+seg_d+seg_e+seg_f+seg_g+seg_h,              // char "6"  0x06
+         seg_a+seg_b+seg_c+seg_f+seg_h,                    		// char "7"  0x07
+         seg_a+seg_b+seg_c+seg_d+seg_e+seg_f+seg_g+seg_h,  		// char "8"  0x08
+         seg_a+seg_b+seg_c+seg_d+seg_f+seg_g+seg_h,        		// char "9"  0x09
          seg_h,                                             // char "."  0x0A
          0                                                  // Dont't display 0x0B
        
 };
+
+
 
 
 const unsigned char GreeNumber[]={
@@ -234,8 +236,10 @@ void LEDDisplay_TimerTim(uint8_t disdat3,uint8_t disdat2,uint8_t disdat1)
          STB_TM1629D=0;   
 		Tm1629DSentData(Addr04H);
 		//指向地址4   
-	    Tm1629DSentData(segNumber[disdat1]); //主显示1位----个位
+	    Tm1629DSentData(segNumber[disdat1] ); //主显示1位----个位
          STB_TM1629D=1; 
+
+		
 	
        STB_TM1629D =0; 
        Tm1629DSentData(OpenDisTM1629D|Set14_16TM1629D); //开显示，显示，设置脉冲宽带 14/16
@@ -561,7 +565,7 @@ void LEDDisplay_GreenColorRing(void)
 			   STB_TM1629D=0;	
 			  Tm1629DSentData(Addr05H);  //地址 05 COM3 高段, 显示ug/M^3
 			  //指向地址0E	 
-			  Tm1629DSentData(0x00);
+			  Tm1629DSentData(0x01);
 			  STB_TM1629D=1; 
 	   
 	   
@@ -650,12 +654,6 @@ void LED_DispPMLogo(void)
 			   Tm1629DSentData(AddrFixed);//AddrFixed 写固定地址
 			   //写显示，固定定制模式
 			   STB_TM1629D=1; 
-
-				 
-			  STB_TM1629D=0;   
-			  Tm1629DSentData(Addr04H);
-			  Tm1629DSentData(segNumber[0x0A]); //指向地址04
-			  STB_TM1629D=1; 
 
 			  STB_TM1629D=0;   
 			  Tm1629DSentData(Addr05H);
