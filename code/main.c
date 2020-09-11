@@ -44,7 +44,22 @@ int main(void)
 
 	  if(Telecom.power_state == 1 ){
 
-	 
+		if(Telecom.childLock ==1 || Telecom.WindSelectLevel==0x0f){
+			    
+				 Telecom.WindSelectLevel=0;
+				
+				
+					BUZZER_Config();
+					delay_20us(2000)  ; 
+					BUZ_DisableBuzzer();
+					delay_20us(2000)  ; 
+					BUZZER_Config();
+					delay_20us(2000)  ; 
+					BUZ_DisableBuzzer();
+				
+				
+
+		}
           
 		switch (Telecom.WindSelectLevel){
 
