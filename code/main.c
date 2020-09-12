@@ -20,6 +20,7 @@ uint8_t windLevelHighest ;
 uint8_t flashflg=0;
 struct usarts  usartdat;
 
+
 /*******************************************************
 	*
 	*Function Name: int main(void)
@@ -30,8 +31,7 @@ struct usarts  usartdat;
 int main(void)
 {		
    
-    uint8_t cont =0;
-    uint8_t arr[2];
+    uint8_t cont =0,vair;
     TMR1_Config();
 	TMR0_Config();
     LED_GPIO_Init();
@@ -40,17 +40,14 @@ int main(void)
 	while(1)
 	{
         
-
-
-	  if(Telecom.power_state == 1 ){
-
-		if(Telecom.childLock ==1 ){
-			    
+		if(Telecom.power_state == 1 ){
+#if 0
+		if(Telecom.childLock ==1  ){
+			    UART0_Config();
 				
-				
-			 if(Telecom.WindSelectLevel == 0x08){
-
-				   Telecom.WindSelectLevel =0;
+			if(Telecom.WindSelectLevel == 0x08){
+			   if(Telecom.lockSonudKey ==0){
+			   		Telecom.lockSonudKey ++ ;
 					BUZZER_Config();
 					delay_20us(2000)  ; 
 					BUZ_DisableBuzzer();
@@ -58,17 +55,20 @@ int main(void)
 					BUZZER_Config();
 					delay_20us(2000)  ; 
 					BUZ_DisableBuzzer();
-					arr[0]= arr[1];
+					
 				 }
 				
-				
+			}
 
 		}
-        else {
-		switch (Telecom.WindSelectLevel){
 
-			  case  0x01 :
-		       if(Telecom.lockSonudKey ==0){
+        else
+		#endif
+		 {
+		
+		  if(Telecom.WindSelectLevel == 0x01){
+
+			  if(Telecom.lockSonudKey ==0){
 			   	Telecom.lockSonudKey ++ ;
 		        BUZZER_Config();
 			     delay_20us(2000)  ; 
@@ -76,10 +76,11 @@ int main(void)
 		       	}
 			  OutputData(0x01);
 			  Telecom.WindSetupLevel=wind_sleep;
-			break;
+
+		  }
+		  if(Telecom.WindSelectLevel == 0x02){
 			
-			case 0x02:
-				if(Telecom.lockSonudKey ==0 ){
+		     	if(Telecom.lockSonudKey ==0 ){
 			   		Telecom.lockSonudKey ++ ;
 		       		BUZZER_Config();
 					delay_20us(2000)  ; 
@@ -87,13 +88,14 @@ int main(void)
 			     }
 				OutputData(0x02);
 				Telecom.WindSetupLevel=wind_middle;
-				
-				
-			break;
-				
-			case 0x03:
 			
-			    if(Telecom.lockSonudKey ==0){
+		  }
+			
+			
+				
+		if(Telecom.WindSelectLevel == 0x03){
+			
+		if(Telecom.lockSonudKey ==0){
 			   	Telecom.lockSonudKey ++ ;
 		       BUZZER_Config();
 		        delay_20us(2000)  ; 
@@ -103,9 +105,9 @@ int main(void)
 				Telecom.WindSetupLevel=wind_high;
 				
 				
-		   break ;
+		}
 
-		   case 0x04:
+		if(Telecom.WindSelectLevel == 0x04){
 		   	  if(Telecom.lockSonudKey ==0){
 			      Telecom.lockSonudKey ++ ;
 		          BUZZER_Config();
@@ -113,15 +115,12 @@ int main(void)
 			     BUZ_DisableBuzzer();
 		       	}
 				Telecom.WindSetupLevel=wind_auto;
-					
-			break;
-			default :
-					Telecom.WindSetupLevel=wind_auto;
-			break;
 		}
 	
+	
 		}
-		if(Telecom.WindSetupLevel==wind_sleep){
+#if 1
+		if(Telecom.WindSetupLevel==wind_sleep ){
 			LEDDisplay_SleepLamp();
 			 
 		
@@ -149,21 +148,22 @@ int main(void)
 			#endif 
 			LED_DispPMLogo();
 			LEDDisplay_GreenColorRing();
-			delay_20us(1000); // disp bug
+		
 
 		}
 			if(NetRecMinute %  55  == 0 )
 			{
 				Flash_ToWriteData();
-				if(NetRecMinute !=0 )
-				Telecom.net_dispnumb =1;
+				
 			} 
 	    
 		
-	 	
-	 }
-	  	}
+	 	#endif 
+}
 	}
+
+	
+}
 
 
 

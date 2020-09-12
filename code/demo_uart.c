@@ -10,34 +10,34 @@
  ******************************************************************************/
 void UART0_Config(void)
 {
-		//Ê¹ÓÃBRT×÷ÎªUARTÄ£¿éµÄ²¨ÌØÂÊÊ±ÖÓ·¢ÉúÆ÷
+		//Ê¹ï¿½ï¿½BRTï¿½ï¿½ÎªUARTÄ£ï¿½ï¿½Ä²ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½Ó·ï¿½ï¿½ï¿½ï¿½ï¿½
 	 uint16_t  BRTValue = 0;
 	 uint32_t  BaudRateVlue = 9600;
 	 
 	 /*
-	 (1)ÉèÖÃUARTxµÄÔËÐÐÄ£Ê½
+	 (1)ï¿½ï¿½ï¿½ï¿½UARTxï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½
 	 */
 	 UART_ConfigRunMode(UART0,UART_MOD_ASY_8BIT, UART_BAUD_BRT);
 	 UART_EnableReceive(UART0);
 	 /*
-	 (2)ÅäÖÃUARTxµÄ²¨ÌØÂÊ
+	 (2)ï¿½ï¿½ï¿½ï¿½UARTxï¿½Ä²ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	 UART_ConfigBRTClk(BRT_CLK_DIV_1);	
 	
-	 UART_EnableDoubleFrequency(UART0); 							/*²¨ÌØÂÊÊ¹ÄÜ±¶Æµ£ºSMOD =1*/
+	 UART_EnableDoubleFrequency(UART0); 							/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ü±ï¿½Æµï¿½ï¿½SMOD =1*/
 	
-  #ifdef USE_FORMULA			//Ê¹ÓÃ¹«Ê½¼ÆËã¶¨Ê±Æ÷µÄ¼ÓÔØÖµ(ÐèÒª¶ÔSystemclock¸³Öµ(main.c))£¬USE_FORMULA ÔÚ Ñ¡ÏîOption->C51->Preporcessor Symbols->DefineÖÐ¶¨Òå
+  #ifdef USE_FORMULA			//Ê¹ï¿½Ã¹ï¿½Ê½ï¿½ï¿½ï¿½ã¶¨Ê±ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Öµ(ï¿½ï¿½Òªï¿½ï¿½Systemclockï¿½ï¿½Öµ(main.c))ï¿½ï¿½USE_FORMULA ï¿½ï¿½ Ñ¡ï¿½ï¿½Option->C51->Preporcessor Symbols->Defineï¿½Ð¶ï¿½ï¿½ï¿½
 	 BRTValue = UART_ConfigBaudRate(UART0, BaudRateVlue) ;
   #else 
-	//BRTValue = 65380; 				//Ê¹ÓÃÊý¾ÝÊÖ²áÉÏÍÆ¼öµÄ¼ÓÔØÖµ(BRTÕÂ½Ú)
+	//BRTValue = 65380; 				//Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö²ï¿½ï¿½ï¿½ï¿½Æ¼ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Öµ(BRTï¿½Â½ï¿½)
   BRTValue = 65484;           //WT.EDIT 
 
   #endif
  
-	 UART_ConfigBRTPeriod(BRTValue);						/*ÅäÖÃÖØ×°Öµ*/
-	 UART_EnableBRT();										/*Ê¹ÄÜ¶¨Ê±Æ÷*/
+	 UART_ConfigBRTPeriod(BRTValue);						/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×°Öµ*/
+	 UART_EnableBRT();										/*Ê¹ï¿½Ü¶ï¿½Ê±ï¿½ï¿½*/
 	 /*
-	 (3)ÅäÖÃIO¿Ú
+	 (3)ï¿½ï¿½ï¿½ï¿½IOï¿½ï¿½
 	 */
 	// GPIO_SET_MUX_MODE(P23CFG,GPIO_MUX_TXD0);			/*TXD0*/
 	// GPIO_SET_MUX_MODE(P22CFG,GPIO_MUX_RXD0);	 		/*RXD0*/
@@ -45,7 +45,7 @@ void UART0_Config(void)
 	  GPIO_SET_MUX_MODE(P17CFG,GPIO_MUX_RXD0);	 		/*RXD0*/     
 	 
 	 /*
-	 (4)ÉèÖÃUARTÖÐ¶Ï
+	 (4)ï¿½ï¿½ï¿½ï¿½UARTï¿½Ð¶ï¿½
 	 */
 	 UART_EnableInt(UART0);
 	 IRQ_SET_PRIORITY(IRQ_UART0,IRQ_PRIORITY_HIGH);
