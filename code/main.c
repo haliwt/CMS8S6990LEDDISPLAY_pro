@@ -30,7 +30,7 @@ struct usarts  usartdat;
 int main(void)
 {		
    
-    static uint8_t cont =0,ReceiveData=0;
+    static uint8_t cont =0,ReceiveData=0,childlockdata=0;
     uint8_t arr[2];
     TMR1_Config();
 	TMR0_Config();
@@ -41,24 +41,34 @@ int main(void)
 	{
 
 		ReceiveData =usartdat.usart_1; //usartdat.usart_1;
-		Telecom.power_state = ReceiveData >> 7;
-	    Telecom.childLock  = ReceiveData >> 6;
-		Telecom.WindSelectLevel = ReceiveData & 0x0f;
+		if(Telecom.childLock ==1 && Telecom.lockSonudKey ==1){
+			childlockdata = ReceiveData ;
+			Telecom.lockSonudKey =0;
+
+		}
+		else {
+			Telecom.power_state = ReceiveData >> 7;
+		    Telecom.childLock  = ReceiveData >> 6;
+			Telecom.WindSelectLevel = ReceiveData & 0x0f;
+		}
 		
 		if(Telecom.power_state == 1 ){
 
-		    if(Telecom.childLock ==1 ){
+		    if(Telecom.childLock ==1 && (childlockdata == 0xee) && Telecom.lockSonudKey ==0){
 			    
-				
+				    if(Telecom.lockSonudKey == 0){
+						Telecom.lockSonudKey =1;
+						Telecom.childLock =2;
+					    childlockdata = 0x00;
 
-					BUZZER_Config();
-					delay_20us(2000)  ; 
-					BUZ_DisableBuzzer();
-					delay_20us(2000)  ; 
-					BUZZER_Config();
-					delay_20us(2000)  ; 
-					BUZ_DisableBuzzer();
-					
+						BUZZER_Config();
+						delay_20us(1000)  ; 
+						BUZ_DisableBuzzer();
+						delay_20us(1000)  ; 
+						BUZZER_Config();
+						delay_20us(1000)  ; 
+						BUZ_DisableBuzzer();
+				    }
 			
 				
 
