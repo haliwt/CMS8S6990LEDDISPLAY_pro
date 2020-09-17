@@ -21,12 +21,12 @@ typedef struct usarts
 
 extern struct usarts  usartdat;
 
-extern unsigned char bufRxd[3]; //接收字节缓冲区
+extern unsigned char bufRxd[4]; //接收字节缓冲区
 
 
 
 void UART0_Config(void);
-uint8_t BCC(uint8_t ver);
+uint8_t BCC(uint8_t ver,uint8_t ver2);
 
 void ParseUART_Data(uint8_t n);
 

@@ -38,10 +38,11 @@ uint16_t NetSetTimer;          //PM sensor averageValue
 
 
 
-unsigned char bufRxd[3]; //接收字节缓冲区
-
-
+unsigned char bufRxd[4]; //接收字节缓冲区
 uint8_t cntRxd ;
+
+uint8_t ReceOverflg;
+
 
 /******************************************************************************
  ** \brief	 INT0 interrupt service function
@@ -177,8 +178,9 @@ void Timer1_IRQHandler(void)  interrupt TMR1_VECTOR
 ******************************************************************************/
 void UART0_IRQHandler(void)  interrupt UART0_VECTOR 
 {
+	
 	#if 1
-	static uint8_t  uartR=0,vair=0;
+	static uint8_t  vair=0;
  
 
     if(UART_GetSendIntFlag(UART0))
@@ -189,7 +191,7 @@ void UART0_IRQHandler(void)  interrupt UART0_VECTOR
 	{   
         UART_ClearReceiveIntFlag(UART0);
       //  UART_SendBuff(UART0,UART_GetBuff(UART0));
-         if (cntRxd < 3){
+         if (cntRxd < 4){
              if(cntRxd ==0){ bufRxd[0] = UART_GetBuff(UART0);
 			     if(bufRxd[0]== 0xAA)
                  	cntRxd++;
@@ -198,43 +200,34 @@ void UART0_IRQHandler(void)  interrupt UART0_VECTOR
 			 else {
                  bufRxd[cntRxd] = UART_GetBuff(UART0);
                  cntRxd ++;
-				if( bufRxd[2]= BCC(bufRxd[1]))
-				  vair = 1;
-				else vair =0;
+				if( bufRxd[3]= BCC(bufRxd[1],bufRxd[2]))
+				  ReceOverflg = 1;
+				else {
+					ReceOverflg =0;
+					cntRxd=0;
+				}
 				   
              }
-			if(cntRxd ==3)cntRxd=0;
+			if(cntRxd ==4)cntRxd=0;
 			
         }
 		
-		
-		if(vair ==1)
+		if(ReceOverflg ==1)
 		{
-		    vair =0;
-		     Telecom.lockSonudKey=0;
-			  if( bufRxd[1] & 0x80 == 0x80)Telecom.power_state = 1;
-			  else Telecom.power_state = 0;
+		   ReceOverflg =0;
+		  
+			  usartdat.usart_1 = bufRxd[1] ;
+			  usartdat.usart_2 = bufRxd[2] ;
+            
 				
-               if( bufRxd[1]  & 0x40 ) {
-				   Telecom.childLock =1;
-			   }
-			    else Telecom.childLock =0;
-				
-			   if(  bufRxd[1] & 0x20  == 0x20)Telecom.TimerFlg =1;
-			   else Telecom.TimerFlg =0;
-			   if( bufRxd[1] & 0x10  == 0x10)Telecom.net_state =1;
-				 else Telecom.net_state =0;
-				
-				vair =  bufRxd[1] ;
-				Telecom.WindSelectLevel= vair & 0x0f;
-				UART_SendBuff(UART0,Telecom.WindSelectLevel);
-			
-			}
+              
+				UART_SendBuff(UART0,usartdat.usart_1);
+				//UART_SendBuff(UART0,usartdat.usart_2);
+           }
 	}
        #endif 
-}
     
- 
+ }
 
 /******************************************************************************
  ** \brief	 Timer 2 interrupt service function

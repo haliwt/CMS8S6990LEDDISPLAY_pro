@@ -81,8 +81,6 @@ typedef struct _TELEC_
     uint8_t TimerEvent ;                  //定时器通知信号
    
     uint8_t WindSelectLevel ;
-
-    uint8_t receChilddata;
  
     uint8_t PowerOnFrequency:1 ;          //开关机的次数
 	uint8_t power_state :1;               //开启电源
