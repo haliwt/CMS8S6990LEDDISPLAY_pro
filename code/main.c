@@ -57,7 +57,7 @@ int main(void)
 					  else if(cont ==2 ) {
 					  	  arr[1] = Telecom.WindSelectLevel;
 						  cont =0;
-					  	}
+					   }
 					  if(arr[0]==arr[1])Telecom.lockSonudKey =1;
 					  else Telecom.lockSonudKey =0;
 
