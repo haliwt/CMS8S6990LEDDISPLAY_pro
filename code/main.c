@@ -41,26 +41,31 @@ int main(void)
 	{
 
 		ReceiveData =usartdat.usart_1; //usartdat.usart_1;
-		if(Telecom.childLock ==1 && Telecom.lockSonudKey ==1){
-			childlockdata = ReceiveData ;
-			Telecom.lockSonudKey =0;
-
-		}
-		else {
-			Telecom.power_state = ReceiveData >> 7;
-		    Telecom.childLock  = ReceiveData >> 6;
-			Telecom.WindSelectLevel = ReceiveData & 0x0f;
-		}
+	
+		Telecom.power_state = ReceiveData >> 7;
+	    Telecom.childLock  = ReceiveData >> 6;
+		Telecom.WindSelectLevel = ReceiveData & 0x0f;
+		
+		
 		
 		if(Telecom.power_state == 1 ){
 
-		    if(Telecom.childLock ==1 && (childlockdata == 0xee) && Telecom.lockSonudKey ==0){
-			    
-				    if(Telecom.lockSonudKey == 0){
-						Telecom.lockSonudKey =1;
-						Telecom.childLock =2;
-					    childlockdata = 0x00;
+		    if(Telecom.childLock ==1){
+				      cont ++;
+					  if(cont ==1)
+				          arr[0] = Telecom.WindSelectLevel;
+					  else if(cont ==2 ) {
+					  	  arr[1] = Telecom.WindSelectLevel;
+						  cont =0;
+					  	}
+					  if(arr[0]==arr[1])Telecom.lockSonudKey =1;
+					  else Telecom.lockSonudKey =0;
 
+			          
+				    if(Telecom.lockSonudKey == 0){ 
+						
+						Telecom.lockSonudKey =1;
+                 
 						BUZZER_Config();
 						delay_20us(1000)  ; 
 						BUZ_DisableBuzzer();
@@ -69,10 +74,8 @@ int main(void)
 						delay_20us(1000)  ; 
 						BUZ_DisableBuzzer();
 				    }
-			
 				
-
-		   }
+		    }
 		   else {
 				switch (Telecom.WindSelectLevel){
 
