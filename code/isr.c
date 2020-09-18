@@ -221,8 +221,8 @@ void UART0_IRQHandler(void)  interrupt UART0_VECTOR
             
 				
               
-				UART_SendBuff(UART0,usartdat.usart_1);
-				//UART_SendBuff(UART0,usartdat.usart_2);
+				//UART_SendBuff(UART0,usartdat.usart_1);
+				UART_SendBuff(UART0,usartdat.usart_2);
            }
 	}
        #endif 

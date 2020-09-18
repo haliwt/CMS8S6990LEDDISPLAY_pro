@@ -30,7 +30,7 @@ struct usarts  usartdat;
 int main(void)
 {		
    
-    static uint8_t cont =0,ReceiveData=0,childlockdata=0;
+    static uint8_t cont =0,ReceiveData=0,childlockdata=0,ReceiveRefData=0,icount=0;
     uint8_t arr[2];
     TMR1_Config();
 	TMR0_Config();
@@ -41,6 +41,7 @@ int main(void)
 	{
 
 		ReceiveData =usartdat.usart_1; //usartdat.usart_1;
+		ReceiveRefData= usartdat.usart_2;
 	
 		Telecom.power_state = ReceiveData >> 7;
 	    Telecom.childLock  = ReceiveData >> 6;
@@ -67,17 +68,40 @@ int main(void)
 						Telecom.lockSonudKey =1;
                  
 						BUZZER_Config();
-						delay_20us(1000)  ; 
+						delay_20us(300)  ; 
 						BUZ_DisableBuzzer();
-						delay_20us(1000)  ; 
+						delay_20us(300)  ; 
 						BUZZER_Config();
-						delay_20us(1000)  ; 
+						delay_20us(300)  ; 
 						BUZ_DisableBuzzer();
 				    }
 				
 		    }
 		   else {
-				switch (Telecom.WindSelectLevel){
+			          icount ++;
+					  if(icount >250)icount=1;
+					  if(icount ==1)
+				          arr[0] = ReceiveRefData;
+					  else if(icount ==2 ) {
+					  	  arr[1] = ReceiveRefData;
+						  icount =0;
+					   }
+					  if(arr[0]==arr[1])Telecom.lockSonudKey =1;
+					  else Telecom.lockSonudKey =0;
+
+			          
+				    if(Telecom.lockSonudKey == 0){ 
+						
+						Telecom.lockSonudKey =1;
+                 
+						BUZZER_Config();
+						delay_20us(300)  ; 
+						BUZ_DisableBuzzer();
+						delay_20us(300)  ; 
+						
+				    }
+			   
+			   switch (Telecom.WindSelectLevel){
 
 					  case  0x01 :
 				       if(Telecom.lockSonudKey ==0){
