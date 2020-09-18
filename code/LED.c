@@ -234,27 +234,18 @@ void LEDDisplay_TimerTim(uint8_t disdat3,uint8_t disdat2,uint8_t disdat1)
 	    Tm1629DSentData(segNumber[disdat2]); //主显示2位---十位
 	    STB_TM1629D=1; 
 		
-
-	
-		
 		//写第三位
          STB_TM1629D=0;   
 		Tm1629DSentData(Addr04H);
 		//指向地址4  
-	
-	       Tm1629DSentData(segNumber[disdat1] | segNumber[0x0A]); //主显示2位---十位
+		Tm1629DSentData(segNumber[disdat1] | segNumber[0x0A]); //主显示2位---十位
          STB_TM1629D=1; 
 
-      
-
-	
-       STB_TM1629D =0; 
-       Tm1629DSentData(OpenDisTM1629D|Set14_16TM1629D); //开显示，显示，设置脉冲宽带 14/16
-       STB_TM1629D =1; 	 
+      	STB_TM1629D =0; 
+        Tm1629DSentData(OpenDisTM1629D|Set14_16TM1629D); //开显示，显示，设置脉冲宽带 14/16
+        STB_TM1629D =1; 	 
 	
 }
-
-
 /******************************************************************************
  **
  ** Function Name:	void KEY_FUNCTION(void)

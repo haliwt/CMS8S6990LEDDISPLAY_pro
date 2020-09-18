@@ -30,9 +30,10 @@ struct usarts  usartdat;
 int main(void)
 {		
    
-    static uint8_t cont =0,ReceiveData=0,ReceiveRefData=0,timerTimes;
-	static uint8_t childlockflg =0,icount=0,powerOnflg =0,i=0,timerOn=0;
-    uint8_t arr[2];
+    static uint8_t cont =0,ReceiveData=0,ReceiveRefData=0;
+	static uint8_t childlockflg =0,icount=0,timerOn=0;
+	static uint8_t ReceiveTimerDatat =0,timecount=0,timingflg =0 ;
+    uint8_t arr[2],timing[2];
     TMR1_Config();
 	TMR0_Config();
     LED_GPIO_Init();
@@ -43,12 +44,13 @@ int main(void)
 
 		ReceiveData =usartdat.usart_1; //usartdat.usart_1;
 		ReceiveRefData= usartdat.usart_2;
-		timerTimes = ReceiveRefData >>4;
+		ReceiveTimerDatat = usartdat.usart_3;
+		
 	
-		Telecom.power_state = ReceiveData >> 7;
-	    Telecom.childLock  = ReceiveData >> 6;
-		timerOn = ReceiveData >>5; //timer time
-		Telecom.netResetflg = ReceiveData >>4;
+		Telecom.power_state = ReceiveData >> 7;  //power on flg
+	    Telecom.childLock  = ReceiveData >> 6;    //Chilid Lock flg 
+		Telecom.timer_state = ReceiveData >>5; //timer time  flg
+		Telecom.netResetflg = ReceiveData >>4;   //Be changed net flg
 		Telecom.WindSelectLevel = ReceiveData & 0x0f;
 	
 		
@@ -97,7 +99,7 @@ int main(void)
 					  
 					 
 
-			        if(Telecom.lockSonudKey == 0 && powerOnflg !=0){ 
+			        if(Telecom.lockSonudKey == 0 ){ 
 						
 						Telecom.lockSonudKey =1;
                  
@@ -122,14 +124,7 @@ int main(void)
 					case  0x01 :
 				       OutputData(0x01);
 					   Telecom.WindSetupLevel=wind_sleep;
-					   if(powerOnflg ==0 && i !=2){
-						    i++;  //i=2
-							BUZZER_Config();
-							delay_20us(400)  ; 
-							BUZ_DisableBuzzer();
-							delay_20us(400)  ; 
-						   
-					   }
+					  
 				       
 					  
 					break;
@@ -138,58 +133,24 @@ int main(void)
 						
 						OutputData(0x02);
 						Telecom.WindSetupLevel=wind_middle;
-						 if(powerOnflg ==0 && i!=3){
-						    i++;  //i=3
-							BUZZER_Config();
-							delay_20us(400)  ; 
-							BUZ_DisableBuzzer();
-							delay_20us(400)  ; 
-						   
-					   }
+						
 						
 					break;
 						
 					case 0x03:
 					    OutputData(0x03);
 						Telecom.WindSetupLevel=wind_high;
-						 if(powerOnflg ==0 && i !=4){
-						    i++; // i=4
-							BUZZER_Config();
-						delay_20us(400)  ; 
-						BUZ_DisableBuzzer();
-						delay_20us(400)  ; 
-						
-						   
-					   }
+					
 						
 						 break ;
 
 				   case 0x04:
 				   	
 						Telecom.WindSetupLevel=wind_auto;
-						 if(powerOnflg ==0 && i !=5){
-						    i++; //i=5
-							BUZZER_Config();
-							delay_20us(400)  ; 
-							BUZ_DisableBuzzer();
-							delay_20us(400)  ; 
-						
-						   
-					   }
-						if(i==5)
-						 powerOnflg =1;
-							
+					
 					break;
 					default :
 					       Telecom.WindSetupLevel=wind_auto;
-						   if(powerOnflg ==0 && i !=1){
-						    i++; //i=1;
-							BUZZER_Config();
-							delay_20us(400)  ; 
-							BUZ_DisableBuzzer();
-							delay_20us(400)  ; 
-						
-						   }
 					
 					break;
 				
@@ -227,17 +188,39 @@ int main(void)
 
 				}
 				
-				if(timerOn == 1) //timer setup for times 
+				if(Telecom.timer_state  == 1) //timer setup for times 
 				{
-				     Telecom.TimerOn =1;
-					 Telecom.TimeBaseUint = timerTimes ;
+				     timecount ++ ;
+					 Telecom.TimerOn =1;
+					 if(timecount ==1)timing[0] = ReceiveTimerDatat;
+					 else if(timecount ==2){
+						 timing[1] = ReceiveTimerDatat;
+						 timecount =0;
+					 }
+					 if(timing[0]==timing[1])timingflg = 1;  //the same timer timing ,don't recoder the second timing
+					 else  timingflg = 0;
+					
+					 if(timingflg==0){
+					        Telecom.TimeBaseUint = ReceiveTimerDatat;
+							timingflg = 1;
+					 }
 					 if(Telecom.TimeBaseUint ==0){
 						 
 						 Telecom.power_state =0;
+						 timerOn =0;
+						 timingflg =0;
+						 LEDDisplay_TimerTim(segNumber[7],segNumber[7],segNumber[7]);
+						delay_30us(20000);
+						delay_30us(20000);
+						delay_30us(20000);
+						delay_30us(20000);
+						delay_30us(20000);
 					  }
 					 
 				}
-				if(Telecom.netResetflg == 1){ //be changed net
+				else timingflg =0;
+				
+				if(Telecom.netResetflg == 1){ //be changed net 
 					FLASH_Init(); //clear recoder times hours
 					Telecom.netResetflg =0;
 				}

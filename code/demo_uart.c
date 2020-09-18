@@ -63,16 +63,17 @@ void UART0_Config(void)
 	*Output Ref:No
 	*
 ******************************************************************************/
-uint8_t BCC(uint8_t ver,uint8_t ver2)
+uint8_t BCC(uint8_t ver,uint8_t ver2,uint8_t ver3)
 {
-     uint8_t sbytes[3],tembyte;
+     uint8_t sbytes[4],tembyte;
 	 sbytes[0]=0xAA;
 
 	 
 	 sbytes[1]= ver;
 	 sbytes[2]= ver2;
+	 sbytes[3]= ver3;
 
-      tembyte =  sbytes[0]^ sbytes[1]^ sbytes[2];
+      tembyte =  sbytes[0]^ sbytes[1]^ sbytes[2]^sbytes[3];
     
     return tembyte;
 

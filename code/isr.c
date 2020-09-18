@@ -27,7 +27,7 @@ uint16_t NetSetTimer;          //PM sensor averageValue
 
 
 
-unsigned char bufRxd[4]; //接收字节缓冲区
+unsigned char bufRxd[5]; //接收字节缓冲区
 uint8_t cntRxd ;
 
 uint8_t ReceOverflg;
@@ -180,7 +180,7 @@ void UART0_IRQHandler(void)  interrupt UART0_VECTOR
 	{   
         UART_ClearReceiveIntFlag(UART0);
       //  UART_SendBuff(UART0,UART_GetBuff(UART0));
-         if (cntRxd < 4){
+         if (cntRxd < 5){
              if(cntRxd ==0){ bufRxd[0] = UART_GetBuff(UART0);
 			     if(bufRxd[0]== 0xAA)
                  	cntRxd++;
@@ -188,16 +188,15 @@ void UART0_IRQHandler(void)  interrupt UART0_VECTOR
              }
 			 else {
                  bufRxd[cntRxd] = UART_GetBuff(UART0);
-                 cntRxd ++;
-				if( bufRxd[3]= BCC(bufRxd[1],bufRxd[2]))
-				  ReceOverflg = 1;
-				else {
-					ReceOverflg =0;
-					cntRxd=0;
-				}
+                 //cntRxd ++;
+				//if( bufRxd[4]== BCC(bufRxd[1],bufRxd[2],bufRxd[3]))
+				//     ReceOverflg = 1;
+				 cntRxd ++;
 				   
              }
-			if(cntRxd ==4)cntRxd=0;
+			if(cntRxd ==5)cntRxd=0;
+			if(bufRxd[4]== BCC(bufRxd[1],bufRxd[2],bufRxd[3]))
+				     ReceOverflg = 1;
 			
         }
 		
@@ -207,11 +206,13 @@ void UART0_IRQHandler(void)  interrupt UART0_VECTOR
 		  
 			  usartdat.usart_1 = bufRxd[1] ;
 			  usartdat.usart_2 = bufRxd[2] ;
+			  usartdat.usart_3 = bufRxd[3] ;
             
 				
               
 				//UART_SendBuff(UART0,usartdat.usart_1);
-				UART_SendBuff(UART0,usartdat.usart_2);
+				//UART_SendBuff(UART0,usartdat.usart_2);
+				UART_SendBuff(UART0,usartdat.usart_3);
            }
 	}
        #endif 

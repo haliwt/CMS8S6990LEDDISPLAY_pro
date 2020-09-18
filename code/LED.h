@@ -49,7 +49,7 @@
 
 #define	Set(x,y)	((x) |= (1 << (y)))				//位置1
 
-
+extern const uint8_t segNumber[];
 
 extern uint8_t pmlog ;
 
