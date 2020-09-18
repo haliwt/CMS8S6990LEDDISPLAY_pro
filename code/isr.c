@@ -6,17 +6,6 @@
 #include "output.h"
 #include "demo_uart.h"
 
-uint16_t getMinute;
-uint8_t TimerCnt;
-
-
-uint8_t  BuzzerSound ;
-
-volatile uint16_t Timer1_num;
-uint8_t childLock ;
-static uint8_t locklg=0;
-uint8_t Timer2_num=0;
-uint8_t CC2_num =0;
 
 
 uint16_t timer0_num;
@@ -25,7 +14,7 @@ uint8_t  vairI;
 uint16_t rec_num;
 uint16_t rec2_num;
 
-uint8_t lockchild ;
+
 
 uint16_t NetSetTimer;          //PM sensor averageValue 
   
@@ -79,12 +68,12 @@ void Timer0_IRQHandler(void)  interrupt TMR0_VECTOR
               if(P22==0){
                    if(vairI==0){
                    rec_num++ ; 
-                  // rec2_num=0;
+                 
                 }
                 else{
                    
                     rec2_num++;
-                    //rec_num=0;
+                   
                 }
               }
            

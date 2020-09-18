@@ -91,8 +91,9 @@ typedef struct _TELEC_
 	uint8_t keyEvent:1;
     uint8_t WindSetupLevel: 3;
 	uint8_t timer_state: 1;
-	uint8_t net_state:1;
-	uint8_t net_dispnumb : 1;
+	uint8_t netResetflg:1;
+    uint8_t net_dispnumb:1;
+
 
 	uint8_t lockSonudKey :1;
 	uint8_t ISR_NetRecMinuteAdj:1;
