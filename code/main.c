@@ -205,28 +205,14 @@ int main(void)
 							timingflg = 1;
 					 }
 					 
-					d1 = Telecom.TimeBaseUint % 10;
-					d2 = (Telecom.TimeBaseUint / 10) % 10;
-					d2 = (Telecom.TimeBaseUint / 100) % 10;
-					LEDDisplay_TimerTim(d3,d2,d1);
-						delay_30us(20000);
-						delay_30us(20000);
-						delay_30us(20000);
-						delay_30us(20000);
-						delay_30us(20000);
-						delay_30us(20000);
-						delay_30us(20000);
+				
 					 if(Telecom.TimeBaseUint ==0){
 						 
 						 Telecom.power_state =0;
 						 timerOn =0;
 						 timingflg =0;
 						 LEDDisplay_TimerTim(segNumber[7],segNumber[7],segNumber[7]);
-						delay_30us(20000);
-						delay_30us(20000);
-						delay_30us(20000);
-						delay_30us(20000);
-						delay_30us(20000);
+						
 					  }
 					 
 				}
