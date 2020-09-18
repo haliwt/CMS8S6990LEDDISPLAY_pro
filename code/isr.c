@@ -180,7 +180,7 @@ void UART0_IRQHandler(void)  interrupt UART0_VECTOR
 {
 	
 	#if 1
-	static uint8_t  vair=0;
+
  
 
     if(UART_GetSendIntFlag(UART0))

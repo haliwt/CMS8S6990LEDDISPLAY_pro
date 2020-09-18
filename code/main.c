@@ -30,7 +30,8 @@ struct usarts  usartdat;
 int main(void)
 {		
    
-    static uint8_t cont =0,ReceiveData=0,childlockdata=0,ReceiveRefData=0,icount=0;
+    static uint8_t cont =0,ReceiveData=0,ReceiveRefData=0;
+	static uint8_t childlockflg =0,icount=0;
     uint8_t arr[2];
     TMR1_Config();
 	TMR0_Config();
@@ -52,7 +53,9 @@ int main(void)
 		if(Telecom.power_state == 1 ){
 
 		    if(Telecom.childLock ==1){
+				      childlockflg =1;
 				      cont ++;
+					  if(cont >250)cont=1;
 					  if(cont ==1)
 				          arr[0] = Telecom.WindSelectLevel;
 					  else if(cont ==2 ) {
@@ -68,11 +71,11 @@ int main(void)
 						Telecom.lockSonudKey =1;
                  
 						BUZZER_Config();
-						delay_20us(300)  ; 
+						delay_20us(400)  ; 
 						BUZ_DisableBuzzer();
-						delay_20us(300)  ; 
+						delay_20us(400)  ; 
 						BUZZER_Config();
-						delay_20us(300)  ; 
+						delay_20us(400)  ; 
 						BUZ_DisableBuzzer();
 				    }
 				
@@ -89,38 +92,36 @@ int main(void)
 					  if(arr[0]==arr[1])Telecom.lockSonudKey =1;
 					  else Telecom.lockSonudKey =0;
 
-			          
-				    if(Telecom.lockSonudKey == 0){ 
+			         if(Telecom.lockSonudKey == 0 ){ 
 						
 						Telecom.lockSonudKey =1;
                  
 						BUZZER_Config();
-						delay_20us(300)  ; 
+						delay_20us(400)  ; 
 						BUZ_DisableBuzzer();
-						delay_20us(300)  ; 
-						
-				    }
+						delay_20us(400)  ; 
+						if(childlockflg == 1){
+							
+							childlockflg =0;
+							BUZZER_Config();
+							delay_20us(400)  ; 
+							BUZ_DisableBuzzer();
+							delay_20us(400)  ; 
+							
+						}
+					}
+					
 			   
 			   switch (Telecom.WindSelectLevel){
 
 					  case  0x01 :
-				       if(Telecom.lockSonudKey ==0){
-					   	Telecom.lockSonudKey ++ ;
-				        BUZZER_Config();
-					     delay_20us(2000)  ; 
-					    BUZ_DisableBuzzer();
-				       	}
+				
 					  OutputData(0x01);
 					  Telecom.WindSetupLevel=wind_sleep;
 					break;
 					
 					case 0x02:
-						if(Telecom.lockSonudKey ==0 ){
-					   		Telecom.lockSonudKey ++ ;
-				       		BUZZER_Config();
-							delay_20us(2000)  ; 
-					  		BUZ_DisableBuzzer();
-					     }
+						
 						OutputData(0x02);
 						Telecom.WindSetupLevel=wind_middle;
 						
@@ -129,12 +130,7 @@ int main(void)
 						
 					case 0x03:
 					
-					    if(Telecom.lockSonudKey ==0){
-					   	Telecom.lockSonudKey ++ ;
-				       BUZZER_Config();
-				        delay_20us(2000)  ; 
-					    BUZ_DisableBuzzer();
-					    }
+					 
 						OutputData(0x03);
 						Telecom.WindSetupLevel=wind_high;
 						
@@ -142,12 +138,7 @@ int main(void)
 				   break ;
 
 				   case 0x04:
-				   	  if(Telecom.lockSonudKey ==0){
-					      Telecom.lockSonudKey ++ ;
-				          BUZZER_Config();
-						 delay_20us(2000)  ; 
-					     BUZ_DisableBuzzer();
-				       	}
+				   	
 						Telecom.WindSetupLevel=wind_auto;
 							
 					break;
