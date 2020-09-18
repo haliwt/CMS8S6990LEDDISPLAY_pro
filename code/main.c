@@ -31,7 +31,7 @@ int main(void)
 {		
    
     static uint8_t cont =0,ReceiveData=0,ReceiveRefData=0;
-	static uint8_t childlockflg =0,icount=0,timerOn=0;
+	static uint8_t childlockflg =0,icount=0,timerOn=0,d1,d2,d3;
 	static uint8_t ReceiveTimerDatat =0,timecount=0,timingflg =0 ;
     uint8_t arr[2],timing[2];
     TMR1_Config();
@@ -204,6 +204,18 @@ int main(void)
 					        Telecom.TimeBaseUint = ReceiveTimerDatat;
 							timingflg = 1;
 					 }
+					 
+					d1 = Telecom.TimeBaseUint % 10;
+					d2 = (Telecom.TimeBaseUint / 10) % 10;
+					d2 = (Telecom.TimeBaseUint / 100) % 10;
+					LEDDisplay_TimerTim(d3,d2,d1);
+						delay_30us(20000);
+						delay_30us(20000);
+						delay_30us(20000);
+						delay_30us(20000);
+						delay_30us(20000);
+						delay_30us(20000);
+						delay_30us(20000);
 					 if(Telecom.TimeBaseUint ==0){
 						 
 						 Telecom.power_state =0;
