@@ -232,7 +232,7 @@ void LEDDisplay_TimerTim(uint8_t disdat3,uint8_t disdat2,uint8_t disdat1)
          STB_TM1629D=0;   
 		Tm1629DSentData(Addr04H);
 		//指向地址4  
-		Tm1629DSentData(segNumber[disdat1] | segNumber[0x0A]); //主显示2位---十位
+		Tm1629DSentData(segNumber[disdat1] | segNumber[0x0A]); //主显示2位---十位 "PM2.5"
          STB_TM1629D=1; 
 
       	STB_TM1629D =0; 

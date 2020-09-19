@@ -32,7 +32,7 @@ int main(void)
    
     static uint8_t cont =0,ReceiveData=0,ReceiveRefData=0;
 	static uint8_t childlockflg =0,icount=0,timerOn=0;
-	static uint8_t ReceiveTimerDatat =0,timecount=0,timingflg =0 ;
+	static uint8_t ReceiveTimerDatat =0,timecount=0,timingflg =0;
     uint8_t arr[2],timing[2];
     TMR1_Config();
 	TMR0_Config();
@@ -47,19 +47,18 @@ int main(void)
 		ReceiveData =usartdat.usart_1; //usartdat.usart_1;
 		ReceiveRefData= usartdat.usart_2;
 		ReceiveTimerDatat = usartdat.usart_3;
+
 		
-	   
-			Telecom.power_state = ReceiveData >> 7;  //power on flg
-			Telecom.childLock  = ReceiveData >> 6;    //Chilid Lock flg 
+	        Telecom.power_state = ReceiveData >> 7;  //power on flg
+            Telecom.childLock  = ReceiveData >> 6;    //Chilid Lock flg 
 			Telecom.timer_state = ReceiveData >>5; //timer time  flg
 			Telecom.netResetflg = ReceiveData >>4;   //Be changed net flg
 			Telecom.WindSelectLevel = ReceiveData & 0x0f;
-		
-		
+	     
+		 
 		if(Telecom.power_state == 1 ){
 			Telecom.PowerOnFrequency=1;
-
-		    if(Telecom.childLock ==1){
+			  if(Telecom.childLock ==1){
 				      childlockflg =1;
 				      cont ++;
 					  if(cont >250)cont=1;
@@ -78,11 +77,11 @@ int main(void)
 						Telecom.lockSonudKey =1;
                  
 						BUZZER_Config();
-						delay_20us(400)  ; 
+						delay_20us(50)  ; 
 						BUZ_DisableBuzzer();
-						delay_20us(400)  ; 
+						delay_20us(50)  ; 
 						BUZZER_Config();
-						delay_20us(400)  ; 
+						delay_20us(50)  ; 
 						BUZ_DisableBuzzer();
 				    }
 				
@@ -99,23 +98,25 @@ int main(void)
 					  if(arr[0]==arr[1])Telecom.lockSonudKey =1;
 					  else Telecom.lockSonudKey =0;
 					  
-					 
-
-			        if(Telecom.lockSonudKey == 0 ){ 
+				
+                    
+			       if(Telecom.lockSonudKey == 0 ){ 
 						
 						Telecom.lockSonudKey =1;
-                 
-						BUZZER_Config();
-						delay_20us(400)  ; 
-						BUZ_DisableBuzzer();
-						delay_20us(400)  ; 
+						
+						    BUZZER_Config();
+							delay_20us(50)  ; 
+							BUZ_DisableBuzzer();
+							delay_20us(50)  ; 
+							 
+						
 						if(childlockflg == 1){
 							
 							childlockflg =0;
 							BUZZER_Config();
-							delay_20us(400)  ; 
+							delay_20us(50)  ; 
 							BUZ_DisableBuzzer();
-							delay_20us(400)  ; 
+							delay_20us(50)  ; 
 							
 						}
 					}
@@ -124,37 +125,37 @@ int main(void)
 			   switch (Telecom.WindSelectLevel){
 
 					case  0x01 :
+						
+						
 				       OutputData(0x01);
 					   Telecom.WindSetupLevel=wind_sleep;
 					  
-				       
-					  
-					break;
-					
-					case 0x02:
+					   
+					  break;
+					 case 0x02:
+						
 						
 						OutputData(0x02);
 						Telecom.WindSetupLevel=wind_middle;
-						
-						
-					break;
+					 
+						break;
 						
 					case 0x03:
-					    OutputData(0x03);
-						Telecom.WindSetupLevel=wind_high;
 					
 						
-						 break ;
+					    OutputData(0x03);
+						Telecom.WindSetupLevel=wind_high;
+						
+					   
+					break ;
 
 				   case 0x04:
-				   	
+                 
 						Telecom.WindSetupLevel=wind_auto;
+						
 					
-					break;
-					default :
-					       Telecom.WindSetupLevel=wind_auto;
+				   break;
 					
-					break;
 				
 				}
             
@@ -168,11 +169,13 @@ int main(void)
 
 						LEDDisplay_TimerTim(PM_3,PM_2,PM_1);
 						LEDDisplay_GreenColorRing();
+						LED_DispPMLogo();
 				}
-				else if(Telecom.WindSetupLevel==wind_auto ){
+				else {
 
 				
 		            PM_SendData();
+					LED_DispPMLogo();
 					LEDDisplay_TimerTim(PM_3,PM_2,PM_1);
 					#if 1
 					if(Flash_ToReadDiffData()==3)LED_DispThreeRadin();
@@ -180,13 +183,12 @@ int main(void)
 					else if(Flash_ToReadDiffData()==1)LED_DispOneRadin();
 					else if(Flash_ToReadDiffData()==5)LEDDisplay_RedColorRing(); //到更换滤网时间
 					else { 
-							LEDDisplay_TimerTim(PM_3,PM_2,PM_1);
-							LED_DispPMLogo();
+							//LEDDisplay_TimerTim(PM_3,PM_2,PM_1);
+							//LED_DispPMLogo();
 							LEDDisplay_GreenColorRing();
 					}
 					#endif 
-					//LED_DispPMLogo();
-					//LEDDisplay_GreenColorRing();
+					
 					
 
 				}
@@ -196,7 +198,7 @@ int main(void)
 				     timecount ++ ;
 					 Telecom.TimerOn =1;
 					 if(timecount ==1)timing[0] = ReceiveTimerDatat;
-					 else if(timecount ==2){
+					 else {
 						 timing[1] = ReceiveTimerDatat;
 						 timecount =0;
 					 }
@@ -215,6 +217,8 @@ int main(void)
 						 timerOn =0;
 						 timingflg =0;
 						 LEDDisplay_TimerTim(segNumber[7],segNumber[7],segNumber[7]);
+						 delay_30us(20000);
+						 delay_30us(20000);
 						
 					  }
 					 

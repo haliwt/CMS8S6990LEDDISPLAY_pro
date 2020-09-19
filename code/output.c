@@ -112,11 +112,13 @@ void PM_SendData(void)
           
           }
 		    
-    
-		 if(wdl == wind_sleep)OutputData(0x01);
-		 else if(wdl == wind_middle)OutputData(0x02);
-		 else if(wdl == wind_high)OutputData(0x03);
-		 else if(wdl== wind_highest)OutputData(0x05);
+        if(Telecom.WindSetupLevel==wind_auto){
+			
+			if(wdl == wind_sleep)OutputData(0x01);
+			else if(wdl == wind_middle)OutputData(0x02);
+			else if(wdl == wind_high)OutputData(0x03);
+			else if(wdl== wind_highest)OutputData(0x05);
+		}
 		 
 	
 		 
