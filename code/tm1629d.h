@@ -19,7 +19,7 @@
  
  
 #define OpenDisTM1629D           0x88//开显示
-#define CloseDisTM1629D			 0x00//关显示
+#define CloseDisTM1629D			 0x80//关显示
  
 #define Addr00H  			0xC0//地址00H
 #define Addr01H  			0xC1//地址01H

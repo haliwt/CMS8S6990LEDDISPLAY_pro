@@ -31,28 +31,30 @@ int main(void)
 {		
    
     static uint8_t cont =0,ReceiveData=0,ReceiveRefData=0;
-	static uint8_t childlockflg =0,icount=0,timerOn=0,d1,d2,d3;
+	static uint8_t childlockflg =0,icount=0,timerOn=0;
 	static uint8_t ReceiveTimerDatat =0,timecount=0,timingflg =0 ;
     uint8_t arr[2],timing[2];
     TMR1_Config();
 	TMR0_Config();
     LED_GPIO_Init();
     UART0_Config();
+	GPIO_PMConfig(); //PM GPIO port
 
 	while(1)
 	{
 
+		
 		ReceiveData =usartdat.usart_1; //usartdat.usart_1;
 		ReceiveRefData= usartdat.usart_2;
 		ReceiveTimerDatat = usartdat.usart_3;
 		
-	
-		Telecom.power_state = ReceiveData >> 7;  //power on flg
-	    Telecom.childLock  = ReceiveData >> 6;    //Chilid Lock flg 
-		Telecom.timer_state = ReceiveData >>5; //timer time  flg
-		Telecom.netResetflg = ReceiveData >>4;   //Be changed net flg
-		Telecom.WindSelectLevel = ReceiveData & 0x0f;
-	
+	   
+			Telecom.power_state = ReceiveData >> 7;  //power on flg
+			Telecom.childLock  = ReceiveData >> 6;    //Chilid Lock flg 
+			Telecom.timer_state = ReceiveData >>5; //timer time  flg
+			Telecom.netResetflg = ReceiveData >>4;   //Be changed net flg
+			Telecom.WindSelectLevel = ReceiveData & 0x0f;
+		
 		
 		if(Telecom.power_state == 1 ){
 			Telecom.PowerOnFrequency=1;
@@ -63,7 +65,7 @@ int main(void)
 					  if(cont >250)cont=1;
 					  if(cont ==1)
 				          arr[0] = Telecom.WindSelectLevel;
-					  else if(cont ==2 ) {
+					  else { // Turn on nondeterminacy
 					  	  arr[1] = Telecom.WindSelectLevel;
 						  cont =0;
 					   }
@@ -90,7 +92,7 @@ int main(void)
 					  if(icount >250)icount=1;
 					  if(icount ==1)
 				          arr[0] = ReceiveRefData;
-					  else if(icount ==2 ) {
+					  else {
 					  	  arr[1] = ReceiveRefData;
 						  icount =0;
 					   }
@@ -171,6 +173,7 @@ int main(void)
 
 				
 		            PM_SendData();
+					LEDDisplay_TimerTim(PM_3,PM_2,PM_1);
 					#if 1
 					if(Flash_ToReadDiffData()==3)LED_DispThreeRadin();
 					else if(Flash_ToReadDiffData()==2)LED_DispTwoRadin();
@@ -235,6 +238,9 @@ int main(void)
 			 }
 		}
 		else{ //turn off be recived times
+                LEDDisplay_TurnOff();
+			 
+						
 				if(Telecom.PowerOnFrequency ==1){
 					Telecom.PowerOnFrequency ++ ;
                     Flash_ToWriteData();

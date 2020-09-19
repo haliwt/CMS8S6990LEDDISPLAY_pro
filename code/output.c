@@ -5,7 +5,25 @@
  uint8_t PM_1;
  uint8_t PM_2;
  uint8_t PM_3;
+/******************************************************************************
+ ** \brief	 GPIO_Config
+ ** \param [in] none
+ **          GPIO中断功能
+ ** \return  none
+ ** \note  
+ ******************************************************************************/
+void GPIO_PMConfig(void)
+{
+	
+	/*
+	(1)设置P23 IO功能
+	*/
 
+	GPIO_SET_MUX_MODE(P22CFG, GPIO_MUX_GPIO);   //	PM2.5 sensor Input
+	GPIO_ENABLE_INPUT(P2TRIS, GPIO_PIN_2);
+	GPIO_ENABLE_UP(P2UP,GPIO_PIN_2) ;
+	
+}
 
 /***************************************************
 	*
@@ -27,7 +45,7 @@ void PM_SendData(void)
 			 disp =rec_num ;
 			 
 			 vairI=1;
-			PM_3 = (rec_num /100) %10;	 //百位
+			 PM_3 = (rec_num /100) %10;	 //百位
 			 PM_2 = (rec_num /10) %10;  //十位
 			 PM_3 = rec_num	%10;		//个位
 			 rec2_num=0;
@@ -87,6 +105,8 @@ void PM_SendData(void)
 		 else if(wdl == wind_middle)OutputData(0x02);
 		 else if(wdl == wind_high)OutputData(0x03);
 		 else if(wdl== wind_highest)OutputData(0x05);
+		 
+	
 		 
 		 
 	  }

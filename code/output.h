@@ -28,6 +28,6 @@ enum WindSpeed{wind_stop,wind_sleep,wind_middle,wind_high,wind_auto,wind_highest
 
 void OutputData(uint8_t wds);
 void PM_SendData(void);
-
+void GPIO_PMConfig(void);
 
 #endif 
