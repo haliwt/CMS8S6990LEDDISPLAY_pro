@@ -37,7 +37,7 @@ void PM_SendData(void)
 {  
    static uint8_t disp =0,PMave1,PMave2,PMave3,PMave4;
 	uint8_t i=0,j=0;
-    uint8_t wdl=0;
+    uint8_t wdl=0,arr[3];
        if(timer0_num >= 1000 && timer0_num <=1060 ){
 			timer0_num =0;
 			 i++;
@@ -58,6 +58,18 @@ void PM_SendData(void)
 			 PM_1 = rec2_num  %10;		 //个位
 			 rec_num =0;
 		 }
+		 if(i==1) arr[0] = PM_3;
+		 else if(i==2) arr[1]= PM_3;
+		 else if(i==3) arr[2]= PM_3;
+		 else if(i==4) {
+			 arr[3] = PM_3;
+			 i=0;
+		 }
+		 if(arr[0] >=1 && arr[2]>=1 && arr[3]>=1 && arr[1]>=1){
+			 
+			 
+		 }
+		 else PM_3 =0;
 		 LED_DispPMLogo();
 		 LEDDisplay_TimerTim(PM_3,PM_2,PM_1);
 	 
